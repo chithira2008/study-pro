@@ -2,8 +2,10 @@
 <html lang="si">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>A/L Ultimate Study & Time Management System</title>
+<!-- Telegram Mini App Official SDK -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root {
     --bg: #f1f5f9;
@@ -21,6 +23,8 @@
     --danger-bg: #fee2e2;
     --purple: #7c3aed;
     --purple-bg: #f3e8ff;
+    --sleep: #0284c7;
+    --sleep-bg: #e0f2fe;
     --header-bg: #f8fafc;
     --live-row: #fef9c3;
   }
@@ -41,16 +45,18 @@
     --danger-bg: #450a0a;
     --purple: #a78bfa;
     --purple-bg: #2e1065;
+    --sleep: #38bdf8;
+    --sleep-bg: #0c4a6e;
     --header-bg: #1e293b;
     --live-row: #1e293b;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: var(--bg);
     color: var(--text);
-    padding: 10px 10px 60px 10px;
+    padding: 8px 8px 75px 8px;
     font-size: 13px;
     transition: background 0.2s, color 0.2s;
   }
@@ -61,7 +67,7 @@
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 14px;
+    padding: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
   }
 
@@ -74,11 +80,11 @@
     padding-bottom: 10px;
     border-bottom: 2px solid var(--border);
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
   }
-  .brand-box { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .brand-box { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .app-title {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 800;
     color: var(--primary);
     letter-spacing: -0.3px;
@@ -89,7 +95,7 @@
     padding: 4px 10px;
     border-radius: 20px;
     font-weight: 800;
-    font-size: 12px;
+    font-size: 11.5px;
   }
   .streak-pill {
     background: var(--warning-bg);
@@ -97,7 +103,7 @@
     padding: 4px 10px;
     border-radius: 20px;
     font-weight: 800;
-    font-size: 12px;
+    font-size: 11.5px;
   }
   .level-pill {
     background: var(--purple-bg);
@@ -105,7 +111,7 @@
     padding: 4px 10px;
     border-radius: 20px;
     font-weight: 800;
-    font-size: 12px;
+    font-size: 11.5px;
   }
 
   /* Live Timer Widget */
@@ -115,7 +121,7 @@
     gap: 6px;
     background: var(--header-bg);
     border: 1px solid var(--border);
-    padding: 4px 10px;
+    padding: 4px 8px;
     border-radius: 8px;
     flex-wrap: wrap;
   }
@@ -124,7 +130,7 @@
     font-weight: 800;
     font-variant-numeric: tabular-nums;
     color: var(--primary);
-    min-width: 58px;
+    min-width: 56px;
     text-align: center;
   }
 
@@ -141,12 +147,15 @@
     transition: 0.15s;
   }
   button:hover { border-color: var(--primary); color: var(--primary); }
+  button:active { transform: scale(0.97); }
   .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
-  .btn-primary:hover { opacity: 0.9; color: #fff; }
+  .btn-primary:hover { opacity: 0.92; color: #fff; }
   .btn-success { background: var(--success); color: #fff; border-color: var(--success); }
-  .btn-success:hover { opacity: 0.9; color: #fff; }
+  .btn-success:hover { opacity: 0.92; color: #fff; }
   .btn-purple { background: var(--purple); color: #fff; border-color: var(--purple); }
-  .btn-purple:hover { opacity: 0.9; color: #fff; }
+  .btn-purple:hover { opacity: 0.92; color: #fff; }
+  .btn-sleep { background: var(--sleep); color: #fff; border-color: var(--sleep); }
+  .btn-sleep:hover { opacity: 0.92; color: #fff; }
   .btn-danger { color: var(--danger); }
 
   /* Stream & Student Ambition Bar */
@@ -154,39 +163,48 @@
     background: var(--primary-bg);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 8px 12px;
+    padding: 8px 10px;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
   }
   .stream-bar-item {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     flex-wrap: wrap;
   }
 
-  /* Navigation Tabs */
+  /* Navigation Tabs (Swipeable on Mobile) */
   .nav-tabs {
     display: flex;
     gap: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     border-bottom: 1px solid var(--border);
     padding-bottom: 8px;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
   }
-  .tab-list { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tab-list {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    max-width: 100%;
+    scrollbar-width: none;
+  }
+  .tab-list::-webkit-scrollbar { display: none; }
   .tab-btn {
     padding: 6px 12px;
     font-weight: 700;
     border-radius: 6px;
     border: 1px solid var(--border);
     background: var(--header-bg);
+    white-space: nowrap;
   }
   .tab-btn.active {
     background: var(--primary);
@@ -205,12 +223,12 @@
     margin-bottom: 12px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
   }
   .progress-wrap {
     flex: 1;
-    min-width: 160px;
+    min-width: 140px;
     background: var(--border);
     height: 12px;
     border-radius: 20px;
@@ -223,11 +241,42 @@
     transition: width 0.3s ease;
   }
 
+  /* Live Active Hour Quick-Card (Mobile Friendly Dock) */
+  .live-quick-card {
+    background: linear-gradient(135deg, var(--primary-bg), var(--header-bg));
+    border: 2px solid var(--primary);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .live-quick-slots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .live-q-btn {
+    min-width: 48px;
+    height: 30px;
+    font-weight: 800;
+    border-radius: 6px;
+  }
+  .live-q-btn.active {
+    background: var(--success);
+    color: #fff;
+    border-color: var(--success);
+  }
+
   /* Header Panels */
   .top-grid {
     display: grid;
-    grid-template-columns: 275px 1fr 315px;
-    gap: 12px;
+    grid-template-columns: 270px 1fr 310px;
+    gap: 10px;
     margin-bottom: 12px;
   }
   @media (max-width: 980px) {
@@ -267,8 +316,8 @@
     background: var(--card);
     color: var(--text);
     border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 4px 8px;
+    border-radius: 5px;
+    padding: 5px 8px;
     font-size: 12px;
     width: 100%;
     font-family: inherit;
@@ -277,7 +326,7 @@
 
   /* Dynamic Unlimited Task List */
   .priority-scroll-box {
-    max-height: 135px;
+    max-height: 140px;
     overflow-y: auto;
     padding-right: 4px;
   }
@@ -295,8 +344,8 @@
     gap: 4px;
   }
   .task-item input[type="checkbox"] {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
     cursor: pointer;
     accent-color: var(--success);
     flex-shrink: 0;
@@ -306,7 +355,7 @@
     color: var(--muted);
   }
   .mini-btn {
-    padding: 2px 6px;
+    padding: 3px 6px;
     font-size: 10.5px;
     white-space: nowrap;
     flex-shrink: 0;
@@ -319,8 +368,8 @@
     gap: 3px;
   }
   .step-chip {
-    padding: 2px 5px;
-    font-size: 10px;
+    padding: 3px 6px;
+    font-size: 10.5px;
     font-weight: 700;
     background: var(--primary-bg);
     color: var(--primary);
@@ -333,15 +382,19 @@
   }
 
   /* Main Table */
-  .table-wrapper { overflow-x: auto; }
+  .table-wrapper {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-bottom: 14px;
+  }
   table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 14px;
   }
   th, td {
     border: 1px solid var(--border);
-    padding: 3.5px 5px;
+    padding: 4px 5px;
     text-align: center;
     vertical-align: middle;
   }
@@ -359,7 +412,7 @@
     color: var(--primary);
     font-weight: 700;
     text-align: left;
-    padding: 5px 10px;
+    padding: 6px 10px;
     font-size: 11.5px;
   }
   .section-row:hover td {
@@ -385,7 +438,7 @@
 
   .time-cell {
     font-weight: 700;
-    width: 142px;
+    width: 150px;
     white-space: nowrap;
     font-size: 11.5px;
     text-align: left;
@@ -402,7 +455,7 @@
     gap: 2px;
   }
   .quick-hr-btn {
-    padding: 1px 4px;
+    padding: 2px 4px;
     font-size: 9.5px;
     border-radius: 4px;
     color: var(--muted);
@@ -414,15 +467,15 @@
     border-color: var(--success);
   }
 
-  .task-cell { text-align: left; min-width: 290px; }
+  .task-cell { text-align: left; min-width: 285px; }
   .task-cell-inner { display: flex; gap: 4px; }
-  .subj-select { width: 115px; flex-shrink: 0; font-weight: 600; }
-  .mode-select { width: 92px; flex-shrink: 0; font-size: 11px; }
+  .subj-select { width: 112px; flex-shrink: 0; font-weight: 600; }
+  .mode-select { width: 90px; flex-shrink: 0; font-size: 11px; }
 
-  /* 15 Min Toggle Buttons */
+  /* 15 Min Study Toggle Buttons */
   .slot-btn {
     width: 100%;
-    height: 24px;
+    height: 26px;
     border-radius: 4px;
     border: 1px solid var(--border);
     background: var(--card);
@@ -437,10 +490,27 @@
     border-color: var(--success);
   }
 
-  /* Quick Waste Stepper */
+  /* Healthy Sleep/Rest Stepper (Separated from Waste!) */
+  .sleep-btn {
+    width: 100%;
+    height: 26px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 0;
+    border-radius: 4px;
+    background: var(--card);
+    color: var(--muted);
+  }
+  .sleep-btn.has-sleep {
+    background: var(--sleep-bg);
+    color: var(--sleep);
+    border-color: var(--sleep);
+  }
+
+  /* Quick Waste Stepper (Strictly Online & Other Distractions) */
   .waste-btn {
     width: 100%;
-    height: 24px;
+    height: 26px;
     font-size: 11px;
     font-weight: 700;
     padding: 0;
@@ -456,13 +526,13 @@
   .waste-row-total {
     font-weight: 700;
     color: var(--danger);
-    width: 65px;
+    width: 62px;
   }
 
   /* Bottom Summary Grid */
   .bottom-grid {
     display: grid;
-    grid-template-columns: 1.15fr 1fr 1.1fr;
+    grid-template-columns: 1.1fr 1.05fr 1.05fr;
     gap: 12px;
   }
   @media (max-width: 900px) {
@@ -470,7 +540,7 @@
   }
 
   .stat-badge {
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 800;
     padding: 2px 8px;
     border-radius: 4px;
@@ -479,6 +549,7 @@
   .stat-good { background: var(--success-bg); color: var(--success); }
   .stat-bad { background: var(--danger-bg); color: var(--danger); }
   .stat-warn { background: var(--warning-bg); color: var(--warning); }
+  .stat-sleep { background: var(--sleep-bg); color: var(--sleep); }
 
   /* Analytics, Heatmap & Coach */
   .analytics-grid {
@@ -596,15 +667,15 @@
     justify-content: space-between;
     background: var(--card);
     border: 1px solid var(--border);
-    padding: 4px 8px;
+    padding: 5px 8px;
     border-radius: 6px;
     margin-bottom: 5px;
     cursor: pointer;
   }
-  .omr-bubbles { display: flex; gap: 4px; }
+  .omr-bubbles { display: flex; gap: 5px; }
   .omr-bubble {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     border: 1px solid var(--border);
     background: var(--header-bg);
@@ -656,41 +727,46 @@
   /* Floating Bottom Quick-Bar for Easy Student Access while Scrolling */
   .floating-quickbar {
     position: fixed;
-    bottom: 12px;
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
     background: var(--card);
     border: 2px solid var(--primary);
     border-radius: 30px;
-    padding: 6px 16px;
+    padding: 6px 14px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+    gap: 8px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.22);
     z-index: 950;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    max-width: 96vw;
+    overflow-x: auto;
   }
 
   /* Non-blocking Toast Notification */
   .toast-box {
     position: fixed;
-    bottom: 65px;
-    right: 20px;
+    bottom: 62px;
+    right: 16px;
+    left: 16px;
+    margin: 0 auto;
     background: #0f172a;
     color: #f8fafc;
     border-left: 4px solid var(--success);
-    padding: 12px 18px;
+    padding: 10px 16px;
     border-radius: 8px;
     font-weight: 700;
-    font-size: 13px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    font-size: 12.5px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.28);
     z-index: 2000;
     opacity: 0;
     transform: translateY(20px);
     pointer-events: none;
     transition: opacity 0.25s, transform 0.25s;
-    max-width: 390px;
+    max-width: 420px;
+    text-align: center;
   }
   .toast-box.show {
     opacity: 1;
@@ -701,12 +777,12 @@
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.72);
     display: none;
     justify-content: center;
     align-items: center;
     z-index: 999;
-    padding: 16px;
+    padding: 14px;
   }
   .modal-overlay.open { display: flex; }
   .modal-card {
@@ -714,9 +790,11 @@
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 16px;
-    max-width: 520px;
+    max-width: 540px;
     width: 100%;
     text-align: center;
+    max-height: 92vh;
+    overflow-y: auto;
   }
   canvas#shareCanvas {
     width: 100%;
@@ -742,7 +820,7 @@
   }
   .zen-overlay.open { display: flex; }
   .zen-timer {
-    font-size: 92px;
+    font-size: 82px;
     font-weight: 900;
     color: #38bdf8;
     font-variant-numeric: tabular-nums;
@@ -755,7 +833,7 @@
     padding-top: 8px;
     border-top: 1px solid var(--border);
     font-weight: 700;
-    font-size: 12px;
+    font-size: 11.5px;
     color: var(--muted);
   }
 
@@ -764,7 +842,7 @@
     @page { size: A4 portrait; margin: 4mm; }
     body { background: #fff !important; color: #000 !important; padding: 0; font-size: 8.5px; }
     .container { border: none; box-shadow: none; padding: 0; max-width: 100%; }
-    .toolbar, .nav-tabs, .stream-bar, .mini-btn, .quick-hr-btn, .step-chip, .floating-quickbar, .modal-overlay, .zen-overlay, .toast-box { display: none !important; }
+    .toolbar, .nav-tabs, .stream-bar, .live-quick-card, .mini-btn, .quick-hr-btn, .step-chip, .floating-quickbar, .modal-overlay, .zen-overlay, .toast-box { display: none !important; }
     .tab-content { display: none !important; }
     #tab-planner { display: block !important; }
     tr.collapsed-group-row { display: table-row !important; }
@@ -779,7 +857,7 @@
     th, td { border: 1px solid #000 !important; padding: 1px 2px !important; font-size: 8px; }
     .section-row td { padding: 1.5px 6px !important; font-size: 8.5px; }
     input, select { border: none !important; padding: 0 2px !important; font-size: 8px !important; background: transparent !important; color: #000 !important; }
-    .slot-btn, .waste-btn { height: 13px; font-size: 7.5px; border: 1px solid #444 !important; }
+    .slot-btn, .sleep-btn, .waste-btn { height: 13px; font-size: 7.5px; border: 1px solid #444 !important; }
     .slot-btn.active { background: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     table { margin-bottom: 4px; }
     .footer { margin-top: 2px; font-size: 8.5px; }
@@ -799,7 +877,7 @@
       <div class="level-pill" id="levelBadge" title="මුළු පාඩම් පැය අනුව ඔබේ මට්ටම">🏆 Lv.1 Starter</div>
     </div>
 
-    <!-- Built-in Accurate Focus Timer + White Noise -->
+    <!-- Built-in Accurate Focus Timer + Brown Noise -->
     <div class="timer-widget">
       <select id="timerModeSelect" onchange="changeTimerPreset()" style="width:auto; font-weight:700; padding:3px 6px;">
         <option value="15">⏱️ 15m Block (+1 Slot)</option>
@@ -816,18 +894,16 @@
     </div>
 
     <div class="btn-group">
-      <button onclick="quickStartStudyNow()" class="btn-success" title="එක ක්ලික් කිරීමකින් දැන් ගතවන පැයට ගොස් ටයිමරය ආරම්භ කරන්න">🚀 දැන් පාඩම් අරඹන්න</button>
-      <button onclick="openShareCard()" class="btn-purple" title="අද දවසේ ප්‍රගතිය පින්තූරයක් ලෙස බාගත කරන්න">📸 Card</button>
+      <button onclick="quickStartStudyNow()" class="btn-success" title="එක ක්ලික් කිරීමකින් දැන් ගතවන පැයට ගොස් ටයිමරය ආරම්භ කරන්න">🚀 දැන් අරඹන්න</button>
+      <button onclick="openShareCard()" class="btn-purple" title="අද දවසේ ප්‍රගතිය පින්තූරයක් හෝ පණිවිඩයක් ලෙස බෙදාගන්න">📸 Report</button>
+      <button onclick="openBackupModal()" title="Cloud Sync & Backup">☁️ Backup</button>
       <button onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
-      <button onclick="exportBackup()" title="Download Backup">💾 Backup</button>
-      <button onclick="document.getElementById('importFile').click()" title="Restore Backup">📂 Restore</button>
-      <input type="file" id="importFile" style="display:none" accept=".json" onchange="importBackup(event)">
-      <button onclick="window.print()" class="btn-primary">🖨️ Print A4</button>
+      <button onclick="window.print()" class="btn-primary">🖨️ A4</button>
       <button onclick="resetCurrentDay()" class="btn-danger" title="අද දත්ත මකන්න">🗑️</button>
     </div>
   </div>
 
-  <!-- Universal A/L Stream Selector & Student Goal Bar -->
+  <!-- Universal A/L Stream Selector, Ambition & Sleep Preset Bar -->
   <div class="stream-bar">
     <div class="stream-bar-item">
       <span style="font-weight:800; color:var(--primary);">🎓 විෂය ධාරාව:</span>
@@ -844,7 +920,7 @@
 
     <div class="stream-bar-item">
       <span style="font-weight:700; font-size:12px;">🎯 ඉලක්කය:</span>
-      <input type="text" id="studentAmbition" placeholder="උදා: Medicine / Engineering | Z-Score: 2.10+" style="width:210px; font-weight:700;" oninput="saveGlobalSettings()">
+      <input type="text" id="studentAmbition" placeholder="උදා: Medicine / Engineering | Z: 2.1+" style="width:195px; font-weight:700;" oninput="saveGlobalSettings()">
     </div>
 
     <div class="stream-bar-item">
@@ -852,18 +928,22 @@
         📋 ඊයේ සැලසුම
       </button>
       <select id="templateSlotSelect" style="width:auto; font-size:11px; font-weight:700; padding:3px 6px;" title="කාලසටහන් ආකෘතිය තෝරන්න">
-        <option value="study">🏠 සාමාන්‍ය පාඩම් දිනය</option>
-        <option value="class">🏫 පන්ති / පාසල් දිනය</option>
-        <option value="exam">📝 ප්‍රශ්න පත්‍ර දිනය</option>
+        <option value="study">🏠 සාමාන්‍ය දිනය</option>
+        <option value="class">🏫 පන්ති දිනය</option>
+        <option value="exam">📝 Paper දිනය</option>
       </select>
-      <button onclick="saveRoutineTemplate()" title="දැනට ඇති කාලසටහන තෝරාගත් ආකෘතියට සුරකින්න" style="font-size:11px;">
-        💾 Save
-      </button>
-      <button onclick="loadRoutineTemplate()" title="තෝරාගත් කාලසටහන් ආකෘතිය අද දිනයට යොදන්න" style="font-size:11px;">
-        📂 Load
-      </button>
-      <button onclick="autoFillNightSleep()" title="රාත්‍රී 11:00 සිට අලුයම 5:00 දක්වා පැය 6ක නින්ද ස්වයංක්‍රීයව ලකුණු කරන්න" style="font-size:11px;">
-        😴 නින්ද (11PM-5AM)
+      <button onclick="saveRoutineTemplate()" title="දැනට ඇති කාලසටහන තෝරාගත් ආකෘතියට සුරකින්න" style="font-size:11px;">💾</button>
+      <button onclick="loadRoutineTemplate()" title="තෝරාගත් කාලසටහන් ආකෘතිය අද දිනයට යොදන්න" style="font-size:11px;">📂</button>
+
+      <!-- Customizable Healthy Sleep Preset Selector -->
+      <select id="sleepPresetSelect" style="width:auto; font-size:11px; font-weight:700; padding:3px 6px;" title="ඔබ නිදාගන්නා කාලසීමාව තෝරන්න">
+        <option value="23_5">😴 11PM - 5AM (6h)</option>
+        <option value="22_4">😴 10PM - 4AM (6h)</option>
+        <option value="0_6">😴 12AM - 6AM (6h)</option>
+        <option value="23_6">😴 11PM - 6AM (7h)</option>
+      </select>
+      <button onclick="autoFillNightSleep()" class="btn-sleep" title="තෝරාගත් රාත්‍රී නින්ද කාලසීමාව එකවර ලකුණු කරන්න (මෙය Waste එකක් ලෙස ගණනය නොවේ)" style="font-size:11px;">
+        + නින්ද ලකුණු කරන්න
       </button>
     </div>
   </div>
@@ -871,14 +951,14 @@
   <!-- Navigation Tabs -->
   <div class="nav-tabs">
     <div class="tab-list">
-      <button class="tab-btn active" id="tabBtn_planner" onclick="switchTab('planner', this)">📅 පැය 24 කාලසටහන (24h Planner)</button>
-      <button class="tab-btn" id="tabBtn_analytics" onclick="switchTab('analytics', this)">📊 විශ්ලේෂණ සහ උපදේශක (Analytics & Coach)</button>
-      <button class="tab-btn" id="tabBtn_syllabus" onclick="switchTab('syllabus', this)">📚 විෂය නිර්දේශය (Syllabus Tracker)</button>
-      <button class="tab-btn" id="tabBtn_omr" onclick="switchTab('omr', this)">🎯 MCQ OMR සහ විභාග පෙරහුරුව</button>
-      <button class="tab-btn" id="tabBtn_vault" onclick="switchTab('vault', this)">🧠 කෙටි සටහන් සහ වැරදුණු කරුණු</button>
+      <button class="tab-btn active" id="tabBtn_planner" onclick="switchTab('planner', this)">📅 පැය 24 කාලසටහන</button>
+      <button class="tab-btn" id="tabBtn_analytics" onclick="switchTab('analytics', this)">📊 විශ්ලේෂණ සහ උපදේශක</button>
+      <button class="tab-btn" id="tabBtn_syllabus" onclick="switchTab('syllabus', this)">📚 විෂය නිර්දේශය</button>
+      <button class="tab-btn" id="tabBtn_omr" onclick="switchTab('omr', this)">🎯 MCQ OMR (50)</button>
+      <button class="tab-btn" id="tabBtn_vault" onclick="switchTab('vault', this)">🧠 කෙටි සටහන් (Vault)</button>
     </div>
     <div style="display:flex; gap:6px; align-items:center;">
-      <button onclick="toggleFocusViewSections()" id="focusViewBtn" class="mini-btn" title="දැන් ගතවන කාල කොටස පමණක් පෙන්වන්න / සියලුම පැය පෙන්වන්න">👁️ දැන් කොටස පමණක් පෙන්වන්න</button>
+      <button onclick="toggleFocusViewSections()" id="focusViewBtn" class="mini-btn" title="දැන් ගතවන කාල කොටස පමණක් පෙන්වන්න / සියලුම පැය පෙන්වන්න">👁️ දැන් කොටස පමණක්</button>
       <button onclick="scrollToLiveHour()" class="mini-btn btn-primary">⚡ දැන් පැයට යන්න</button>
     </div>
   </div>
@@ -914,21 +994,50 @@
 
   <!-- ================= TAB 1: 24-HOUR DAILY PLANNER ================= -->
   <div id="tab-planner" class="tab-content active">
-    <!-- Daily Target & Efficiency Progress Strip -->
+    <!-- Daily Target, Efficiency & Hydration Strip -->
     <div class="goal-strip">
       <div style="display:flex; align-items:center; gap:6px; font-weight:700;">
-        <span>🎯 DAILY GOAL (Hours):</span>
-        <input type="number" id="dailyGoalHours" value="10" min="1" max="20" style="width:55px; font-weight:800;" onchange="saveGlobalSettings(); renderTotals();">
+        <span>🎯 DAILY GOAL (h):</span>
+        <input type="number" id="dailyGoalHours" value="10" min="1" max="20" style="width:52px; font-weight:800;" onchange="saveGlobalSettings(); renderTotals();">
       </div>
       <div class="progress-wrap">
         <div class="progress-fill" id="goalProgressBar"></div>
       </div>
-      <div id="goalProgressText" style="font-weight:800; font-size:12px;">0% Complete</div>
-      <div id="efficiencyBadge" class="stat-badge stat-warn">Efficiency: 0%</div>
+      <div id="goalProgressText" style="font-weight:800; font-size:12px;">0%</div>
+      <div id="efficiencyBadge" class="stat-badge stat-warn" title="පාඩම් කළ කාලය සහ අපතේ ගිය කාලය අනුව කාර්යක්ෂමතාව (නින්ද මීට අදාළ නොවේ)">Focus: 100%</div>
+      <button type="button" onclick="stepWaterCount()" id="waterBtn" class="mini-btn" style="background:var(--sleep-bg); color:var(--sleep); border-color:var(--sleep); font-weight:800;" title="දිනකට ජල වීදුරු 8ක් පානය කර මොළයේ ක්‍රියාකාරිත්වය ඉහළින් තබාගන්න (ක්ලික් කරන්න)">
+        💧 0/8 Glasses
+      </button>
       <label style="font-size:11px; color:var(--muted); display:flex; align-items:center; gap:4px; cursor:pointer;">
         <input type="checkbox" id="hideEmptyPrintChk" onchange="togglePrintEmptyMode(this.checked)">
-        Print හිදී හිස් පැය සඟවන්න
+        Print හිස් පැය සඟවන්න
       </label>
+    </div>
+
+    <!-- NEW: Mobile-Friendly Live Active Hour Control Dock -->
+    <div class="live-quick-card" id="liveQuickCard">
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; flex:1;">
+        <span class="stat-badge stat-bad" id="liveQuickTimeLabel" style="font-size:12px;">⚡ LIVE HOUR</span>
+        <select id="liveQuickSubj" style="width:125px; font-weight:700;" onchange="syncFromLiveQuickCard()"></select>
+        <select id="liveQuickMode" style="width:100px;" onchange="syncFromLiveQuickCard()">
+          <option value="theory">Theory</option>
+          <option value="revision">Revision</option>
+          <option value="paper">Past Paper</option>
+          <option value="tute">Tute / ගැටලු</option>
+          <option value="practical">Practical</option>
+          <option value="notes">Short Notes</option>
+          <option value="class">Class</option>
+        </select>
+        <input type="text" id="liveQuickTask" list="smartLessonSuggestions" placeholder="දැන් ගතවන පැයේ පාඩම මෙතැනින් තෝරන්න..." style="flex:1; min-width:170px; font-weight:600;" onfocus="updateSmartLessonSuggestions()" oninput="syncFromLiveQuickCard()">
+      </div>
+      <div class="live-quick-slots">
+        <span style="font-size:11px; font-weight:700; color:var(--muted);">පාඩම් කළ කාලය:</span>
+        <button type="button" class="live-q-btn" id="liveQSlot_0" onclick="toggleLiveQuickSlot(0)">15m</button>
+        <button type="button" class="live-q-btn" id="liveQSlot_1" onclick="toggleLiveQuickSlot(1)">15m</button>
+        <button type="button" class="live-q-btn" id="liveQSlot_2" onclick="toggleLiveQuickSlot(2)">15m</button>
+        <button type="button" class="live-q-btn" id="liveQSlot_3" onclick="toggleLiveQuickSlot(3)">15m</button>
+        <button type="button" class="mini-btn btn-sleep" onclick="markLiveHourFullSleep()" title="මෙම පැය නින්ද/විවේකය ලෙස ලකුණු කරන්න">😴 විවේක</button>
+      </div>
     </div>
 
     <!-- Header Panels -->
@@ -961,12 +1070,12 @@
       <div class="panel">
         <div class="panel-title">
           <div style="display:flex; align-items:center; gap:6px;">
-            <span>2. TODAY'S PRIORITY TASKS (අද දවසේ ප්‍රධාන වැඩ ලැයිස්තුව)</span>
+            <span>2. TODAY'S PRIORITY TASKS (අද ප්‍රධාන වැඩ)</span>
             <span id="taskCounterBadge" class="stat-badge stat-good" style="font-size:10.5px; padding:1px 6px;">0/6 Done</span>
           </div>
           <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;">
-            <button type="button" class="mini-btn btn-primary" onclick="addNewTaskRow()" title="අද දවසට තවත් අලුත් වැඩක් එක් කරන්න">+ තව වැඩක් එක් කරන්න</button>
-            <button type="button" class="mini-btn" onclick="carryOverUnfinishedTasks()" title="අද අවසන් නොකළ වැඩ සියල්ල හෙට දිනයේ ලැයිස්තුවට යවන්න">↪ ඉතිරි වැඩ හෙටට</button>
+            <button type="button" class="mini-btn btn-primary" onclick="addNewTaskRow()" title="අද දවසට තවත් අලුත් වැඩක් එක් කරන්න">+ තව වැඩක්</button>
+            <button type="button" class="mini-btn" onclick="carryOverUnfinishedTasks()" title="අද අවසන් නොකළ වැඩ සියල්ල හෙට දිනයේ ලැයිස්තුවට යවන්න">↪ ඉතිරි හෙටට</button>
           </div>
         </div>
         <div class="priority-scroll-box">
@@ -1006,20 +1115,21 @@
       <table>
         <thead>
           <tr>
-            <th rowspan="2" class="time-cell">TIME (24h) &nbsp;[1h | ⏬]</th>
+            <th rowspan="2" class="time-cell">TIME (24h) &nbsp;[1h | 😴 | ⏬]</th>
             <th rowspan="2">SUBJECT / MODE / TASK (පාඩම ටයිප් කරන්න හෝ ක්ලික් කර ලැයිස්තුවෙන් තෝරන්න)</th>
-            <th colspan="4">USING TIME (Click 15m blocks)</th>
-            <th colspan="4">NON-STUDY / SLEEP / WASTE (Click +15m | Max 60m/hr)</th>
+            <th colspan="4" style="color:var(--success);">✅ STUDY TIME (Click 15m)</th>
+            <th style="color:var(--sleep);">😴 REST / SLEEP</th>
+            <th colspan="3" style="color:var(--danger);">⚠️ WASTED TIME (නින්ද අයත් නොවේ)</th>
           </tr>
           <tr>
-            <th style="width:46px;">15m</th>
-            <th style="width:46px;">15m</th>
-            <th style="width:46px;">15m</th>
-            <th style="width:46px;">15m</th>
-            <th style="width:62px;">SLEEP</th>
+            <th style="width:45px;">15m</th>
+            <th style="width:45px;">15m</th>
+            <th style="width:45px;">15m</th>
+            <th style="width:45px;">15m</th>
+            <th style="width:68px; color:var(--sleep);" title="නින්ද හෝ විවේකය (මෙය Waste එකක් ලෙස ගණනය නොවේ)">SLEEP</th>
             <th style="width:62px;">ONLINE</th>
             <th style="width:62px;">OTHER</th>
-            <th style="width:65px;">TOTAL</th>
+            <th style="width:64px;">WASTE</th>
           </tr>
         </thead>
         <tbody id="scheduleBody"></tbody>
@@ -1027,9 +1137,9 @@
           <tr style="background: var(--header-bg); font-weight: 800;">
             <td colspan="2" style="text-align:right; padding-right:10px;">24-HOUR DAILY TOTALS :</td>
             <td colspan="4" id="tableUsingTotal" style="color:var(--success); font-size:13px;">0h 00m</td>
-            <td id="sumSleep">0m</td>
-            <td id="sumOnline">0m</td>
-            <td id="sumOther">0m</td>
+            <td id="sumSleep" style="color:var(--sleep); font-size:12.5px;">0h 00m</td>
+            <td id="sumOnline" style="color:var(--danger);">0m</td>
+            <td id="sumOther" style="color:var(--danger);">0m</td>
             <td id="tableWasteTotal" style="color:var(--danger); font-size:13px;">0h 00m</td>
           </tr>
         </tfoot>
@@ -1066,23 +1176,27 @@
         </div>
       </div>
 
-      <!-- Auto-Calculated Progress Summary -->
+      <!-- Auto-Calculated Progress Summary (Sleep & Waste Clearly Separated!) -->
       <div class="panel">
         <div class="panel-title"><span>AUTO PROGRESS SUMMARY (ස්වයංක්‍රීය සාරාංශය)</span></div>
         <div class="field-row">
-          <label>➤ TODAY STUDY TIME :</label>
+          <label>✅ TODAY STUDY TIME :</label>
           <span id="todayTotalDisplay" class="stat-badge stat-good">0h 00m</span>
         </div>
         <div class="field-row">
-          <label>YESTERDAY TOTAL (Auto) :</label>
-          <span id="yesterdayTotalDisplay" style="font-weight:800;">0h 00m</span>
+          <label>📅 YESTERDAY / WEEK :</label>
+          <span>
+            <strong id="yesterdayTotalDisplay">0h 00m</strong>
+            <span style="color:var(--muted);"> | </span>
+            <strong id="weekTotalDisplay" style="color:var(--primary);">0h 00m</strong>
+          </span>
         </div>
         <div class="field-row">
-          <label>WEEK TOTAL SO FAR (Auto) :</label>
-          <span id="weekTotalDisplay" style="font-weight:800; color:var(--primary);">0h 00m</span>
+          <label>😴 SLEEP / REST (නින්ද) :</label>
+          <span id="sleepTotalDisplay" class="stat-badge stat-sleep">0h 00m</span>
         </div>
         <div class="field-row">
-          <label>SLEEP / ONLINE / OTHER :</label>
+          <label>⚠️ WASTED (Online/Other) :</label>
           <span id="wasteTotalDisplay" class="stat-badge stat-bad">0h 00m</span>
         </div>
       </div>
@@ -1092,7 +1206,7 @@
         <div class="panel-title"><span>DAILY REVIEW (දවසේ සමාලෝචනය)</span></div>
         <div style="margin-bottom:8px;">
           <label style="font-weight:600; font-size:11.5px; display:block; margin-bottom:3px;">MAIN DISTRACTION (කාලය අපතේ ගිය ප්‍රධාන හේතුව):</label>
-          <input type="text" id="mainDistraction" placeholder="උදා: Social Media / අනවශ්‍ය නින්ද..." oninput="saveData()">
+          <input type="text" id="mainDistraction" placeholder="උදා: Social Media / දුරකථන භාවිතය..." oninput="saveData()">
         </div>
         <div>
           <label style="font-weight:600; font-size:11.5px; display:block; margin-bottom:3px;">TOMORROW'S FIX (හෙට දවසේ දියුණු කරගත යුතු දේ):</label>
@@ -1107,8 +1221,8 @@
     <!-- Smart Study Coach Panel -->
     <div class="panel" style="margin-bottom:14px;">
       <div class="panel-title">
-        <span>🤖 SMART STUDY COACH (ස්වයංක්‍රීය අධ්‍යයන උපදේශක සහ විශ්ලේෂණය)</span>
-        <span style="font-size:11px; color:var(--muted);">ඔබගේ දත්ත මත පදනම්ව ස්වයංක්‍රීයව ජනනය වන උපදෙස්</span>
+        <span>🤖 SMART STUDY COACH (ස්වයංක්‍රීය අධ්‍යයන සහ සෞඛ්‍ය උපදේශක)</span>
+        <span style="font-size:11px; color:var(--muted);">ඔබගේ පාඩම් කාලය, විෂය සමබරතාව සහ නින්ද මත පදනම්ව උපදෙස්</span>
       </div>
       <ul id="smartCoachList" class="coach-list"></ul>
     </div>
@@ -1143,13 +1257,16 @@
     <div class="panel">
       <div class="panel-title">
         <span>📝 ප්‍රශ්න පත්‍ර ලකුණු විශ්ලේෂකය සහ ප්‍රගති ප්‍රස්තාරය (PAST PAPER SCORE TRACKER & LINE GRAPH)</span>
-        <select id="paperChartFilter" onchange="renderPaperScores()" style="width:160px; font-weight:700; padding:2px 6px;">
-          <option value="all">සියලුම විෂයයන් (All)</option>
-          <option value="s1">Subject 1</option>
-          <option value="s2">Subject 2</option>
-          <option value="s3">Subject 3</option>
-          <option value="common">Gen.Eng / GIT</option>
-        </select>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <span id="paperAvgGradeBadge" class="stat-badge stat-good">Avg: --%</span>
+          <select id="paperChartFilter" onchange="renderPaperScores()" style="width:155px; font-weight:700; padding:2px 6px;">
+            <option value="all">සියලුම විෂයයන් (All)</option>
+            <option value="s1">Subject 1</option>
+            <option value="s2">Subject 2</option>
+            <option value="s3">Subject 3</option>
+            <option value="common">Gen.Eng / GIT</option>
+          </select>
+        </div>
       </div>
 
       <!-- Visual SVG Line Chart for Marks -->
@@ -1206,10 +1323,22 @@
 
         <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
           <button onclick="toggleOmrGradingMode()" id="omrGradeModeBtn" class="btn-purple">✔️ හරි/වැරදි ලකුණු කරන්න</button>
-          <button onclick="gradeWithAnswerKey()" title="පිළිතුරු පත්‍රිකාවේ (Marking Scheme) පිළිතුරු 50 ලබා දී ස්වයංක්‍රීයව පරීක්ෂා කරන්න">🔑 Answer Key</button>
+          <button onclick="toggleAnswerKeyBox()" title="Marking Scheme පිළිතුරු 50 ලබා දී ස්වයංක්‍රීයව පරීක්ෂා කරන්න">🔑 Answer Key</button>
           <span id="omrScoreBadge" class="stat-badge stat-good">Answered: 0/50 | Score: 0/50 (0%)</span>
           <button onclick="saveOmrToScores()" class="btn-primary">💾 ලකුණු සුරකින්න</button>
           <button onclick="clearOmrSheet()" class="btn-danger">🗑️ Clear</button>
+        </div>
+      </div>
+
+      <!-- Mobile-Safe Inline Answer Key Grader (Replaces blocked browser prompt) -->
+      <div id="omrAnswerKeyDrawer" style="display:none; margin-top:8px; background:var(--primary-bg); border:1px solid var(--primary); padding:10px; border-radius:8px;">
+        <div style="font-weight:700; font-size:12px; margin-bottom:6px; color:var(--primary);">
+          🔑 Marking Scheme හි 1 සිට 50 දක්වා නිවැරදි පිළිතුරු අංක (1-5) අනුපිළිවෙළින් පහත කොටුවේ ටයිප් හෝ Paste කරන්න:
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <input type="text" id="omrAnswerKeyInput" placeholder="උදා: 2415312453... (හිස්තැන් හෝ කොමා තිබුණාට කමක් නැත)" style="flex:1; min-width:220px; font-weight:700;">
+          <button type="button" class="btn-success" onclick="gradeWithAnswerKey()">✅ දැන් පරීක්ෂා කරන්න</button>
+          <button type="button" onclick="toggleAnswerKeyBox()">✖ වසන්න</button>
         </div>
       </div>
 
@@ -1252,7 +1381,7 @@
   </div>
 
   <div class="footer">
-    A/L ULTIMATE STUDY & TIME MANAGEMENT SYSTEM &nbsp;|&nbsp; 24-HOUR EDITION
+    A/L ULTIMATE STUDY & TIME MANAGEMENT SYSTEM &nbsp;|&nbsp; TELEGRAM MINI APP & 24-HOUR EDITION
   </div>
 </div>
 
@@ -1285,16 +1414,45 @@
   </div>
 </div>
 
-<!-- Shareable Study Card Modal -->
+<!-- Shareable Study Card & Telegram Report Modal -->
 <div class="modal-overlay" id="shareModal">
   <div class="modal-card">
-    <h3 style="margin-bottom:4px; color:var(--primary);">📸 අද දවසේ පාඩම් සාරාංශ කාඩ්පත</h3>
-    <p style="font-size:12px; color:var(--muted);">මෙම කාඩ්පත බාගත කර ඔබේ ප්‍රගතිය සටහන් කර තබාගන්න</p>
+    <h3 style="margin-bottom:4px; color:var(--primary);">📸 අද දවසේ පාඩම් සාරාංශ වාර්තාව</h3>
+    <p style="font-size:12px; color:var(--muted);">පින්තූරයක් ලෙස හෝ Telegram / WhatsApp පණිවිඩයක් ලෙස බෙදාගන්න</p>
     <canvas id="shareCanvas" width="600" height="360"></canvas>
-    <div style="display:flex; justify-content:center; gap:10px; margin-top:8px;">
-      <button onclick="downloadShareCard()" class="btn-success">⬇️ පින්තූරය බාගත කරන්න (Download PNG)</button>
+    <div style="display:flex; justify-content:center; gap:8px; margin-top:8px; flex-wrap:wrap;">
+      <button onclick="shareOrDownloadCard()" class="btn-success">📲 Share / Download Image</button>
+      <button onclick="copyTextReport()" class="btn-primary">📋 Copy Text Report (TG/WA)</button>
       <button onclick="closeShareCard()">✖ වසන්න</button>
     </div>
+  </div>
+</div>
+
+<!-- Cloud & Text Backup Modal (Telegram WebView Friendly) -->
+<div class="modal-overlay" id="backupModal">
+  <div class="modal-card">
+    <h3 style="margin-bottom:6px; color:var(--primary);">☁️ දත්ත ආරක්ෂාව (Backup & Restore)</h3>
+    <p style="font-size:12px; color:var(--muted); margin-bottom:12px;">
+      Telegram තුළ හෝ වෙනත් උපාංගයකට දත්ත මාරු කිරීමට පහත ක්‍රම භාවිතා කරන්න.
+    </p>
+    <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+      <button onclick="syncToTelegramCloud()" class="btn-purple">☁️ Save to Telegram Cloud</button>
+      <button onclick="restoreFromTelegramCloud()" class="btn-primary">📥 Restore from TG Cloud</button>
+    </div>
+    <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border);">
+      <button onclick="exportBackup()" class="btn-success">💾 Download .JSON File</button>
+      <button onclick="document.getElementById('importFile').click()">📂 Upload .JSON File</button>
+      <input type="file" id="importFile" style="display:none" accept=".json" onchange="importBackup(event)">
+    </div>
+    <div style="text-align:left; margin-bottom:10px;">
+      <label style="font-weight:700; font-size:11.5px; display:block; margin-bottom:4px;">📋 Text Backup Code (Telegram Saved Messages හි සුරැකීමට):</label>
+      <textarea id="backupTextArea" rows="3" placeholder="Backup කේතය ලබාගැනීමට 'Generate Code' ඔබන්න, නැතහොත් කලින් කොපි කළ කේතයක් මෙහි Paste කර 'Restore Code' ඔබන්න..." style="font-size:11px;"></textarea>
+      <div style="display:flex; gap:8px; margin-top:6px; justify-content:center;">
+        <button onclick="generateTextBackupCode()" class="mini-btn btn-primary">📋 Generate & Copy Code</button>
+        <button onclick="restoreFromTextBackupCode()" class="mini-btn btn-success">✅ Restore from Code</button>
+      </div>
+    </div>
+    <button onclick="closeBackupModal()">✖ වසන්න</button>
   </div>
 </div>
 
@@ -1309,6 +1467,31 @@
       .replace(/'/g, '&#39;');
   }
 
+  // Telegram Mini App Haptic Feedback Helper
+  function triggerHaptic(style = 'light') {
+    try {
+      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred(style);
+      }
+    } catch (e) {}
+  }
+
+  // Initialize Telegram Mini App Environment
+  function initTelegramMiniApp() {
+    try {
+      if (window.Telegram && window.Telegram.WebApp) {
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+        if (!localStorage.getItem('al_planner_theme') && tg.colorScheme === 'dark') {
+          document.body.classList.add('dark');
+          const tBtn = document.getElementById('themeBtn');
+          if (tBtn) tBtn.textContent = '☀️ Light';
+        }
+      }
+    } catch (e) {}
+  }
+
   // Non-blocking Toast Notification Helper
   let toastTimeout = null;
   function showToast(msg) {
@@ -1319,7 +1502,7 @@
     if (toastTimeout) clearTimeout(toastTimeout);
     toastTimeout = setTimeout(() => {
       box.classList.remove('show');
-    }, 3600);
+    }, 3400);
   }
 
   // Stream Presets & Sri Lankan A/L Official Syllabus Database
@@ -1500,6 +1683,7 @@
   const orderedSlotIds = timeSlots.filter(s => !s.group).map(s => s.id);
   let collapsedGroups = {};
   let isFocusSectionView = false;
+  let waterGlasses = 0;
 
   function getLocalDateString(dateObj = new Date()) {
     const y = dateObj.getFullYear();
@@ -1565,6 +1749,79 @@
         badgeBox.innerHTML = '';
       }
     });
+    refreshLiveQuickCard();
+  }
+
+  // Sync Top Live Active Hour Quick-Card with Current Hour Row
+  function refreshLiveQuickCard() {
+    const liveId = getCurrentSlotId() || 'am_7_8';
+    const slotObj = timeSlots.find(s => s.id === liveId);
+    const lbl = document.getElementById('liveQuickTimeLabel');
+    if (lbl && slotObj) lbl.textContent = `⚡ ${slotObj.label}`;
+
+    const subjEl = document.getElementById(`subj_${liveId}`);
+    const modeEl = document.getElementById(`mode_${liveId}`);
+    const taskEl = document.getElementById(`task_${liveId}`);
+    if (!subjEl || !modeEl || !taskEl) return;
+
+    const qSubj = document.getElementById('liveQuickSubj');
+    const qMode = document.getElementById('liveQuickMode');
+    const qTask = document.getElementById('liveQuickTask');
+
+    if (qSubj && document.activeElement !== qSubj) qSubj.value = subjEl.value;
+    if (qMode && document.activeElement !== qMode) qMode.value = modeEl.value;
+    if (qTask && document.activeElement !== qTask) qTask.value = taskEl.value;
+
+    for (let q = 0; q < 4; q++) {
+      const rowBtn = document.getElementById(`slot_${liveId}_${q}`);
+      const qBtn = document.getElementById(`liveQSlot_${q}`);
+      if (rowBtn && qBtn) {
+        if (rowBtn.classList.contains('active')) qBtn.classList.add('active');
+        else qBtn.classList.remove('active');
+      }
+    }
+  }
+
+  function syncFromLiveQuickCard() {
+    const liveId = getCurrentSlotId() || 'am_7_8';
+    const qSubj = document.getElementById('liveQuickSubj');
+    const qMode = document.getElementById('liveQuickMode');
+    const qTask = document.getElementById('liveQuickTask');
+
+    if (qSubj) document.getElementById(`subj_${liveId}`).value = qSubj.value;
+    if (qMode) document.getElementById(`mode_${liveId}`).value = qMode.value;
+    if (qTask) document.getElementById(`task_${liveId}`).value = qTask.value;
+
+    saveData();
+    renderTotals();
+  }
+
+  function toggleLiveQuickSlot(q) {
+    const liveId = getCurrentSlotId() || 'am_7_8';
+    toggleSlot(liveId, q);
+    refreshLiveQuickCard();
+  }
+
+  function markLiveHourFullSleep() {
+    const liveId = getCurrentSlotId() || 'am_7_8';
+    toggleFullHourSleep(liveId);
+    refreshLiveQuickCard();
+  }
+
+  // Water / Hydration Tracker
+  function stepWaterCount() {
+    waterGlasses = (waterGlasses + 1) > 8 ? 0 : waterGlasses + 1;
+    triggerHaptic('light');
+    renderWaterBadge();
+    saveData();
+    if (waterGlasses === 8) {
+      showToast('💧 විශිෂ්ටයි! ඔබ අද දවසේ ජල වීදුරු 8 ඉලක්කය සම්පූර්ණ කළා!');
+    }
+  }
+
+  function renderWaterBadge() {
+    const btn = document.getElementById('waterBtn');
+    if (btn) btn.textContent = `💧 ${waterGlasses}/8 Glasses`;
   }
 
   // Smart Lesson Auto-Complete Builder (Zero-Typing Lesson Picker)
@@ -1573,12 +1830,10 @@
     if (!dl) return;
     const suggestions = new Set();
 
-    // 1. Add Today's Priority Tasks first
     currentPriorities.forEach(p => {
       if (p.txt && p.txt.trim()) suggestions.add(p.txt.trim());
     });
 
-    // 2. Add Syllabus Units based on the row's selected subject (or all subjects)
     const sylData = getSyllabusData();
     const selectedSubj = forSlotId ? (document.getElementById(`subj_${forSlotId}`) || {}).value : null;
 
@@ -1631,12 +1886,13 @@
     });
     applyCollapsedGroupStates();
     if (btn) {
-      btn.textContent = isFocusSectionView ? '👁️ සියලුම පැය පෙන්වන්න (Show All 24h)' : '👁️ දැන් කොටස පමණක් පෙන්වන්න';
+      btn.textContent = isFocusSectionView ? '👁️ සියලුම පැය පෙන්වන්න' : '👁️ දැන් කොටස පමණක්';
     }
   }
 
   // 1-Click Quick Start Study Now
   function quickStartStudyNow() {
+    triggerHaptic('medium');
     scrollToLiveHour();
     const liveId = getCurrentSlotId() || 'am_7_8';
     const taskInput = document.getElementById(`task_${liveId}`);
@@ -1652,6 +1908,7 @@
 
   // Quick Add Stepper for MCQs and Essays (+1, +5, +10)
   function quickAddCount(inputId, delta) {
+    triggerHaptic('light');
     const el = document.getElementById(inputId);
     if (!el) return;
     const cur = parseInt(el.value || '0');
@@ -1663,6 +1920,7 @@
 
   // Copy Row to Next Hour (1-Click Multi-Hour Filler)
   function copyRowToNextHour(slotId) {
+    triggerHaptic('light');
     const idx = orderedSlotIds.indexOf(slotId);
     if (idx === -1 || idx >= orderedSlotIds.length - 1) {
       return showToast('⚠️ මෙය අවසාන පැය පේළියයි!');
@@ -1707,6 +1965,7 @@
     if (!currentPriorities[index]) return;
     currentPriorities[index][field] = val;
     if (field === 'chk') {
+      triggerHaptic('light');
       toggleTaskStyle(`prio_txt_${index}`, val);
     }
     updateTaskCounterBadge();
@@ -1774,6 +2033,7 @@
   }
 
   function initUI() {
+    initTelegramMiniApp();
     currentDate = getLogicalStudyDate();
     document.getElementById('planDate').value = currentDate;
 
@@ -1788,7 +2048,7 @@
             <td colspan="10">
               <span id="grp_icon_${slot.groupId}" style="display:inline-block; width:16px;">▼</span>
               ${slot.group}
-              <span style="float:right; font-size:10px; opacity:0.8;">[Click to Collapse/Expand]</span>
+              <span style="float:right; font-size:10px; opacity:0.8;">[Tap to Collapse/Expand]</span>
             </td>
           </tr>`;
       } else {
@@ -1799,7 +2059,8 @@
               <div class="time-cell-inner">
                 <span>${slot.label}<span id="livebadge_${slot.id}">${isLive ? '<span class="live-badge">LIVE</span>' : ''}</span></span>
                 <div class="row-action-btns">
-                  <button type="button" class="quick-hr-btn" onclick="toggleFullHourStudy('${slot.id}')" title="මෙම පැයේ මිනිත්තු 15 කොටු 4ම එකවර ලකුණු කරන්න">1h</button>
+                  <button type="button" class="quick-hr-btn" onclick="toggleFullHourStudy('${slot.id}')" title="මෙම පැයේ මිනිත්තු 15 කොටු 4ම (1h Study) එකවර ලකුණු කරන්න">1h</button>
+                  <button type="button" class="quick-hr-btn" onclick="toggleFullHourSleep('${slot.id}')" title="මෙම සම්පූර්ණ පැය නින්ද/විවේකය (60m Sleep) ලෙස ලකුණු කරන්න">😴</button>
                   <button type="button" class="quick-hr-btn" onclick="copyRowToNextHour('${slot.id}')" title="මෙම පැයේ විෂය සහ පාඩම ඊළඟ පැයටත් පිටපත් කරන්න">⏬</button>
                 </div>
               </div>
@@ -1823,7 +2084,7 @@
                   <option value="notes">Short Notes</option>
                   <option value="class">Class</option>
                 </select>
-                <input type="text" id="task_${slot.id}" list="smartLessonSuggestions" onfocus="updateSmartLessonSuggestions('${slot.id}')" placeholder="පාඩම ටයිප් කරන්න හෝ ක්ලික් කර තෝරන්න..." oninput="saveData(); updateEmptyRowClasses();">
+                <input type="text" id="task_${slot.id}" list="smartLessonSuggestions" onfocus="updateSmartLessonSuggestions('${slot.id}')" placeholder="පාඩම ටයිප් කරන්න හෝ ක්ලික් කර තෝරන්න..." oninput="saveData(); updateEmptyRowClasses(); refreshLiveQuickCard();">
               </div>
             </td>
             ${[0, 1, 2, 3].map(q => `
@@ -1831,7 +2092,7 @@
                 <button type="button" id="slot_${slot.id}_${q}" class="slot-btn" onclick="toggleSlot('${slot.id}',${q})">15m</button>
               </td>
             `).join('')}
-            <td><button type="button" id="sleep_${slot.id}" class="waste-btn" onclick="cycleWaste('${slot.id}', 'sleep')">0m</button></td>
+            <td><button type="button" id="sleep_${slot.id}" class="sleep-btn" onclick="cycleWaste('${slot.id}', 'sleep')" title="නින්ද හෝ විවේකය (+15m බැගින් හෝ වම් පස 😴 බොත්තමෙන් 60m)">0m</button></td>
             <td><button type="button" id="online_${slot.id}" class="waste-btn" onclick="cycleWaste('${slot.id}', 'online')">0m</button></td>
             <td><button type="button" id="other_${slot.id}" class="waste-btn" onclick="cycleWaste('${slot.id}', 'other')">0m</button></td>
             <td id="wtotal_${slot.id}" class="waste-row-total">0m</td>
@@ -1847,6 +2108,7 @@
     initOmrSheet();
     renderVaultCards();
     updateSmartLessonSuggestions();
+    refreshLiveQuickCard();
 
     setInterval(refreshLiveHourHighlight, 60000);
 
@@ -1854,11 +2116,13 @@
       if (e.key === 'Escape') {
         closeZenMode();
         closeShareCard();
+        closeBackupModal();
       }
     });
   }
 
   function stepDate(offsetDays) {
+    triggerHaptic('light');
     if (offsetDays === 0) {
       currentDate = getLogicalStudyDate();
     } else {
@@ -1872,10 +2136,11 @@
   }
 
   function toggleFullHourStudy(slotId) {
+    triggerHaptic('medium');
     const rm = getRowMinutes(slotId);
     const allActive = (rm.using === 60);
     if (!allActive) {
-      setWasteButtonState(document.getElementById(`sleep_${slotId}`), 0);
+      setSleepButtonState(document.getElementById(`sleep_${slotId}`), 0);
       setWasteButtonState(document.getElementById(`online_${slotId}`), 0);
       setWasteButtonState(document.getElementById(`other_${slotId}`), 0);
       [0, 1, 2, 3].forEach(q => document.getElementById(`slot_${slotId}_${q}`).classList.add('active'));
@@ -1886,19 +2151,43 @@
     renderTotals();
   }
 
+  function toggleFullHourSleep(slotId) {
+    triggerHaptic('light');
+    const rm = getRowMinutes(slotId);
+    const isFullSleep = (rm.s === 60);
+    if (!isFullSleep) {
+      [0, 1, 2, 3].forEach(q => document.getElementById(`slot_${slotId}_${q}`).classList.remove('active'));
+      setWasteButtonState(document.getElementById(`online_${slotId}`), 0);
+      setWasteButtonState(document.getElementById(`other_${slotId}`), 0);
+      setSleepButtonState(document.getElementById(`sleep_${slotId}`), 60);
+    } else {
+      setSleepButtonState(document.getElementById(`sleep_${slotId}`), 0);
+    }
+    saveData();
+    renderTotals();
+  }
+
   function autoFillNightSleep() {
-    const sleepSlotIds = ["pm_11_12", "am_12_1", "am_1_2", "am_2_3", "am_3_4", "am_4_5"];
+    triggerHaptic('medium');
+    const preset = (document.getElementById('sleepPresetSelect') || {}).value || '23_5';
+    const presetMap = {
+      '23_5': ["pm_11_12", "am_12_1", "am_1_2", "am_2_3", "am_3_4", "am_4_5"],
+      '22_4': ["pm_10_11", "pm_11_12", "am_12_1", "am_1_2", "am_2_3", "am_3_4"],
+      '0_6':  ["am_12_1", "am_1_2", "am_2_3", "am_3_4", "am_4_5", "am_5_6"],
+      '23_6': ["pm_11_12", "am_12_1", "am_1_2", "am_2_3", "am_3_4", "am_4_5", "am_5_6"]
+    };
+    const sleepSlotIds = presetMap[preset] || presetMap['23_5'];
     sleepSlotIds.forEach(slotId => {
       const rm = getRowMinutes(slotId);
       if (rm.using === 0) {
         setWasteButtonState(document.getElementById(`online_${slotId}`), 0);
         setWasteButtonState(document.getElementById(`other_${slotId}`), 0);
-        setWasteButtonState(document.getElementById(`sleep_${slotId}`), 60);
+        setSleepButtonState(document.getElementById(`sleep_${slotId}`), 60);
       }
     });
     saveData();
     renderTotals();
-    showToast('😴 රාත්‍රී 11:00 සිට අලුයම 5:00 දක්වා නින්ද ස්වයංක්‍රීයව ලකුණු කරන ලදී!');
+    showToast('😴 තෝරාගත් නින්ද කාලසීමාව ස්වයංක්‍රීයව ලකුණු කරන ලදී! (මෙය Waste එකක් ලෙස ගණනය නොවේ)');
   }
 
   function saveRoutineTemplate() {
@@ -1919,7 +2208,7 @@
   function loadRoutineTemplate() {
     const slotType = document.getElementById('templateSlotSelect').value || 'study';
     const raw = localStorage.getItem(`al_pro_routine_template_${slotType}`) || localStorage.getItem('al_pro_routine_template');
-    if (!raw) return showToast('⚠️ මෙම ආකෘතිය සඳහා තවම කාලසටහනක් සුරකිනු ලැබ නැත! පළමුව "💾 Save" ඔබන්න.');
+    if (!raw) return showToast('⚠️ මෙම ආකෘතිය සඳහා තවම කාලසටහනක් සුරකිනු ලැබ නැත! පළමුව "💾" ඔබන්න.');
     try {
       const tpl = JSON.parse(raw);
       timeSlots.forEach(slot => {
@@ -1950,7 +2239,7 @@
       const rm = getRowMinutes(slot.id);
       const taskTxt = document.getElementById(`task_${slot.id}`).value.trim();
       const subjVal = document.getElementById(`subj_${slot.id}`).value;
-      const isEmpty = (rm.using === 0 && rm.totalWaste === 0 && !taskTxt && subjVal === 'none');
+      const isEmpty = (rm.using === 0 && rm.s === 0 && rm.actualWaste === 0 && !taskTxt && subjVal === 'none');
       if (isEmpty) row.classList.add('empty-slot-row');
       else row.classList.remove('empty-slot-row');
     });
@@ -2048,6 +2337,7 @@
   }
 
   function switchTab(tabName, btnEl) {
+    triggerHaptic('light');
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     document.getElementById(`tab-${tabName}`).classList.add('active');
@@ -2079,16 +2369,24 @@
     const s = parseInt(document.getElementById(`sleep_${slotId}`).dataset.mins || '0');
     const o = parseInt(document.getElementById(`online_${slotId}`).dataset.mins || '0');
     const ot = parseInt(document.getElementById(`other_${slotId}`).dataset.mins || '0');
-    return { using, s, o, ot, totalWaste: s + o + ot };
+    return {
+      using,
+      s,
+      o,
+      ot,
+      actualWaste: o + ot,
+      nonStudyTotal: s + o + ot
+    };
   }
 
   function toggleSlot(slotId, q) {
+    triggerHaptic('light');
     const btn = document.getElementById(`slot_${slotId}_${q}`);
     const isActivating = !btn.classList.contains('active');
     if (isActivating) {
       const rm = getRowMinutes(slotId);
-      if (rm.using + 15 + rm.totalWaste > 60) {
-        showToast('⚠️ මෙම පැයේ මිනිත්තු 60 සම්පූර්ණ වී ඇත! අපතේ ගිය/නින්ද කාලය අඩු කර නැවත උත්සාහ කරන්න.');
+      if (rm.using + 15 + rm.nonStudyTotal > 60) {
+        showToast('⚠️ මෙම පැයේ මිනිත්තු 60 සම්පූර්ණ වී ඇත! නින්ද හෝ අපතේ ගිය කාලය අඩු කර නැවත උත්සාහ කරන්න.');
         return;
       }
     }
@@ -2098,19 +2396,33 @@
   }
 
   function cycleWaste(slotId, type) {
+    triggerHaptic('light');
     const btn = document.getElementById(`${type}_${slotId}`);
     let val = parseInt(btn.dataset.mins || '0');
     const rm = getRowMinutes(slotId);
-    const otherWaste = rm.totalWaste - val;
-    const maxAllowed = 60 - rm.using - otherWaste;
+    const otherNonStudy = rm.nonStudyTotal - val;
+    const maxAllowed = 60 - rm.using - otherNonStudy;
 
     val = (val + 15) > maxAllowed ? 0 : val + 15;
-    setWasteButtonState(btn, val);
+    if (type === 'sleep') {
+      setSleepButtonState(btn, val);
+    } else {
+      setWasteButtonState(btn, val);
+    }
     saveData();
     renderTotals();
   }
 
+  function setSleepButtonState(btn, mins) {
+    if (!btn) return;
+    btn.dataset.mins = mins;
+    btn.textContent = `${mins}m`;
+    if (mins > 0) btn.classList.add('has-sleep');
+    else btn.classList.remove('has-sleep');
+  }
+
   function setWasteButtonState(btn, mins) {
+    if (!btn) return;
     btn.dataset.mins = mins;
     btn.textContent = `${mins}m`;
     if (mins > 0) btn.classList.add('has-waste');
@@ -2279,6 +2591,7 @@
   }
 
   function startPauseTimer() {
+    triggerHaptic('medium');
     const btn = document.getElementById('timerStartBtn');
     const floatBtn = document.getElementById('floatStartBtn');
     if (timerInterval) {
@@ -2309,6 +2622,7 @@
         if (floatBtn) floatBtn.textContent = '▶ Start';
         document.title = BASE_PAGE_TITLE;
         playBellSound();
+        triggerHaptic('heavy');
 
         const blocksToTick = Math.floor(timerDurationSec / (15 * 60));
         if (blocksToTick > 0) {
@@ -2345,7 +2659,7 @@
         const btn = document.getElementById(`slot_${sId}_${q}`);
         if (btn && !btn.classList.contains('active')) {
           const rm = getRowMinutes(sId);
-          if (rm.using + 15 + rm.totalWaste <= 60) {
+          if (rm.using + 15 + rm.nonStudyTotal <= 60) {
             btn.classList.add('active');
             ticked++;
           }
@@ -2379,6 +2693,20 @@
         }
       }
     });
+
+    const qSubj = document.getElementById('liveQuickSubj');
+    if (qSubj) {
+      const curVal = qSubj.value || 'none';
+      qSubj.innerHTML = `
+        <option value="none">-- විෂය --</option>
+        <option value="s1">${escHtml(names.s1)}</option>
+        <option value="s2">${escHtml(names.s2)}</option>
+        <option value="s3">${escHtml(names.s3)}</option>
+        <option value="common">Gen.Eng / GIT</option>
+        <option value="other">Class / Other</option>
+      `;
+      qSubj.value = curVal;
+    }
 
     ['paperSubjInput', 'omrSubjectSelect', 'vaultSubjSelect'].forEach(id => {
       const sel = document.getElementById(id);
@@ -2516,26 +2844,39 @@
       const s = parseInt(document.getElementById(`sleep_${slot.id}`).dataset.mins || '0');
       const o = parseInt(document.getElementById(`online_${slot.id}`).dataset.mins || '0');
       const ot = parseInt(document.getElementById(`other_${slot.id}`).dataset.mins || '0');
-      const rowWaste = s + o + ot;
+
+      // FIXED: Row Waste strictly sums Online + Other! Sleep is excluded from Waste!
+      const rowActualWaste = o + ot;
 
       totalSleepMins += s;
       totalOnlineMins += o;
       totalOtherWasteMins += ot;
 
-      document.getElementById(`wtotal_${slot.id}`).textContent = `${rowWaste}m`;
+      document.getElementById(`wtotal_${slot.id}`).textContent = `${rowActualWaste}m`;
     });
 
-    const grandWaste = totalSleepMins + totalOnlineMins + totalOtherWasteMins;
+    // FIXED: Grand Waste is ONLY Online + Other! Sleep is healthy rest.
+    const grandActualWaste = totalOnlineMins + totalOtherWasteMins;
     const totalPaperAndTuteMins = modeMins.paper + modeMins.tute;
 
     document.getElementById('tableUsingTotal').textContent = formatMinutes(totalUsingMins);
     document.getElementById('todayTotalDisplay').textContent = formatMinutes(totalUsingMins);
 
-    document.getElementById('sumSleep').textContent = `${totalSleepMins}m`;
+    document.getElementById('sumSleep').textContent = formatMinutes(totalSleepMins);
     document.getElementById('sumOnline').textContent = `${totalOnlineMins}m`;
     document.getElementById('sumOther').textContent = `${totalOtherWasteMins}m`;
-    document.getElementById('tableWasteTotal').textContent = formatMinutes(grandWaste);
-    document.getElementById('wasteTotalDisplay').textContent = formatMinutes(grandWaste);
+    document.getElementById('tableWasteTotal').textContent = formatMinutes(grandActualWaste);
+    document.getElementById('wasteTotalDisplay').textContent = formatMinutes(grandActualWaste);
+
+    // Sleep Health Status Indicator
+    const sleepEl = document.getElementById('sleepTotalDisplay');
+    const sleepHrs = totalSleepMins / 60;
+    let sleepStatus = '';
+    if (totalSleepMins === 0) sleepStatus = ' (සටහන් කර නැත)';
+    else if (sleepHrs >= 5.5 && sleepHrs <= 8) sleepStatus = ' (සුවදායකයි ✅)';
+    else if (sleepHrs < 5.5) sleepStatus = ' (නින්ද මදි ⚠️)';
+    else sleepStatus = ' (වැඩිපුර නින්ද ⚠️)';
+    sleepEl.textContent = `${formatMinutes(totalSleepMins)}${sleepStatus}`;
 
     document.getElementById('subj1Hours').textContent = formatMinutes(subjMins.s1);
     document.getElementById('subj2Hours').textContent = formatMinutes(subjMins.s2);
@@ -2556,15 +2897,15 @@
     document.getElementById('goalProgressBar').style.width = `${pct}%`;
     document.getElementById('goalProgressText').textContent = `${pct}% of ${goalMins/60}h Goal`;
 
-    const distractionMins = totalOnlineMins + totalOtherWasteMins;
-    const activeTracked = totalUsingMins + distractionMins;
-    const eff = activeTracked > 0 ? Math.round((totalUsingMins / activeTracked) * 100) : 0;
+    const activeTracked = totalUsingMins + grandActualWaste;
+    const eff = activeTracked > 0 ? Math.round((totalUsingMins / activeTracked) * 100) : 100;
     const effEl = document.getElementById('efficiencyBadge');
-    effEl.textContent = `Efficiency: ${eff}%`;
-    effEl.className = 'stat-badge ' + (eff >= 75 ? 'stat-good' : eff >= 50 ? 'stat-warn' : 'stat-bad');
+    effEl.textContent = `Focus: ${eff}%`;
+    effEl.className = 'stat-badge ' + (eff >= 80 ? 'stat-good' : eff >= 55 ? 'stat-warn' : 'stat-bad');
 
     updateEmptyRowClasses();
     calculateHistoricalTotals(currentDate);
+    refreshLiveQuickCard();
   }
 
   function renderAnalytics() {
@@ -2580,7 +2921,9 @@
     let total7Mins = 0;
     let sTotals = { s1: 0, s2: 0, s3: 0, common: 0, other: 0 };
     let mTotals = { theory: 0, paper: 0 };
-    let onlineWaste7 = 0;
+    let actualWaste7 = 0;
+    let sleep7Mins = 0;
+    let sleepDaysLogged = 0;
 
     for (let i = 6; i >= 0; i--) {
       const d = new Date(cur);
@@ -2588,6 +2931,7 @@
       const dStr = getLocalDateString(d);
       const raw = localStorage.getItem(`al_plan_${dStr}`);
       let dayMins = 0;
+      let daySleep = 0;
       if (raw) {
         try {
           const parsed = JSON.parse(raw);
@@ -2605,10 +2949,15 @@
               if (r.mode === 'paper' || r.mode === 'tute') mTotals.paper += rMins;
               else mTotals.theory += rMins;
 
-              onlineWaste7 += parseInt(r.online || 0);
+              actualWaste7 += parseInt(r.online || 0) + parseInt(r.other || 0);
+              daySleep += parseInt(r.sleep || 0);
             });
           }
         } catch (e) {}
+      }
+      if (daySleep > 0) {
+        sleep7Mins += daySleep;
+        sleepDaysLogged++;
       }
       total7Mins += dayMins;
       daysData.push({ label: dStr.slice(5), mins: dayMins });
@@ -2681,7 +3030,7 @@
       ].sort((a, b) => a.m - b.m)[0];
 
       if (total7Mins === 0) {
-        tips.push('💡 ඔබ තවම මේ සතියේ පාඩම් කාලයන් සටහන් කර නැත. ඉහළ ඇති "🚀 දැන් පාඩම් අරඹන්න" බොත්තම ඔබා ආරම්භ කරන්න.');
+        tips.push('💡 ඔබ තවම මේ සතියේ පාඩම් කාලයන් සටහන් කර නැත. ඉහළ ඇති "🚀 දැන් අරඹන්න" බොත්තම ඔබා ආරම්භ කරන්න.');
       } else {
         tips.push(`⚖️ විෂය සමබරතාවය: පසුගිය දින 7 තුළ ඔබ අඩුවෙන්ම අවධානය යොමු කර ඇත්තේ "${escHtml(minSubj.name)}" (${formatMinutes(minSubj.m)}) විෂයටයි. හෙට දිනයේ එම විෂයට වැඩි කාලයක් වෙන් කරන්න.`);
         if (mTotals.paper < total7Mins * 0.25) {
@@ -2689,8 +3038,16 @@
         } else {
           tips.push(`🌟 විශිෂ්ටයි! ඔබ සිද්ධාන්ත සහ ප්‍රශ්න පත්‍ර (Past Papers/Tutes) අතර ඉතා හොඳ සමබරතාවයක් පවත්වාගෙන යයි.`);
         }
-        if (onlineWaste7 > 300) {
-          tips.push(`⚠️ අවධානයට: පසුගිය දින 7 තුළ Online/Social Media නිසා ඔබගේ කාලයෙන් ${formatMinutes(onlineWaste7)} ක් අපතේ ගොස් ඇත. පාඩම් කරන විට "🧘 Zen Mode" භාවිත කරන්න.`);
+        if (sleepDaysLogged > 0) {
+          const avgSleepHrs = (sleep7Mins / 60 / sleepDaysLogged).toFixed(1);
+          if (avgSleepHrs < 5.5) {
+            tips.push(`😴 නින්ද සහ මතක ශක්තිය: ඔබගේ සාමාන්‍ය නින්ද දිනකට පැය ${avgSleepHrs} කි. පාඩම් කළ කරුණු දිගුකාලීන මතකයේ තැන්පත් වීමට දිනකට පැය 6ක සුවදායක නින්දක් ලබාගන්න.`);
+          } else {
+            tips.push(`😴 සුවදායක විවේකය: ඔබ දිනකට සාමාන්‍යයෙන් පැය ${avgSleepHrs} ක ප්‍රමාණවත් නින්දක් පවත්වාගෙන යයි.`);
+          }
+        }
+        if (actualWaste7 > 240) {
+          tips.push(`⚠️ අවධානයට: පසුගිය දින 7 තුළ Online/Social Media හා බාහිර දේ නිසා ${formatMinutes(actualWaste7)} ක් අපතේ ගොස් ඇත. පාඩම් කරන විට "🧘 Zen Mode" භාවිත කරන්න.`);
         }
       }
       coachEl.innerHTML = tips.map(t => `<li class="coach-item">${t}</li>`).join('');
@@ -2705,6 +3062,14 @@
     loadData(dStr);
     switchTab('planner', document.getElementById('tabBtn_planner'));
     showToast(`📅 ${dStr} දිනයේ කාලසටහන විවෘත කරන ලදී!`);
+  }
+
+  function getAlGradeLetter(marks) {
+    if (marks >= 75) return 'A';
+    if (marks >= 65) return 'B';
+    if (marks >= 50) return 'C';
+    if (marks >= 35) return 'S';
+    return 'W';
   }
 
   function addPaperScore() {
@@ -2733,6 +3098,7 @@
   function renderPaperScores() {
     const container = document.getElementById('paperScoreList');
     const chartBox = document.getElementById('paperChartBox');
+    const avgBadge = document.getElementById('paperAvgGradeBadge');
     if (!container) return;
     const allList = JSON.parse(localStorage.getItem('al_pro_papers') || '[]');
     const filterSubj = (document.getElementById('paperChartFilter') || {}).value || 'all';
@@ -2740,6 +3106,15 @@
 
     const names = getSubjectNames();
     names.common = 'General English / GIT';
+
+    if (avgBadge) {
+      if (filtered.length > 0) {
+        const avgM = Math.round(filtered.reduce((acc, it) => acc + Number(it.marks || 0), 0) / filtered.length);
+        avgBadge.textContent = `Avg: ${avgM}% (${getAlGradeLetter(avgM)})`;
+      } else {
+        avgBadge.textContent = 'Avg: --%';
+      }
+    }
 
     if (chartBox) {
       const chronological = [...filtered].reverse().slice(-12);
@@ -2776,6 +3151,7 @@
     }
     container.innerHTML = filtered.map(item => {
       const sName = names[item.subj] || item.subj;
+      const grade = getAlGradeLetter(item.marks);
       const badgeCls = item.marks >= 75 ? 'stat-good' : item.marks >= 50 ? 'stat-warn' : 'stat-bad';
       return `
         <div class="unit-item">
@@ -2784,7 +3160,7 @@
             <span style="font-size:11px; color:var(--muted); margin-left:6px;">(${escHtml(item.date)})</span>
           </div>
           <div style="display:flex; align-items:center; gap:8px;">
-            <span class="stat-badge ${badgeCls}">${item.marks}%</span>
+            <span class="stat-badge ${badgeCls}">${item.marks}% [${grade}]</span>
             <button class="mini-btn btn-danger" onclick="deletePaperScore(${item.id})">✕</button>
           </div>
         </div>
@@ -2816,6 +3192,7 @@
   }
 
   function sendSyllabusUnitToTodayTasks(subjKey, unitId) {
+    triggerHaptic('light');
     const data = getSyllabusData();
     const names = getSubjectNames();
     const unit = (data[subjKey] || []).find(u => u.id === unitId);
@@ -2835,6 +3212,7 @@
   }
 
   function toggleSyllabusCheck(subjKey, unitId, field) {
+    triggerHaptic('light');
     const data = getSyllabusData();
     const unit = data[subjKey].find(u => u.id === unitId);
     if (unit) {
@@ -2966,6 +3344,7 @@
 
   function selectOmrBubble(e, q, opt) {
     e.stopPropagation();
+    triggerHaptic('light');
     if (omrGradingMode) {
       handleOmrRowClick(q);
       return;
@@ -2986,9 +3365,18 @@
     }
   }
 
+  function toggleAnswerKeyBox() {
+    const box = document.getElementById('omrAnswerKeyDrawer');
+    if (!box) return;
+    box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    if (box.style.display === 'block') {
+      document.getElementById('omrAnswerKeyInput').focus();
+    }
+  }
+
   function gradeWithAnswerKey() {
-    const input = prompt('පිළිතුරු පත්‍රිකාවේ (Marking Scheme) 1 සිට 50 දක්වා නිවැරදි පිළිතුරු අනුපිළිවෙළින් ඇතුළත් කරන්න (උදා: 24153... හෝ කොමා/හිස්තැන් සහිතව):');
-    if (!input) return;
+    const input = (document.getElementById('omrAnswerKeyInput').value || '').trim();
+    if (!input) return showToast('⚠️ කරුණාකර පිළිතුරු අංක ඇතුළත් කරන්න!');
     const digits = input.replace(/[^1-5]/g, '').split('').map(Number);
     if (digits.length === 0) return showToast('⚠️ වලංගු පිළිතුරු අංක (1-5) හමු නොවීය!');
 
@@ -3001,11 +3389,14 @@
     });
     saveOmrState();
     initOmrSheet();
+    document.getElementById('omrAnswerKeyDrawer').style.display = 'none';
+    triggerHaptic('medium');
     showToast(`🔑 ප්‍රශ්න ${Math.min(50, digits.length)}ක් ස්වයංක්‍රීයව පරීක්ෂා කර ලකුණු ගණනය කරන ලදී!`);
   }
 
   function handleOmrRowClick(q) {
     if (!omrGradingMode) return;
+    triggerHaptic('light');
     if (omrCorrectFlags[q] === undefined) omrCorrectFlags[q] = true;
     else if (omrCorrectFlags[q] === true) omrCorrectFlags[q] = false;
     else delete omrCorrectFlags[q];
@@ -3018,7 +3409,8 @@
     const correctCount = Object.values(omrCorrectFlags).filter(v => v === true).length;
     const wrongQs = Object.keys(omrCorrectFlags).filter(k => omrCorrectFlags[k] === false).map(k => `#${k}`);
     const pct = Math.round((correctCount / 50) * 100);
-    document.getElementById('omrScoreBadge').textContent = `Answered: ${answeredCount}/50 | Score: ${correctCount}/50 (${pct}%)`;
+    const grade = getAlGradeLetter(pct);
+    document.getElementById('omrScoreBadge').textContent = `Answered: ${answeredCount}/50 | Score: ${correctCount}/50 (${pct}% - ${grade})`;
 
     const wrongEl = document.getElementById('omrWrongListText');
     if (wrongEl) {
@@ -3175,7 +3567,7 @@
     }).join('');
   }
 
-  // Shareable Study Card
+  // Shareable Study Card & Text Report
   function openShareCard() {
     document.getElementById('shareModal').classList.add('open');
     const canvas = document.getElementById('shareCanvas');
@@ -3205,7 +3597,7 @@
     ctx.fillText(document.getElementById('todayTotalDisplay').textContent, 45, 165);
     ctx.fillStyle = '#facc15';
     ctx.font = 'bold 13px Segoe UI, sans-serif';
-    ctx.fillText(document.getElementById('efficiencyBadge').textContent, 45, 188);
+    ctx.fillText(`${document.getElementById('efficiencyBadge').textContent}  |  😴 Sleep: ${document.getElementById('sumSleep').textContent}`, 45, 188);
 
     ctx.fillStyle = 'rgba(255,255,255,0.08)';
     ctx.fillRect(300, 88, 270, 185);
@@ -3236,7 +3628,7 @@
     const essays = document.getElementById('essayCount').value || 0;
     ctx.fillStyle = '#f8fafc';
     ctx.font = 'bold 14px Segoe UI, sans-serif';
-    ctx.fillText(`✅ MCQs: ${mcqs}  |  ✍️ Essays/Tutes: ${essays}`, 45, 238);
+    ctx.fillText(`✅ MCQs: ${mcqs}  |  ✍️ Essays: ${essays}`, 45, 238);
     ctx.fillStyle = '#93c5fd';
     ctx.fillText(`📊 Week Total: ${document.getElementById('weekTotalDisplay').textContent}`, 45, 260);
 
@@ -3253,12 +3645,49 @@
     document.getElementById('shareModal').classList.remove('open');
   }
 
-  function downloadShareCard() {
+  // Mobile & Telegram WebView Friendly Share / Download Image
+  function shareOrDownloadCard() {
     const canvas = document.getElementById('shareCanvas');
-    const a = document.createElement('a');
-    a.href = canvas.toDataURL('image/png');
-    a.download = `Study_Summary_${currentDate}.png`;
-    a.click();
+    canvas.toBlob(async blob => {
+      if (!blob) return;
+      const file = new File([blob], `AL_Study_${currentDate}.png`, { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            title: `A/L Study Report - ${currentDate}`,
+            files: [file]
+          });
+          return;
+        } catch (err) {}
+      }
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `Study_Summary_${currentDate}.png`;
+      a.click();
+      showToast('⬇️ සාරාංශ කාඩ්පත බාගත කරන ලදී!');
+    });
+  }
+
+  function copyTextReport() {
+    const names = getSubjectNames();
+    const report = [
+      `🎓 *A/L DAILY STUDY REPORT (${currentDate})*`,
+      `🔥 ${document.getElementById('streakBadge').textContent} | ${document.getElementById('levelBadge').textContent}`,
+      `────────────────────`,
+      `✅ *Today Study:* ${document.getElementById('todayTotalDisplay').textContent} (${document.getElementById('goalProgressText').textContent})`,
+      `📘 ${names.s1}: ${document.getElementById('subj1Hours').textContent}`,
+      `📗 ${names.s2}: ${document.getElementById('subj2Hours').textContent}`,
+      `📙 ${names.s3}: ${document.getElementById('subj3Hours').textContent}`,
+      `📝 MCQs: ${document.getElementById('mcqCount').value || 0} | Essays: ${document.getElementById('essayCount').value || 0}`,
+      `😴 Sleep/Rest: ${document.getElementById('sumSleep').textContent} | 💧 Water: ${waterGlasses}/8`,
+      `📊 Week Total: ${document.getElementById('weekTotalDisplay').textContent}`
+    ].join('\n');
+
+    navigator.clipboard.writeText(report).then(() => {
+      showToast('📋 වාර්තාව Copy කරන ලදී! දැන් Telegram හෝ WhatsApp හි Paste කරන්න.');
+    }).catch(() => {
+      showToast('⚠️ Copy කිරීමට නොහැකි විය.');
+    });
   }
 
   function updateExamCountdown() {
@@ -3320,6 +3749,7 @@
       essayCount: document.getElementById('essayCount').value,
       mainDistraction: document.getElementById('mainDistraction').value,
       tomorrowFix: document.getElementById('tomorrowFix').value,
+      water: waterGlasses,
       priorities: currentPriorities,
       rows: {}
     };
@@ -3354,6 +3784,8 @@
     document.getElementById('essayCount').value = data.essayCount || '';
     document.getElementById('mainDistraction').value = data.mainDistraction || '';
     document.getElementById('tomorrowFix').value = data.tomorrowFix || '';
+    waterGlasses = parseInt(data.water || '0');
+    renderWaterBadge();
 
     if (Array.isArray(data.priorities) && data.priorities.length > 0) {
       currentPriorities = data.priorities.map(p => ({ chk: !!p.chk, txt: p.txt || '' }));
@@ -3376,7 +3808,7 @@
         if (r.slots && r.slots[q]) btn.classList.add('active');
         else btn.classList.remove('active');
       });
-      setWasteButtonState(document.getElementById(`sleep_${slot.id}`), parseInt(r.sleep || 0));
+      setSleepButtonState(document.getElementById(`sleep_${slot.id}`), parseInt(r.sleep || 0));
       setWasteButtonState(document.getElementById(`online_${slot.id}`), parseInt(r.online || 0));
       setWasteButtonState(document.getElementById(`other_${slot.id}`), parseInt(r.other || 0));
     });
@@ -3389,6 +3821,8 @@
     document.getElementById('essayCount').value = '';
     document.getElementById('mainDistraction').value = '';
     document.getElementById('tomorrowFix').value = '';
+    waterGlasses = 0;
+    renderWaterBadge();
     currentPriorities = createDefaultPriorities(6);
     renderPriorityList();
 
@@ -3398,7 +3832,7 @@
       document.getElementById(`mode_${slot.id}`).value = 'theory';
       document.getElementById(`task_${slot.id}`).value = '';
       [0, 1, 2, 3].forEach(q => document.getElementById(`slot_${slot.id}_${q}`).classList.remove('active'));
-      setWasteButtonState(document.getElementById(`sleep_${slot.id}`), 0);
+      setSleepButtonState(document.getElementById(`sleep_${slot.id}`), 0);
       setWasteButtonState(document.getElementById(`online_${slot.id}`), 0);
       setWasteButtonState(document.getElementById(`other_${slot.id}`), 0);
     });
@@ -3428,12 +3862,104 @@
     document.getElementById('themeBtn').textContent = isDark ? '☀️ Light' : '🌙 Dark';
   }
 
-  function exportBackup() {
+  // Backup & Telegram Cloud Modal Functions
+  function openBackupModal() {
+    document.getElementById('backupModal').classList.add('open');
+  }
+
+  function closeBackupModal() {
+    document.getElementById('backupModal').classList.remove('open');
+  }
+
+  function getAllBackupObject() {
     const backup = {};
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
       if (k && k.startsWith('al_')) backup[k] = localStorage.getItem(k);
     }
+    return backup;
+  }
+
+  function applyBackupObject(data) {
+    Object.keys(data).forEach(k => {
+      if (k.startsWith('al_')) localStorage.setItem(k, data[k]);
+    });
+    loadGlobalSettings();
+    loadData(currentDate);
+    loadOmrState();
+    initOmrSheet();
+    renderSyllabus();
+    renderAnalytics();
+    renderVaultCards();
+  }
+
+  function generateTextBackupCode() {
+    const jsonStr = JSON.stringify(getAllBackupObject());
+    const area = document.getElementById('backupTextArea');
+    area.value = jsonStr;
+    area.select();
+    navigator.clipboard.writeText(jsonStr).then(() => {
+      showToast('📋 Backup කේතය Copy කරන ලදී! එය Telegram Saved Messages හි Paste කර තබාගන්න.');
+    }).catch(() => {
+      showToast('✅ කේතය ජනනය කරන ලදී! එය Copy කර තබාගන්න.');
+    });
+  }
+
+  function restoreFromTextBackupCode() {
+    const raw = (document.getElementById('backupTextArea').value || '').trim();
+    if (!raw) return showToast('⚠️ පළමුව Backup කේතය කොටුව තුළ Paste කරන්න!');
+    try {
+      const data = JSON.parse(raw);
+      applyBackupObject(data);
+      closeBackupModal();
+      showToast('✅ Backup කේතයෙන් දත්ත සාර්ථකව ප්‍රතිස්ථාපනය (Restore) කරන ලදී!');
+    } catch (e) {
+      showToast('⚠️ Backup කේතය නිවැරදි නොවේ!');
+    }
+  }
+
+  function syncToTelegramCloud() {
+    if (!window.Telegram || !window.Telegram.WebApp || !window.Telegram.WebApp.CloudStorage) {
+      return showToast('ℹ️ Telegram CloudStorage ක්‍රියා කරන්නේ Telegram Mini App එක තුළදී පමණි. Text Backup හෝ JSON භාවිත කරන්න.');
+    }
+    try {
+      const cs = window.Telegram.WebApp.CloudStorage;
+      cs.setItem('al_pro_settings', localStorage.getItem('al_pro_settings') || '{}');
+      cs.setItem('al_pro_papers', (localStorage.getItem('al_pro_papers') || '[]').slice(0, 4000));
+      cs.setItem(`al_plan_${currentDate}`, (localStorage.getItem(`al_plan_${currentDate}`) || '{}').slice(0, 4000), (err) => {
+        if (err) showToast('⚠️ Cloud Sync දෝෂයක්!');
+        else showToast('☁️ අද දවසේ දත්ත සහ සැකසුම් Telegram Cloud වෙත සුරකින ලදී!');
+      });
+    } catch (e) {
+      showToast('⚠️ Cloud Storage භාවිත කළ නොහැක. Text Backup භාවිත කරන්න.');
+    }
+  }
+
+  function restoreFromTelegramCloud() {
+    if (!window.Telegram || !window.Telegram.WebApp || !window.Telegram.WebApp.CloudStorage) {
+      return showToast('ℹ️ Telegram CloudStorage ක්‍රියා කරන්නේ Telegram Mini App එක තුළදී පමණි.');
+    }
+    try {
+      const cs = window.Telegram.WebApp.CloudStorage;
+      const keys = ['al_pro_settings', 'al_pro_papers', `al_plan_${currentDate}`];
+      cs.getItems(keys, (err, values) => {
+        if (err || !values) return showToast('⚠️ Cloud දත්ත ලබාගත නොහැකි විය.');
+        Object.keys(values).forEach(k => {
+          if (values[k]) localStorage.setItem(k, values[k]);
+        });
+        loadGlobalSettings();
+        loadData(currentDate);
+        renderAnalytics();
+        closeBackupModal();
+        showToast('📥 Telegram Cloud වෙතින් දත්ත සාර්ථකව ලබාගන්නා ලදී!');
+      });
+    } catch (e) {
+      showToast('⚠️ Cloud Restore දෝෂයක්!');
+    }
+  }
+
+  function exportBackup() {
+    const backup = getAllBackupObject();
     const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -3449,16 +3975,8 @@
     reader.onload = e => {
       try {
         const data = JSON.parse(e.target.result);
-        Object.keys(data).forEach(k => {
-          if (k.startsWith('al_')) localStorage.setItem(k, data[k]);
-        });
-        loadGlobalSettings();
-        loadData(currentDate);
-        loadOmrState();
-        initOmrSheet();
-        renderSyllabus();
-        renderAnalytics();
-        renderVaultCards();
+        applyBackupObject(data);
+        closeBackupModal();
         showToast('✅ Backup දත්ත සාර්ථකව ප්‍රතිස්ථාපනය (Restore) කරන ලදී!');
       } catch (err) {
         showToast('⚠️ Backup ගොනුව කියවීමේ දෝෂයක්!');
