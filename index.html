@@ -1,0 +1,3473 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A/L Ultimate Study & Time Management System</title>
+<style>
+  :root {
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #cbd5e1;
+    --primary: #2563eb;
+    --primary-bg: #eff6ff;
+    --success: #16a34a;
+    --success-bg: #dcfce7;
+    --warning: #d97706;
+    --warning-bg: #fef3c7;
+    --danger: #dc2626;
+    --danger-bg: #fee2e2;
+    --purple: #7c3aed;
+    --purple-bg: #f3e8ff;
+    --header-bg: #f8fafc;
+    --live-row: #fef9c3;
+  }
+
+  body.dark {
+    --bg: #090d16;
+    --card: #111827;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --border: #1f2937;
+    --primary: #3b82f6;
+    --primary-bg: #172554;
+    --success: #22c55e;
+    --success-bg: #052e16;
+    --warning: #f59e0b;
+    --warning-bg: #451a03;
+    --danger: #ef4444;
+    --danger-bg: #450a0a;
+    --purple: #a78bfa;
+    --purple-bg: #2e1065;
+    --header-bg: #1e293b;
+    --live-row: #1e293b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 10px 10px 60px 10px;
+    font-size: 13px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .container {
+    max-width: 1320px;
+    margin: 0 auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+
+  /* Top Action Bar & Timer */
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .brand-box { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .app-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.3px;
+  }
+  .countdown-pill {
+    background: var(--danger-bg);
+    color: var(--danger);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 800;
+    font-size: 12px;
+  }
+  .streak-pill {
+    background: var(--warning-bg);
+    color: var(--warning);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 800;
+    font-size: 12px;
+  }
+  .level-pill {
+    background: var(--purple-bg);
+    color: var(--purple);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 800;
+    font-size: 12px;
+  }
+
+  /* Live Timer Widget */
+  .timer-widget {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--header-bg);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 8px;
+    flex-wrap: wrap;
+  }
+  .timer-display {
+    font-size: 18px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--primary);
+    min-width: 58px;
+    text-align: center;
+  }
+
+  .btn-group { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+  button {
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--header-bg);
+    color: var(--text);
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: 0.15s;
+  }
+  button:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .btn-primary:hover { opacity: 0.9; color: #fff; }
+  .btn-success { background: var(--success); color: #fff; border-color: var(--success); }
+  .btn-success:hover { opacity: 0.9; color: #fff; }
+  .btn-purple { background: var(--purple); color: #fff; border-color: var(--purple); }
+  .btn-purple:hover { opacity: 0.9; color: #fff; }
+  .btn-danger { color: var(--danger); }
+
+  /* Stream & Student Ambition Bar */
+  .stream-bar {
+    background: var(--primary-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .stream-bar-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  /* Navigation Tabs */
+  .nav-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tab-list { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 6px 12px;
+    font-weight: 700;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--header-bg);
+  }
+  .tab-btn.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Progress Bar Strip */
+  .goal-strip {
+    background: var(--header-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .progress-wrap {
+    flex: 1;
+    min-width: 160px;
+    background: var(--border);
+    height: 12px;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--success));
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  /* Header Panels */
+  .top-grid {
+    display: grid;
+    grid-template-columns: 275px 1fr 315px;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  @media (max-width: 980px) {
+    .top-grid { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: var(--header-bg);
+  }
+  .panel-title {
+    font-weight: 700;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    color: var(--primary);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 5px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .field-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    gap: 6px;
+  }
+  .field-row label { font-weight: 600; font-size: 12px; }
+  input[type="text"], input[type="date"], input[type="number"], select, textarea {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    width: 100%;
+    font-family: inherit;
+  }
+  input[type="number"] { width: 62px; text-align: center; }
+
+  /* Dynamic Unlimited Task List */
+  .priority-scroll-box {
+    max-height: 135px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+  .priority-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 10px;
+  }
+  @media (max-width: 700px) {
+    .priority-grid { grid-template-columns: 1fr; }
+  }
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .task-item input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    accent-color: var(--success);
+    flex-shrink: 0;
+  }
+  .task-item input.done {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+  .mini-btn {
+    padding: 2px 6px;
+    font-size: 10.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Quick Stepper Buttons for MCQs/Essays */
+  .quick-step-group {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .step-chip {
+    padding: 2px 5px;
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--primary-bg);
+    color: var(--primary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  .step-chip:hover {
+    background: var(--primary);
+    color: #fff;
+  }
+
+  /* Main Table */
+  .table-wrapper { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14px;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 3.5px 5px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  th {
+    background: var(--header-bg);
+    font-weight: 700;
+    font-size: 11px;
+  }
+  .section-row {
+    cursor: pointer;
+    user-select: none;
+  }
+  .section-row td {
+    background: var(--primary-bg);
+    color: var(--primary);
+    font-weight: 700;
+    text-align: left;
+    padding: 5px 10px;
+    font-size: 11.5px;
+  }
+  .section-row:hover td {
+    filter: brightness(0.96);
+  }
+  tr.collapsed-group-row {
+    display: none !important;
+  }
+  tr.current-hour-row {
+    background: var(--live-row) !important;
+    outline: 2px solid var(--warning);
+  }
+  .live-badge {
+    display: inline-block;
+    background: var(--danger);
+    color: #fff;
+    font-size: 9px;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  .time-cell {
+    font-weight: 700;
+    width: 142px;
+    white-space: nowrap;
+    font-size: 11.5px;
+    text-align: left;
+    padding-left: 6px;
+  }
+  .time-cell-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3px;
+  }
+  .row-action-btns {
+    display: flex;
+    gap: 2px;
+  }
+  .quick-hr-btn {
+    padding: 1px 4px;
+    font-size: 9.5px;
+    border-radius: 4px;
+    color: var(--muted);
+    background: var(--card);
+  }
+  .quick-hr-btn:hover {
+    background: var(--success);
+    color: #fff;
+    border-color: var(--success);
+  }
+
+  .task-cell { text-align: left; min-width: 290px; }
+  .task-cell-inner { display: flex; gap: 4px; }
+  .subj-select { width: 115px; flex-shrink: 0; font-weight: 600; }
+  .mode-select { width: 92px; flex-shrink: 0; font-size: 11px; }
+
+  /* 15 Min Toggle Buttons */
+  .slot-btn {
+    width: 100%;
+    height: 24px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .slot-btn.active {
+    background: var(--success);
+    color: #fff;
+    border-color: var(--success);
+  }
+
+  /* Quick Waste Stepper */
+  .waste-btn {
+    width: 100%;
+    height: 24px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 0;
+    border-radius: 4px;
+    background: var(--card);
+    color: var(--muted);
+  }
+  .waste-btn.has-waste {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border-color: var(--danger);
+  }
+  .waste-row-total {
+    font-weight: 700;
+    color: var(--danger);
+    width: 65px;
+  }
+
+  /* Bottom Summary Grid */
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr 1.1fr;
+    gap: 12px;
+  }
+  @media (max-width: 900px) {
+    .bottom-grid { grid-template-columns: 1fr; }
+  }
+
+  .stat-badge {
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .stat-good { background: var(--success-bg); color: var(--success); }
+  .stat-bad { background: var(--danger-bg); color: var(--danger); }
+  .stat-warn { background: var(--warning-bg); color: var(--warning); }
+
+  /* Analytics, Heatmap & Coach */
+  .analytics-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .syllabus-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 950px) {
+    .analytics-grid, .syllabus-grid { grid-template-columns: 1fr; }
+  }
+
+  .chart-bars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 165px;
+    padding: 16px 8px 6px;
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+  }
+  .bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+  }
+  .bar-fill {
+    width: 100%;
+    max-width: 38px;
+    background: linear-gradient(180deg, var(--primary), var(--success));
+    border-radius: 6px 6px 0 0;
+    transition: height 0.3s;
+    min-height: 3px;
+  }
+  .bar-val { font-size: 10px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+  .bar-lbl { font-size: 10px; color: var(--muted); margin-top: 6px; font-weight: 600; }
+
+  /* 30-Day Heatmap */
+  .heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 6px;
+    margin-top: 8px;
+  }
+  @media (max-width: 650px) {
+    .heatmap-grid { grid-template-columns: repeat(5, 1fr); }
+  }
+  .heat-cell {
+    padding: 6px 4px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .heat-0 { background: var(--card); color: var(--muted); }
+  .heat-1 { background: #dcfce7; color: #166534; }
+  .heat-2 { background: #86efac; color: #14532d; }
+  .heat-3 { background: #22c55e; color: #ffffff; }
+  .heat-4 { background: #15803d; color: #ffffff; }
+
+  .coach-list {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+  }
+  .coach-item {
+    background: var(--card);
+    border-left: 4px solid var(--primary);
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  .unit-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 6px;
+    gap: 6px;
+  }
+  .unit-checks { display: flex; gap: 5px; align-items: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .unit-checks label { display: flex; align-items: center; gap: 2px; cursor: pointer; }
+
+  /* OMR Simulator Grid */
+  .omr-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+  }
+  @media (max-width: 950px) {
+    .omr-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 550px) {
+    .omr-grid { grid-template-columns: 1fr; }
+  }
+  .omr-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
+  .omr-bubbles { display: flex; gap: 4px; }
+  .omr-bubble {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--header-bg);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .omr-bubble.selected {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .omr-row.correct { border-color: var(--success); background: var(--success-bg); }
+  .omr-row.wrong { border-color: var(--danger); background: var(--danger-bg); }
+
+  /* Flashcards Grid */
+  .flashcard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+  }
+  @media (max-width: 900px) {
+    .flashcard-grid { grid-template-columns: 1fr; }
+  }
+  .flashcard {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--purple);
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .flashcard:hover { transform: translateY(-2px); }
+  .flashcard-ans {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border);
+    color: var(--success);
+    font-weight: 700;
+    display: none;
+  }
+  .flashcard.revealed .flashcard-ans { display: block; }
+
+  /* Floating Bottom Quick-Bar for Easy Student Access while Scrolling */
+  .floating-quickbar {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--card);
+    border: 2px solid var(--primary);
+    border-radius: 30px;
+    padding: 6px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+    z-index: 950;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Non-blocking Toast Notification */
+  .toast-box {
+    position: fixed;
+    bottom: 65px;
+    right: 20px;
+    background: #0f172a;
+    color: #f8fafc;
+    border-left: 4px solid var(--success);
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    z-index: 2000;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    max-width: 390px;
+  }
+  .toast-box.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Modal & Zen Mode Overlay */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+  }
+  canvas#shareCanvas {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin: 10px 0;
+  }
+
+  /* Zen Fullscreen Overlay */
+  .zen-overlay {
+    position: fixed;
+    inset: 0;
+    background: #090d16;
+    color: #f8fafc;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 24px;
+    text-align: center;
+  }
+  .zen-overlay.open { display: flex; }
+  .zen-timer {
+    font-size: 92px;
+    font-weight: 900;
+    color: #38bdf8;
+    font-variant-numeric: tabular-nums;
+    margin: 16px 0;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Print Styles for Single A4 Page (24 Hours Compact Fit) */
+  @media print {
+    @page { size: A4 portrait; margin: 4mm; }
+    body { background: #fff !important; color: #000 !important; padding: 0; font-size: 8.5px; }
+    .container { border: none; box-shadow: none; padding: 0; max-width: 100%; }
+    .toolbar, .nav-tabs, .stream-bar, .mini-btn, .quick-hr-btn, .step-chip, .floating-quickbar, .modal-overlay, .zen-overlay, .toast-box { display: none !important; }
+    .tab-content { display: none !important; }
+    #tab-planner { display: block !important; }
+    tr.collapsed-group-row { display: table-row !important; }
+    .goal-strip { padding: 3px 6px; margin-bottom: 4px; border: 1px solid #000; }
+    .top-grid { grid-template-columns: 195px 1fr 205px; gap: 4px; margin-bottom: 4px; }
+    .bottom-grid { grid-template-columns: 1fr 1fr 1.2fr; gap: 4px; }
+    .panel { padding: 3px 5px; background: #fff !important; border: 1px solid #000 !important; }
+    .panel-title { margin-bottom: 3px; padding-bottom: 2px; font-size: 9px; }
+    .priority-scroll-box { max-height: none !important; overflow: visible !important; }
+    .field-row { margin-bottom: 2px; }
+    .task-item { margin-bottom: 2px; }
+    th, td { border: 1px solid #000 !important; padding: 1px 2px !important; font-size: 8px; }
+    .section-row td { padding: 1.5px 6px !important; font-size: 8.5px; }
+    input, select { border: none !important; padding: 0 2px !important; font-size: 8px !important; background: transparent !important; color: #000 !important; }
+    .slot-btn, .waste-btn { height: 13px; font-size: 7.5px; border: 1px solid #444 !important; }
+    .slot-btn.active { background: #000 !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    table { margin-bottom: 4px; }
+    .footer { margin-top: 2px; font-size: 8.5px; }
+    body.hide-empty-print tr.empty-slot-row { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Top Action & Live Timer Bar -->
+  <div class="toolbar">
+    <div class="brand-box">
+      <div class="app-title">🎓 A/L ULTIMATE STUDY SYSTEM</div>
+      <div class="countdown-pill" id="alCountdownBadge">A/L: -- Days</div>
+      <div class="streak-pill" id="streakBadge" title="අඛණ්ඩව පාඩම් කළ දින ගණන">🔥 0 Day Streak</div>
+      <div class="level-pill" id="levelBadge" title="මුළු පාඩම් පැය අනුව ඔබේ මට්ටම">🏆 Lv.1 Starter</div>
+    </div>
+
+    <!-- Built-in Accurate Focus Timer + White Noise -->
+    <div class="timer-widget">
+      <select id="timerModeSelect" onchange="changeTimerPreset()" style="width:auto; font-weight:700; padding:3px 6px;">
+        <option value="15">⏱️ 15m Block (+1 Slot)</option>
+        <option value="30">🍅 30m Session (+2 Slots)</option>
+        <option value="45">🔥 45m Deep (+3 Slots)</option>
+        <option value="60">⚡ 60m Full Hour (+4 Slots)</option>
+        <option value="5">☕ 5m Break</option>
+      </select>
+      <div class="timer-display" id="timerDisplay">15:00</div>
+      <button onclick="startPauseTimer()" id="timerStartBtn" class="btn-success">▶ Start</button>
+      <button onclick="resetTimer()" title="Reset Timer">↺</button>
+      <button onclick="toggleFocusSound()" id="noiseBtn" title="පාඩම් කරන විට අවධානය රඳවා ගැනීමට ශබ්ද තරංග (Brown Noise)">🎧 Sound</button>
+      <button onclick="openZenMode()" class="btn-purple" title="බාධාවකින් තොරව පාඩම් කිරීමට Fullscreen Zen Mode">🧘 Zen</button>
+    </div>
+
+    <div class="btn-group">
+      <button onclick="quickStartStudyNow()" class="btn-success" title="එක ක්ලික් කිරීමකින් දැන් ගතවන පැයට ගොස් ටයිමරය ආරම්භ කරන්න">🚀 දැන් පාඩම් අරඹන්න</button>
+      <button onclick="openShareCard()" class="btn-purple" title="අද දවසේ ප්‍රගතිය පින්තූරයක් ලෙස බාගත කරන්න">📸 Card</button>
+      <button onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+      <button onclick="exportBackup()" title="Download Backup">💾 Backup</button>
+      <button onclick="document.getElementById('importFile').click()" title="Restore Backup">📂 Restore</button>
+      <input type="file" id="importFile" style="display:none" accept=".json" onchange="importBackup(event)">
+      <button onclick="window.print()" class="btn-primary">🖨️ Print A4</button>
+      <button onclick="resetCurrentDay()" class="btn-danger" title="අද දත්ත මකන්න">🗑️</button>
+    </div>
+  </div>
+
+  <!-- Universal A/L Stream Selector & Student Goal Bar -->
+  <div class="stream-bar">
+    <div class="stream-bar-item">
+      <span style="font-weight:800; color:var(--primary);">🎓 විෂය ධාරාව:</span>
+      <select id="streamSelect" onchange="applyStreamPreset(this.value)" style="width:auto; font-weight:700;">
+        <option value="maths">📐 භෞතික විද්‍යා (Physical Science)</option>
+        <option value="bio">🧬 ජීව විද්‍යා (Biological Science)</option>
+        <option value="commerce">📊 වාණිජ (Commerce)</option>
+        <option value="etech">⚙️ ඉංජිනේරු තාක්ෂණවේදය (E-Tech)</option>
+        <option value="btech">🌱 ජෛව පද්ධති තාක්ෂණවේදය (B-Tech)</option>
+        <option value="arts">🎨 කලා (Arts)</option>
+        <option value="custom">✨ වෙනත් (Custom)</option>
+      </select>
+    </div>
+
+    <div class="stream-bar-item">
+      <span style="font-weight:700; font-size:12px;">🎯 ඉලක්කය:</span>
+      <input type="text" id="studentAmbition" placeholder="උදා: Medicine / Engineering | Z-Score: 2.10+" style="width:210px; font-weight:700;" oninput="saveGlobalSettings()">
+    </div>
+
+    <div class="stream-bar-item">
+      <button onclick="copyYesterdaySchedule()" title="ඊයේ දිනයේ විෂයයන් සහ වැඩ සැලසුම අද දිනයට පිටපත් කරන්න" style="font-size:11px;">
+        📋 ඊයේ සැලසුම
+      </button>
+      <select id="templateSlotSelect" style="width:auto; font-size:11px; font-weight:700; padding:3px 6px;" title="කාලසටහන් ආකෘතිය තෝරන්න">
+        <option value="study">🏠 සාමාන්‍ය පාඩම් දිනය</option>
+        <option value="class">🏫 පන්ති / පාසල් දිනය</option>
+        <option value="exam">📝 ප්‍රශ්න පත්‍ර දිනය</option>
+      </select>
+      <button onclick="saveRoutineTemplate()" title="දැනට ඇති කාලසටහන තෝරාගත් ආකෘතියට සුරකින්න" style="font-size:11px;">
+        💾 Save
+      </button>
+      <button onclick="loadRoutineTemplate()" title="තෝරාගත් කාලසටහන් ආකෘතිය අද දිනයට යොදන්න" style="font-size:11px;">
+        📂 Load
+      </button>
+      <button onclick="autoFillNightSleep()" title="රාත්‍රී 11:00 සිට අලුයම 5:00 දක්වා පැය 6ක නින්ද ස්වයංක්‍රීයව ලකුණු කරන්න" style="font-size:11px;">
+        😴 නින්ද (11PM-5AM)
+      </button>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="nav-tabs">
+    <div class="tab-list">
+      <button class="tab-btn active" id="tabBtn_planner" onclick="switchTab('planner', this)">📅 පැය 24 කාලසටහන (24h Planner)</button>
+      <button class="tab-btn" id="tabBtn_analytics" onclick="switchTab('analytics', this)">📊 විශ්ලේෂණ සහ උපදේශක (Analytics & Coach)</button>
+      <button class="tab-btn" id="tabBtn_syllabus" onclick="switchTab('syllabus', this)">📚 විෂය නිර්දේශය (Syllabus Tracker)</button>
+      <button class="tab-btn" id="tabBtn_omr" onclick="switchTab('omr', this)">🎯 MCQ OMR සහ විභාග පෙරහුරුව</button>
+      <button class="tab-btn" id="tabBtn_vault" onclick="switchTab('vault', this)">🧠 කෙටි සටහන් සහ වැරදුණු කරුණු</button>
+    </div>
+    <div style="display:flex; gap:6px; align-items:center;">
+      <button onclick="toggleFocusViewSections()" id="focusViewBtn" class="mini-btn" title="දැන් ගතවන කාල කොටස පමණක් පෙන්වන්න / සියලුම පැය පෙන්වන්න">👁️ දැන් කොටස පමණක් පෙන්වන්න</button>
+      <button onclick="scrollToLiveHour()" class="mini-btn btn-primary">⚡ දැන් පැයට යන්න</button>
+    </div>
+  </div>
+
+  <!-- Datalist for Quick Subject Picking Across All Streams -->
+  <datalist id="allAlSubjects">
+    <option value="Combined Maths">
+    <option value="Physics">
+    <option value="Chemistry">
+    <option value="Biology">
+    <option value="Agricultural Science">
+    <option value="Accounting">
+    <option value="Business Studies">
+    <option value="Economics">
+    <option value="ICT">
+    <option value="Engineering Tech">
+    <option value="Bio Systems Tech">
+    <option value="Science for Tech (SFT)">
+    <option value="Sinhala">
+    <option value="Political Science">
+    <option value="Geography">
+    <option value="Media Studies">
+    <option value="Buddhist Civilization">
+    <option value="History">
+    <option value="Logic">
+    <option value="English Literature">
+    <option value="Japanese / Languages">
+    <option value="Art / Dancing / Music">
+  </datalist>
+
+  <!-- Smart Datalist for Auto-Suggesting Lessons & Tasks without Typing -->
+  <datalist id="smartLessonSuggestions"></datalist>
+
+  <!-- ================= TAB 1: 24-HOUR DAILY PLANNER ================= -->
+  <div id="tab-planner" class="tab-content active">
+    <!-- Daily Target & Efficiency Progress Strip -->
+    <div class="goal-strip">
+      <div style="display:flex; align-items:center; gap:6px; font-weight:700;">
+        <span>🎯 DAILY GOAL (Hours):</span>
+        <input type="number" id="dailyGoalHours" value="10" min="1" max="20" style="width:55px; font-weight:800;" onchange="saveGlobalSettings(); renderTotals();">
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-fill" id="goalProgressBar"></div>
+      </div>
+      <div id="goalProgressText" style="font-weight:800; font-size:12px;">0% Complete</div>
+      <div id="efficiencyBadge" class="stat-badge stat-warn">Efficiency: 0%</div>
+      <label style="font-size:11px; color:var(--muted); display:flex; align-items:center; gap:4px; cursor:pointer;">
+        <input type="checkbox" id="hideEmptyPrintChk" onchange="togglePrintEmptyMode(this.checked)">
+        Print හිදී හිස් පැය සඟවන්න
+      </label>
+    </div>
+
+    <!-- Header Panels -->
+    <div class="top-grid">
+      <!-- Panel 1: Date & Exam Setup with Quick Stepper -->
+      <div class="panel">
+        <div class="panel-title">
+          <span>1. DATE & EXAM TARGET</span>
+          <div style="display:flex; gap:3px;">
+            <button type="button" class="mini-btn" onclick="stepDate(-1)" title="පෙර දිනය">◀</button>
+            <button type="button" class="mini-btn" onclick="stepDate(0)" title="අද දිනය">අද</button>
+            <button type="button" class="mini-btn" onclick="stepDate(1)" title="ඊළඟ දිනය">▶</button>
+          </div>
+        </div>
+        <div class="field-row">
+          <label>PLAN DATE :</label>
+          <input type="date" id="planDate" onchange="changeDate(this.value)" style="width:135px; font-weight:700;">
+        </div>
+        <div class="field-row">
+          <label>A/L EXAM DATE :</label>
+          <input type="date" id="examDate" onchange="saveGlobalSettings(); updateExamCountdown();" style="width:135px;">
+        </div>
+        <div class="field-row">
+          <label>DAYS FOR A/L :</label>
+          <span id="daysForALText" class="stat-badge stat-bad">Set Exam Date</span>
+        </div>
+      </div>
+
+      <!-- Panel 2: Unlimited Dynamic Daily Tasks + Spaced Repetition + Carry Over -->
+      <div class="panel">
+        <div class="panel-title">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span>2. TODAY'S PRIORITY TASKS (අද දවසේ ප්‍රධාන වැඩ ලැයිස්තුව)</span>
+            <span id="taskCounterBadge" class="stat-badge stat-good" style="font-size:10.5px; padding:1px 6px;">0/6 Done</span>
+          </div>
+          <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;">
+            <button type="button" class="mini-btn btn-primary" onclick="addNewTaskRow()" title="අද දවසට තවත් අලුත් වැඩක් එක් කරන්න">+ තව වැඩක් එක් කරන්න</button>
+            <button type="button" class="mini-btn" onclick="carryOverUnfinishedTasks()" title="අද අවසන් නොකළ වැඩ සියල්ල හෙට දිනයේ ලැයිස්තුවට යවන්න">↪ ඉතිරි වැඩ හෙටට</button>
+          </div>
+        </div>
+        <div class="priority-scroll-box">
+          <div id="priorityList" class="priority-grid"></div>
+        </div>
+      </div>
+
+      <!-- Panel 3: Universal Paper, Problem & Question Tracker with 1-Click Quick Add Chips -->
+      <div class="panel">
+        <div class="panel-title"><span>3. PAPER & PROBLEM TRACKER</span></div>
+        <div class="field-row">
+          <label>MCQs :</label>
+          <div class="quick-step-group">
+            <input type="number" id="mcqCount" placeholder="0" min="0" oninput="saveData(); renderAnalytics();">
+            <button type="button" class="step-chip" onclick="quickAddCount('mcqCount', 1)">+1</button>
+            <button type="button" class="step-chip" onclick="quickAddCount('mcqCount', 5)">+5</button>
+            <button type="button" class="step-chip" onclick="quickAddCount('mcqCount', 10)">+10</button>
+          </div>
+        </div>
+        <div class="field-row">
+          <label>ESSAYS / ගැටලු :</label>
+          <div class="quick-step-group">
+            <input type="number" id="essayCount" placeholder="0" min="0" oninput="saveData(); renderAnalytics();">
+            <button type="button" class="step-chip" onclick="quickAddCount('essayCount', 1)">+1</button>
+            <button type="button" class="step-chip" onclick="quickAddCount('essayCount', 5)">+5</button>
+          </div>
+        </div>
+        <div class="field-row">
+          <label>PAST PAPER / TUTE HOURS :</label>
+          <span id="paperHoursBadge" class="stat-badge stat-good">0h 00m</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Schedule Table (All 24 Hours: 4 AM to 4 AM) -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2" class="time-cell">TIME (24h) &nbsp;[1h | ⏬]</th>
+            <th rowspan="2">SUBJECT / MODE / TASK (පාඩම ටයිප් කරන්න හෝ ක්ලික් කර ලැයිස්තුවෙන් තෝරන්න)</th>
+            <th colspan="4">USING TIME (Click 15m blocks)</th>
+            <th colspan="4">NON-STUDY / SLEEP / WASTE (Click +15m | Max 60m/hr)</th>
+          </tr>
+          <tr>
+            <th style="width:46px;">15m</th>
+            <th style="width:46px;">15m</th>
+            <th style="width:46px;">15m</th>
+            <th style="width:46px;">15m</th>
+            <th style="width:62px;">SLEEP</th>
+            <th style="width:62px;">ONLINE</th>
+            <th style="width:62px;">OTHER</th>
+            <th style="width:65px;">TOTAL</th>
+          </tr>
+        </thead>
+        <tbody id="scheduleBody"></tbody>
+        <tfoot>
+          <tr style="background: var(--header-bg); font-weight: 800;">
+            <td colspan="2" style="text-align:right; padding-right:10px;">24-HOUR DAILY TOTALS :</td>
+            <td colspan="4" id="tableUsingTotal" style="color:var(--success); font-size:13px;">0h 00m</td>
+            <td id="sumSleep">0m</td>
+            <td id="sumOnline">0m</td>
+            <td id="sumOther">0m</td>
+            <td id="tableWasteTotal" style="color:var(--danger); font-size:13px;">0h 00m</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Bottom Summary & Auto Analytics -->
+    <div class="bottom-grid">
+      <!-- Subject Breakdown -->
+      <div class="panel">
+        <div class="panel-title">
+          <span>SUBJECT HOURS (විෂයයන් අනුව කාලය)</span>
+          <span style="font-size:10px; color:var(--muted);">විෂය නම වෙනස් කළ හැක</span>
+        </div>
+        <div class="field-row">
+          <input type="text" id="subj1Name" list="allAlSubjects" value="Combined Maths" style="width:155px; font-weight:700;" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus();">
+          <span id="subj1Hours" class="stat-badge stat-good">0h 00m</span>
+        </div>
+        <div class="field-row">
+          <input type="text" id="subj2Name" list="allAlSubjects" value="Physics" style="width:155px; font-weight:700;" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus();">
+          <span id="subj2Hours" class="stat-badge stat-good">0h 00m</span>
+        </div>
+        <div class="field-row">
+          <input type="text" id="subj3Name" list="allAlSubjects" value="Chemistry" style="width:155px; font-weight:700;" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus();">
+          <span id="subj3Hours" class="stat-badge stat-good">0h 00m</span>
+        </div>
+        <div class="field-row">
+          <label style="color:var(--muted);">Gen.Eng / GIT / Class :</label>
+          <span id="subjCommonHours" style="font-weight:800; font-size:12px;">0h 00m</span>
+        </div>
+        <div class="field-row">
+          <label style="color:var(--muted);">Modes (T / R / P / Prac) :</label>
+          <span id="modeBreakdownText" style="font-weight:700; font-size:11px;">T:0h | R:0h | P:0h</span>
+        </div>
+      </div>
+
+      <!-- Auto-Calculated Progress Summary -->
+      <div class="panel">
+        <div class="panel-title"><span>AUTO PROGRESS SUMMARY (ස්වයංක්‍රීය සාරාංශය)</span></div>
+        <div class="field-row">
+          <label>➤ TODAY STUDY TIME :</label>
+          <span id="todayTotalDisplay" class="stat-badge stat-good">0h 00m</span>
+        </div>
+        <div class="field-row">
+          <label>YESTERDAY TOTAL (Auto) :</label>
+          <span id="yesterdayTotalDisplay" style="font-weight:800;">0h 00m</span>
+        </div>
+        <div class="field-row">
+          <label>WEEK TOTAL SO FAR (Auto) :</label>
+          <span id="weekTotalDisplay" style="font-weight:800; color:var(--primary);">0h 00m</span>
+        </div>
+        <div class="field-row">
+          <label>SLEEP / ONLINE / OTHER :</label>
+          <span id="wasteTotalDisplay" class="stat-badge stat-bad">0h 00m</span>
+        </div>
+      </div>
+
+      <!-- Daily Review -->
+      <div class="panel">
+        <div class="panel-title"><span>DAILY REVIEW (දවසේ සමාලෝචනය)</span></div>
+        <div style="margin-bottom:8px;">
+          <label style="font-weight:600; font-size:11.5px; display:block; margin-bottom:3px;">MAIN DISTRACTION (කාලය අපතේ ගිය ප්‍රධාන හේතුව):</label>
+          <input type="text" id="mainDistraction" placeholder="උදා: Social Media / අනවශ්‍ය නින්ද..." oninput="saveData()">
+        </div>
+        <div>
+          <label style="font-weight:600; font-size:11.5px; display:block; margin-bottom:3px;">TOMORROW'S FIX (හෙට දවසේ දියුණු කරගත යුතු දේ):</label>
+          <input type="text" id="tomorrowFix" placeholder="උදා: උදෑසන සැලසුම් කළ වේලාවටම වැඩ ආරම්භ කිරීම..." oninput="saveData()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 2: ANALYTICS, HEATMAP & SMART COACH ================= -->
+  <div id="tab-analytics" class="tab-content">
+    <!-- Smart Study Coach Panel -->
+    <div class="panel" style="margin-bottom:14px;">
+      <div class="panel-title">
+        <span>🤖 SMART STUDY COACH (ස්වයංක්‍රීය අධ්‍යයන උපදේශක සහ විශ්ලේෂණය)</span>
+        <span style="font-size:11px; color:var(--muted);">ඔබගේ දත්ත මත පදනම්ව ස්වයංක්‍රීයව ජනනය වන උපදෙස්</span>
+      </div>
+      <ul id="smartCoachList" class="coach-list"></ul>
+    </div>
+
+    <div class="analytics-grid">
+      <!-- 7-Day Study Bar Chart -->
+      <div class="panel">
+        <div class="panel-title">
+          <span>📊 පසුගිය දින 7 පාඩම් කළ පැය ගණන (7-DAY STUDY TREND)</span>
+          <span id="sevenDayAvgBadge" class="stat-badge stat-good">Avg: 0h/day</span>
+        </div>
+        <div id="sevenDayChart" class="chart-bars"></div>
+      </div>
+
+      <!-- 7-Day Subject & Mode Distribution -->
+      <div class="panel">
+        <div class="panel-title"><span>🎯 සතියේ විෂයයන් අනුව කාලය බෙදී යාම (7-DAY BREAKDOWN)</span></div>
+        <div id="subjectDistBox" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <!-- 30-Day Consistency Heatmap -->
+    <div class="panel" style="margin-bottom:14px;">
+      <div class="panel-title">
+        <span>🔥 පසුගිය දින 30 අඛණ්ඩතා සිතියම (30-DAY CONSISTENCY HEATMAP)</span>
+        <span style="font-size:11px; color:var(--muted);">දිනයක් මත ක්ලික් කර එම දිනයේ කාලසටහන විවෘත කළ හැක</span>
+      </div>
+      <div id="heatmapGrid" class="heatmap-grid"></div>
+    </div>
+
+    <!-- Past Paper Score Tracker + SVG Trend Line Chart -->
+    <div class="panel">
+      <div class="panel-title">
+        <span>📝 ප්‍රශ්න පත්‍ර ලකුණු විශ්ලේෂකය සහ ප්‍රගති ප්‍රස්තාරය (PAST PAPER SCORE TRACKER & LINE GRAPH)</span>
+        <select id="paperChartFilter" onchange="renderPaperScores()" style="width:160px; font-weight:700; padding:2px 6px;">
+          <option value="all">සියලුම විෂයයන් (All)</option>
+          <option value="s1">Subject 1</option>
+          <option value="s2">Subject 2</option>
+          <option value="s3">Subject 3</option>
+          <option value="common">Gen.Eng / GIT</option>
+        </select>
+      </div>
+
+      <!-- Visual SVG Line Chart for Marks -->
+      <div id="paperChartBox" style="background:var(--card); border:1px solid var(--border); border-radius:8px; padding:10px; margin-bottom:12px;"></div>
+
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+        <select id="paperSubjInput" style="width:180px; font-weight:700;"></select>
+        <input type="text" id="paperNameInput" placeholder="ප්‍රශ්න පත්‍රයේ නම (උදා: 2024 Past Paper / Model Paper 1)" style="flex:1; min-width:200px;">
+        <input type="number" id="paperMarksInput" placeholder="ලකුණු %" min="0" max="100" style="width:95px;" onkeydown="if(event.key==='Enter') addPaperScore()">
+        <button onclick="addPaperScore()" class="btn-primary">+ ලකුණු එක් කරන්න</button>
+      </div>
+      <div id="paperScoreList" style="max-height:220px; overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 3: SYLLABUS TRACKER ================= -->
+  <div id="tab-syllabus" class="tab-content">
+    <div class="panel" style="margin-bottom:12px;">
+      <div class="panel-title">
+        <span>📚 විෂය නිර්දේශ ආවරණ පද්ධතිය (SYLLABUS COVERAGE TRACKER)</span>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <input type="text" id="syllabusSearchInput" placeholder="🔍 පාඩම සොයන්න..." style="width:160px; padding:3px 8px;" oninput="renderSyllabus()">
+          <select id="syllabusFilterMode" onchange="renderSyllabus()" style="width:150px; padding:3px 6px;">
+            <option value="all">සියලුම ඒකක (All)</option>
+            <option value="incomplete">ඉතිරි ඒකක (Pending)</option>
+            <option value="completed">අවසන් කළ (100% Done)</option>
+          </select>
+          <button onclick="loadDefaultSyllabusForCurrentSubjects(true)" class="mini-btn btn-primary">📥 නිල විෂය නිර්දේශ ඒකක පූරණය කරන්න</button>
+        </div>
+      </div>
+      <div class="syllabus-grid" id="syllabusContainer"></div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 4: DIGITAL MCQ OMR & EXAM SIMULATOR ================= -->
+  <div id="tab-omr" class="tab-content">
+    <div class="panel">
+      <div class="panel-title">
+        <span>🎯 ඩිජිටල් MCQ OMR පත්‍රිකාව සහ විභාග ටයිමරය (50 QUESTIONS OMR SIMULATOR)</span>
+        <span style="font-size:11px; color:var(--muted);">ඔබ ලකුණු කරන පිළිතුරු ස්වයංක්‍රීයව සුරැකේ (Auto-Saved)</span>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:var(--card); padding:10px; border-radius:8px; border:1px solid var(--border);">
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <select id="omrSubjectSelect" style="width:160px; font-weight:700;" onchange="saveOmrState()"></select>
+          <input type="text" id="omrPaperTitle" placeholder="ප්‍රශ්න පත්‍රය (උදා: 2023 MCQ Paper)" style="width:200px;" oninput="saveOmrState()">
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span style="font-weight:800; font-size:16px; color:var(--primary);" id="omrTimerDisplay">02:00:00</span>
+          <button onclick="startPauseOmrTimer()" id="omrTimerBtn" class="btn-success">▶ Start 2h Exam</button>
+          <button onclick="resetOmrTimer()">↺</button>
+        </div>
+
+        <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+          <button onclick="toggleOmrGradingMode()" id="omrGradeModeBtn" class="btn-purple">✔️ හරි/වැරදි ලකුණු කරන්න</button>
+          <button onclick="gradeWithAnswerKey()" title="පිළිතුරු පත්‍රිකාවේ (Marking Scheme) පිළිතුරු 50 ලබා දී ස්වයංක්‍රීයව පරීක්ෂා කරන්න">🔑 Answer Key</button>
+          <span id="omrScoreBadge" class="stat-badge stat-good">Answered: 0/50 | Score: 0/50 (0%)</span>
+          <button onclick="saveOmrToScores()" class="btn-primary">💾 ලකුණු සුරකින්න</button>
+          <button onclick="clearOmrSheet()" class="btn-danger">🗑️ Clear</button>
+        </div>
+      </div>
+
+      <div id="omrHelpBanner" style="margin-top:8px; font-size:12px; color:var(--muted); font-weight:600; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+        <span>💡 පළමුව 1 සිට 50 දක්වා ඔබේ පිළිතුරු (1,2,3,4,5) ලකුණු කරන්න. ඉන්පසු <strong>"✔️ හරි/වැරදි ලකුණු කරන්න"</strong> හෝ <strong>"🔑 Answer Key"</strong> භාවිත කරන්න.</span>
+        <span id="omrWrongListText" style="color:var(--danger); font-weight:800;"></span>
+      </div>
+
+      <div id="omrGridContainer" class="omr-grid"></div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 5: FLASHCARDS & MISTAKE VAULT ================= -->
+  <div id="tab-vault" class="tab-content">
+    <div class="panel">
+      <div class="panel-title">
+        <span>🧠 කෙටි සටහන්, සූත්‍ර සහ වැරදුණු කරුණු ගබඩාව (ACTIVE RECALL FLASHCARDS & MISTAKE VAULT)</span>
+        <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+          <input type="text" id="vaultSearchInput" placeholder="🔍 සටහන් සොයන්න..." style="width:150px; padding:3px 8px;" oninput="renderVaultCards()">
+          <select id="vaultFilterSubj" onchange="renderVaultCards()" style="width:140px; padding:3px 6px;">
+            <option value="all">සියලුම විෂයයන්</option>
+            <option value="s1">Subject 1</option>
+            <option value="s2">Subject 2</option>
+            <option value="s3">Subject 3</option>
+            <option value="common">Gen.Eng / GIT</option>
+          </select>
+          <button onclick="shuffleVaultCards()" class="mini-btn btn-purple">🔀 කාඩ්පත් කලවම් කරන්න (Shuffle)</button>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+        <select id="vaultSubjSelect" style="width:170px; font-weight:700;"></select>
+        <input type="text" id="vaultQuestionInput" placeholder="ප්‍රශ්නය / අමතක වන කරුණ / සූත්‍රයේ නම..." style="flex:1; min-width:220px;">
+        <input type="text" id="vaultAnswerInput" placeholder="පිළිතුර / සූත්‍රය / කෙටි සටහන..." style="flex:1; min-width:220px;" onkeydown="if(event.key==='Enter') addVaultCard()">
+        <button onclick="addVaultCard()" class="btn-primary">+ කාඩ්පත එක් කරන්න</button>
+      </div>
+
+      <div id="vaultCardsContainer" class="flashcard-grid"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    A/L ULTIMATE STUDY & TIME MANAGEMENT SYSTEM &nbsp;|&nbsp; 24-HOUR EDITION
+  </div>
+</div>
+
+<!-- Floating Bottom Mini-Controller for Easy Access While Scrolling -->
+<div class="floating-quickbar">
+  <span style="font-weight:800; color:var(--primary); font-variant-numeric:tabular-nums;" id="floatTimerText">⏱️ 15:00</span>
+  <button onclick="startPauseTimer()" class="mini-btn btn-success" id="floatStartBtn">▶ Start</button>
+  <button onclick="scrollToLiveHour()" class="mini-btn btn-primary">⚡ දැන් පැයට</button>
+  <button onclick="toggleFocusSound()" class="mini-btn" id="floatSoundBtn">🎧 Sound</button>
+  <button onclick="openZenMode()" class="mini-btn btn-purple">🧘 Zen</button>
+</div>
+
+<!-- Non-blocking Toast Notification -->
+<div id="toastBox" class="toast-box"></div>
+
+<!-- Fullscreen Zen Focus Mode Overlay -->
+<div class="zen-overlay" id="zenOverlay">
+  <div style="font-size:14px; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:1px;">
+    🧘 DISTRACTION-FREE ZEN FOCUS MODE
+  </div>
+  <div id="zenAmbitionText" style="font-size:18px; color:#facc15; font-weight:800; margin-top:6px;"></div>
+  <div class="zen-timer" id="zenTimerDisplay">15:00</div>
+  <div id="zenCurrentTaskText" style="font-size:20px; font-weight:700; color:#e2e8f0; max-width:600px; margin-bottom:24px;">
+    දැන් ගතවන පැයේ පාඩම කෙරෙහි පමණක් අවධානය යොමු කරන්න
+  </div>
+  <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+    <button onclick="startPauseTimer()" class="btn-success" style="font-size:15px; padding:10px 20px;">▶ Start / Pause Timer</button>
+    <button onclick="toggleFocusSound()" class="btn-primary" style="font-size:15px; padding:10px 20px;">🎧 Toggle Focus Sound</button>
+    <button onclick="closeZenMode()" class="btn-danger" style="font-size:15px; padding:10px 20px;">✖ Exit Zen Mode (Esc)</button>
+  </div>
+</div>
+
+<!-- Shareable Study Card Modal -->
+<div class="modal-overlay" id="shareModal">
+  <div class="modal-card">
+    <h3 style="margin-bottom:4px; color:var(--primary);">📸 අද දවසේ පාඩම් සාරාංශ කාඩ්පත</h3>
+    <p style="font-size:12px; color:var(--muted);">මෙම කාඩ්පත බාගත කර ඔබේ ප්‍රගතිය සටහන් කර තබාගන්න</p>
+    <canvas id="shareCanvas" width="600" height="360"></canvas>
+    <div style="display:flex; justify-content:center; gap:10px; margin-top:8px;">
+      <button onclick="downloadShareCard()" class="btn-success">⬇️ පින්තූරය බාගත කරන්න (Download PNG)</button>
+      <button onclick="closeShareCard()">✖ වසන්න</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Safe HTML Escaping Helper
+  function escHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Non-blocking Toast Notification Helper
+  let toastTimeout = null;
+  function showToast(msg) {
+    const box = document.getElementById('toastBox');
+    if (!box) return;
+    box.textContent = msg;
+    box.classList.add('show');
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      box.classList.remove('show');
+    }, 3600);
+  }
+
+  // Stream Presets & Sri Lankan A/L Official Syllabus Database
+  const STREAM_PRESETS = {
+    maths: { s1: "Combined Maths", s2: "Physics", s3: "Chemistry" },
+    bio: { s1: "Biology", s2: "Physics", s3: "Chemistry" },
+    commerce: { s1: "Accounting", s2: "Business Studies", s3: "Economics" },
+    etech: { s1: "Engineering Tech", s2: "Science for Tech (SFT)", s3: "ICT" },
+    btech: { s1: "Bio Systems Tech", s2: "Science for Tech (SFT)", s3: "Agricultural Science" },
+    arts: { s1: "Sinhala", s2: "Political Science", s3: "Geography" }
+  };
+
+  const SYLLABUS_PRESETS = {
+    "combined maths": [
+      "Pure 01: තාත්වික සංඛ්‍යා සහ ශ්‍රිත", "Pure 02: බහුපද ශ්‍රිත හා වර්ගජ සමීකරණ", "Pure 03: ත්‍රිකෝණමිතිය",
+      "Pure 04: සීමාව සහ අවකලනය", "Pure 05: අනුකලනය", "Pure 06: සරල රේඛාව", "Pure 07: වෘත්තය",
+      "Pure 08: ශ්‍රේණි හා ගණිතමය අභ්‍යුහනය", "Pure 09: සංකරණ, සංයෝජන හා ද්විපද ප්‍රමේයය",
+      "Pure 10: න්‍යාස, නිශ්චායක හා සංකීර්ණ සංඛ්‍යා", "Applied 01: දෛශික සහ බල පද්ධති",
+      "Applied 02: ඍජුකෝණී චලිතය හා ප්‍රක්ෂිප්ත", "Applied 03: නිව්ටන් නියම සහ ආවේගය",
+      "Applied 04: කාර්යය, ශක්තිය හා ක්ෂමතාව", "Applied 05: වෘත්ත හා සරල අනුවර්තී චලිතය",
+      "Applied 06: ගුරුත්ව කේන්ද්‍රය හා සන්ධි කළ දඬු", "Applied 07: සම්භාවිතාව සහ සංඛ්‍යානය"
+    ],
+    "physics": [
+      "ඒකකය 01: මිනුම් (Measurements)", "ඒකකය 02: යාන්ත්‍ර විද්‍යාව (Mechanics)",
+      "ඒකකය 03: දෝලන හා තරංග (Oscillations & Waves)", "ඒකකය 04: තාප භෞතිකය (Thermal Physics)",
+      "ඒකකය 05: ගුරුත්වාකර්ෂණ ක්ෂේත්‍ර", "ඒකකය 06: ස්ථිති විද්‍යුත් ක්ෂේත්‍ර",
+      "ඒකකය 07: චුම්බක ක්ෂේත්‍ර", "ඒකකය 08: ධාරා විද්‍යුතය (Current Electricity)",
+      "ඒකකය 09: ඉලෙක්ට්‍රොනික විද්‍යාව (Electronics)", "ඒකකය 10: පදාර්ථයේ යාන්ත්‍රික ගුණ",
+      "ඒකකය 11: පදාර්ථය හා විකිරණ"
+    ],
+    "chemistry": [
+      "ඒකකය 01: පරමාණුක ව්‍යුහය", "ඒකකය 02: ව්‍යුහය හා බන්ධන", "ඒකකය 03: රසායනික ගණනය (Stoichiometry)",
+      "ඒකකය 04: පදාර්ථයේ වායු අවස්ථාව", "ඒකකය 05: ශක්ති විද්‍යාව (Energetics)",
+      "ඒකකය 06: s, p සහ d ගොනුවේ රසායනය (Inorganic)", "ඒකකය 07: මූලික කාබනික රසායනය",
+      "ඒකකය 08: හයිඩ්‍රොකාබන හා කාබනික සංයෝග (Organic)", "ඒකකය 09: රසායනික චාලක විද්‍යාව (Kinetics)",
+      "ඒකකය 10: රසායනික සමතුලිතතාව (Equilibrium)", "ඒකකය 11: විද්‍යුත් රසායනය (Electrochemistry)",
+      "ඒකකය 12: කර්මාන්ත හා පරිසර රසායනය"
+    ],
+    "biology": [
+      "ඒකකය 01: ජීව විද්‍යාව හැඳින්වීම", "ඒකකය 02: ජීවයේ රසායනික හා සෛලීය පදනම",
+      "ඒකකය 03: ජීවීන්ගේ පරිණාමය හා විවිධත්වය", "ඒකකය 04: ශාක ආකාරය හා ක්‍රියාකාරිත්වය",
+      "ඒකකය 05: සත්ත්ව ආකාරය හා ක්‍රියාකාරිත්වය", "ඒකකය 06: ප්‍රවේණිය (Genetics)",
+      "ඒකකය 07: අණුක ජීව විද්‍යාව හා ප්‍රතිසංයෝජිත DNA", "ඒකකය 08: පාරිසරික ජීව විද්‍යාව",
+      "ඒකකය 09: ක්ෂුද්‍ර ජීව විද්‍යාව (Microbiology)", "ඒකකය 10: ව්‍යවහාරික ජීව විද්‍යාව"
+    ],
+    "accounting": [
+      "ඒකකය 01: ගිණුම්කරණය හැඳින්වීම හා සමීකරණය", "ඒකකය 02: ද්විත්ව සටහන් හා මූලික පොත්",
+      "ඒකකය 03: තනි පුද්ගල ව්‍යාපාර මූල්‍ය ප්‍රකාශන", "ඒකකය 04: ලාභ අරමුණු කර නොගත් සංවිධාන",
+      "ඒකකය 05: අසම්පූර්ණ සටහන්", "ඒකකය 06: හවුල් ව්‍යාපාර ගිණුම්කරණය",
+      "ඒකකය 07: සමාගම් ගිණුම්කරණය හා ප්‍රමිත (LKAS/SLFRS)", "ඒකකය 08: මූල්‍ය ප්‍රකාශන විශ්ලේෂණය (අනුපාත)",
+      "ඒකකය 09: පිරිවැය ගිණුම්කරණය (ද්‍රව්‍ය, ශ්‍රම, පොදු කාර්ය)", "ඒකකය 10: ආන්තික පිරිවැය හා CVP විශ්ලේෂණය",
+      "ඒකකය 11: අයවැයකරණය හා ආයෝජන තීරණ (NPV)"
+    ],
+    "business studies": [
+      "ඒකකය 01: ව්‍යාපාර පදනම හා පරිසරය", "ඒකකය 02: සමාජ වගකීම් හා ආචාරධර්ම",
+      "ඒකකය 03: රජය හා ව්‍යාපාර", "ඒකකය 04: ව්‍යාපාර සංවිධාන ක්‍රම",
+      "ඒකකය 05: ව්‍යවසායකත්වය හා කුඩා ව්‍යාපාර", "ඒකකය 06: මුදල් හා මූල්‍ය ආයතන",
+      "ඒකකය 07: රක්ෂණය, සන්නිවේදනය හා ප්‍රවාහනය", "ඒකකය 08: දේශීය හා ජාත්‍යන්තර වෙළඳාම",
+      "ඒකකය 09: කළමනාකරණය (Management)", "ඒකකය 10: මෙහෙයුම් කළමනාකරණය",
+      "ඒකකය 11: අලෙවිකරණය (Marketing)", "ඒකකය 12: මූල්‍ය කළමනාකරණය හා කොටස් වෙළඳපොළ",
+      "ඒකකය 13: මානව සම්පත් කළමනාකරණය (HRM)", "ඒකකය 14: තොරතුරු පද්ධති හා ව්‍යාපාර සැලැස්ම"
+    ],
+    "economics": [
+      "ඒකකය 01: ආර්ථික විද්‍යාව හැඳින්වීම හා මූලික ප්‍රශ්න", "ඒකකය 02: ඉල්ලුම, සැපයුම හා වෙළඳපොළ සමතුලිතය",
+      "ඒකකය 03: වෙළඳපොළට රජයේ මැදිහත්වීම", "ඒකකය 04: නිෂ්පාදන හා පිරිවැය න්‍යාය",
+      "ඒකකය 05: වෙළඳපොළ ව්‍යුහයන්", "ඒකකය 06: සාර්ව ආර්ථික විද්‍යාව හා ජාතික ගිණුම්කරණය",
+      "ඒකකය 07: සාර්ව ආර්ථික සමතුලිතය", "ඒකකය 08: මුදල්, බැංකු හා මිල මට්ටම",
+      "ඒකකය 09: රාජ්‍ය මූල්‍ය ප්‍රතිපත්තිය", "ඒකකය 10: ජාත්‍යන්තර වෙළඳාම හා විදේශ විනිමය",
+      "ඒකකය 11: ආර්ථික වර්ධනය හා තිරසර සංවර්ධනය", "ඒකකය 12: ශ්‍රී ලංකාවේ ආර්ථික ප්‍රතිපත්ති"
+    ],
+    "ict": [
+      "ඒකකය 01: තොරතුරු හා සන්නිවේදන තාක්ෂණ සංකල්ප", "ඒකකය 02: පරිගණක පද්ධති හැඳින්වීම",
+      "ඒකකය 03: දත්ත නිරූපණය (Number Systems)", "ඒකකය 04: සංඛ්‍යාංක පරිපථ හා තාර්කික ද්වාර (Logic Gates)",
+      "ඒකකය 05: මෙහෙයුම් පද්ධති (Operating Systems)", "ඒකකය 06: දත්ත සන්නිවේදනය හා ජාලකරණය (Networking)",
+      "ඒකකය 07: පද්ධති විශ්ලේෂණය හා නිර්මාණය (SDLC)", "ඒකකය 08: දත්ත සමුදා කළමනාකරණය (DBMS & SQL)",
+      "ඒකකය 09: Python ක්‍රමලේඛනය (Programming)", "ඒකකය 10: වෙබ් අඩවි සංවර්ධනය (HTML, CSS, PHP)",
+      "ඒකකය 11: Internet of Things (IoT)", "ඒකකය 12: ICT හි ව්‍යාපාරික හා නව ප්‍රවණතා"
+    ],
+    "engineering tech": [
+      "ඒකකය 01: ඉංජිනේරු තාක්ෂණවේදය හැඳින්වීම", "ඒකකය 02: මූලික මිනුම් හා උපකරණ",
+      "ඒකකය 03: ඉංජිනේරු ඇඳීම හා සැලසුම්කරණය", "ඒකකය 04: යාන්ත්‍රික හා මෝටර් රථ තාක්ෂණවේදය",
+      "ඒකකය 05: විදුලි හා ඉලෙක්ට්‍රොනික තාක්ෂණවේදය", "ඒකකය 06: සිවිල් ඉංජිනේරු හා ඉදිකිරීම් තාක්ෂණය",
+      "ඒකකය 07: නිෂ්පාදන තාක්ෂණය හා කාර්මික ආරක්ෂාව", "ඒකකය 08: බිම් මැනුම් හා ඇස්තමේන්තුකරණය",
+      "ඒකකය 09: ව්‍යවසායකත්වය හා කළමනාකරණය"
+    ],
+    "bio systems tech": [
+      "ඒකකය 01: ජෛව පද්ධති තාක්ෂණවේදය හැඳින්වීම", "ඒකකය 02: කාලගුණය, පස හා ජල කළමනාකරණය",
+      "ඒකකය 03: ශාක ප්‍රචාරණය හා ආරක්ෂිත ගෘහ වගාව", "ඒකකය 04: පසු අස්වනු තාක්ෂණය හා ආහාර සැකසුම්",
+      "ඒකකය 05: සත්ත්ව පාලනය හා ජලජීවී වගාව", "ඒකකය 06: ජෛව තාක්ෂණය හා පටක රෝපණය",
+      "ඒකකය 07: කෘෂි යන්ත්‍රෝපකරණ, මිනුම් හා බලශක්තිය", "ඒකකය 08: අපද්‍රව්‍ය කළමනාකරණය හා ව්‍යවසායකත්වය"
+    ],
+    "science for tech (sft)": [
+      "ඒකකය 01: මූලික ගණිත සංකල්ප, ත්‍රිකෝණමිතිය හා ජ්‍යාමිතිය", "ඒකකය 02: මිනුම් හා ඒකක",
+      "ඒකකය 03: යාන්ත්‍ර විද්‍යාව හා තරල (Mechanics & Fluids)", "ඒකකය 04: තාපය හා තාප ගති විද්‍යාව",
+      "ඒකකය 05: තරංග, ආලෝකය හා විද්‍යුතය", "ඒකකය 06: පරමාණුක ව්‍යුහය හා රසායනික බන්ධන",
+      "ඒකකය 07: රසායනික ගණනය, අම්ල-භෂ්ම හා ද්‍රාවණ", "ඒකකය 08: කාබනික රසායනය හා බහුඅවයවක (Polymers)",
+      "ඒකකය 09: සෛලීය පදනම හා ක්ෂුද්‍ර ජීව විද්‍යාව", "ඒකකය 10: පරිසර විද්‍යාව හා ස්වභාවික සම්පත්"
+    ],
+    "agricultural science": [
+      "ඒකකය 01: ශ්‍රී ලංකාවේ කෘෂිකර්මය හා කෘෂි කාලගුණය", "ඒකකය 02: පාංශු විද්‍යාව හා ශාක පෝෂණය",
+      "ඒකකය 03: බිම් සැකසීම, ජල සම්පාදනය හා ජලවහනය", "ඒකකය 04: ශාක ප්‍රචාරණය හා අභිජනනය",
+      "ඒකකය 05: ශාක කායික විද්‍යාව හා පළිබෝධ පාලනය", "ඒකකය 06: පසු අස්වනු තාක්ෂණය හා ආහාර සංරක්ෂණය",
+      "ඒකකය 07: ගොවිපළ සත්ත්ව පාලනය", "ඒකකය 08: කෘෂි ආර්ථික විද්‍යාව හා ව්‍යාපාර කළමනාකරණය"
+    ],
+    "sinhala": [
+      "01: නූතන පද්‍ය සාහිත්‍යය", "02: නූතන කෙටිකතා විමසුම", "03: නවකතා විචාරය",
+      "04: සම්භාව්‍ය පද්‍ය සාහිත්‍යය (ගුත්තිලය / සැළලිහිණිය)", "05: සම්භාව්‍ය ගද්‍ය (බුත්සරණ / සද්ධර්මරත්නාවලිය)",
+      "06: සිංහල ව්‍යාකරණ හා භාෂා රීති", "07: නිර්මාණාත්මක රචනය හා සාරාංශකරණය", "08: ජනශ්‍රැති හා සාහිත්‍ය විචාර මූලධර්ම"
+    ],
+    "political science": [
+      "01: දේශපාලන විද්‍යාවේ ස්වභාවය හා රාජ්‍යය", "02: දේශපාලන මතවාද (ලිබරල්, සමාජවාදී, ෆැසිස්ට්)",
+      "03: ගැටුම් හා ගැටුම් නිරාකරණය", "04: ආණ්ඩුක්‍රම වර්ගීකරණය (කැබිනට්, ජනාධිපති, සන්ධීය)",
+      "05: ශ්‍රී ලංකාවේ යටත්විජිත යුගයේ ආණ්ඩුක්‍රම ප්‍රතිසංස්කරණ", "06: 1978 ආණ්ඩුක්‍රම ව්‍යවස්ථාව හා සංශෝධන",
+      "07: ප්‍රජාතන්ත්‍රවාදය, මැතිවරණ ක්‍රම හා දේශපාලන පක්ෂ", "08: ජාත්‍යන්තර දේශපාලනය හා විදේශ ප්‍රතිපත්තිය"
+    ],
+    "geography": [
+      "01: භෞතික භූගෝල විද්‍යාව (ශිලාගෝලය, වායුගෝලය, ජලගෝලය)", "02: මානව හා ආර්ථික භූගෝල විද්‍යාව",
+      "03: සිතියම් අධ්‍යයනය හා භූගෝලීය තොරතුරු පද්ධති (GIS)", "04: සංඛ්‍යාන දත්ත නිරූපණය හා විශ්ලේෂණය",
+      "05: පාරිසරික ගැටලු හා ආපදා කළමනාකරණය", "06: ශ්‍රී ලංකාවේ සංවර්ධන ව්‍යාපෘති හා කලාපීය භූගෝලය"
+    ],
+    "media studies": [
+      "01: සන්නිවේදන මූලධර්ම හා ආකෘති", "02: ජනමාධ්‍ය විකාශනය (පුවත්පත්, ගුවන්විදුලි, රූපවාහිනී)",
+      "03: නව මාධ්‍ය හා ඩිජිටල් සන්නිවේදනය", "04: සංස්කෘතිය හා සන්නිවේදනය",
+      "05: මහජන සම්බන්ධතා හා ප්‍රචාරණය", "06: මාධ්‍ය ආචාරධර්ම, නීතිය හා මාධ්‍ය සාක්ෂරතාව",
+      "07: නිර්මාණාත්මක මාධ්‍ය ලේඛනය හා විචාරය"
+    ],
+    "buddhist civilization": [
+      "01: භාරතීය පසුබිම හා බුද්ධ චරිතය", "02: මූලික බෞද්ධ ඉගැන්වීම් හා සමාජ දර්ශනය",
+      "03: බෞද්ධ සංස්කෘතිය හා ධර්ම සංගායනා", "04: මහින්දාගමනය හා ශ්‍රී ලාංකේය බෞද්ධ ශිෂ්ටාචාරය",
+      "05: බෞද්ධ කලා ශිල්ප හා වාස්තු විද්‍යාව", "06: වත්මන් ලෝකයේ බුදුදහමේ ව්‍යාප්තිය"
+    ],
+    "history": [
+      "01: ශ්‍රී ලංකාවේ පැරණි ශිෂ්ටාචාරය හා රාජධානි", "02: පැරණි වාරි තාක්ෂණය හා ආර්ථිකය",
+      "03: යුරෝපීය බලපෑම හා යටත්විජිත යුගය", "04: නිදහස් සටන හා ආණ්ඩුක්‍රම ප්‍රතිසංස්කරණ",
+      "05: ලෝක ඉතිහාසයේ ප්‍රධාන විප්ලව හා ලෝක යුද්ධ", "06: නූතන ජාත්‍යන්තර සංවිධාන හා දේශපාලනය"
+    ],
+    "logic": [
+      "01: තර්ක ශාස්ත්‍රය හැඳින්වීම හා තර්ක වර්ග", "02: භාෂාව, පද හා නිර්වචන",
+      "03: සාම්ප්‍රදායික තර්ක ශාස්ත්‍රය හා සංවාක්‍යය", "04: ප්‍රස්තුත තර්ක ශාස්ත්‍රය හා සත්‍යතා වගු",
+      "05: ආඛ්‍යාත තර්ක ශාස්ත්‍රය", "06: තාර්කික ආභාස (Fallacies)",
+      "07: විද්‍යාත්මක ක්‍රමය හා කල්පිත පරීක්ෂාව"
+    ]
+  };
+
+  // COMPLETE 24-HOUR SCHEDULE SLOTS with Group IDs for Collapsible Sections
+  const timeSlots = [
+    { group: "🌅 අලුයම කාලය - EARLY BIRD (4:00 AM - 7:00 AM)", groupId: "grp_early" },
+    { id: "am_4_5", label: "4:00 - 5:00 AM", hour24: 4, groupId: "grp_early" },
+    { id: "am_5_6", label: "5:00 - 6:00 AM", hour24: 5, groupId: "grp_early" },
+    { id: "am_6_7", label: "6:00 - 7:00 AM", hour24: 6, groupId: "grp_early" },
+    { group: "☀️ උදෑසන කාලය - MORNING (7:00 AM - 12:00 PM)", groupId: "grp_morning" },
+    { id: "am_7_8", label: "7:00 - 8:00 AM", hour24: 7, groupId: "grp_morning" },
+    { id: "am_8_9", label: "8:00 - 9:00 AM", hour24: 8, groupId: "grp_morning" },
+    { id: "am_9_10", label: "9:00 - 10:00 AM", hour24: 9, groupId: "grp_morning" },
+    { id: "am_10_11", label: "10:00 - 11:00 AM", hour24: 10, groupId: "grp_morning" },
+    { id: "am_11_12", label: "11:00 - 12:00 PM", hour24: 11, groupId: "grp_morning" },
+    { group: "🌤️ දහවල් සහ සවස - AFTERNOON & EVENING (12:00 PM - 6:00 PM)", groupId: "grp_afternoon" },
+    { id: "pm_12_1", label: "12:00 - 1:00 PM", hour24: 12, groupId: "grp_afternoon" },
+    { id: "pm_1_2", label: "1:00 - 2:00 PM", hour24: 13, groupId: "grp_afternoon" },
+    { id: "pm_2_3", label: "2:00 - 3:00 PM", hour24: 14, groupId: "grp_afternoon" },
+    { id: "pm_3_4", label: "3:00 - 4:00 PM", hour24: 15, groupId: "grp_afternoon" },
+    { id: "pm_4_5", label: "4:00 - 5:00 PM", hour24: 16, groupId: "grp_afternoon" },
+    { id: "pm_5_6", label: "5:00 - 6:00 PM", hour24: 17, groupId: "grp_afternoon" },
+    { group: "🌙 රාත්‍රී කාලය - NIGHT (6:00 PM - 12:00 AM)", groupId: "grp_night" },
+    { id: "pm_6_7", label: "6:00 - 7:00 PM", hour24: 18, groupId: "grp_night" },
+    { id: "pm_7_8", label: "7:00 - 8:00 PM", hour24: 19, groupId: "grp_night" },
+    { id: "pm_8_9", label: "8:00 - 9:00 PM", hour24: 20, groupId: "grp_night" },
+    { id: "pm_9_10", label: "9:00 - 10:00 PM", hour24: 21, groupId: "grp_night" },
+    { id: "pm_10_11", label: "10:00 - 11:00 PM", hour24: 22, groupId: "grp_night" },
+    { id: "pm_11_12", label: "11:00 - 12:00 AM", hour24: 23, groupId: "grp_night" },
+    { group: "🦉 මැදියම් රාත්‍රී කාලය - NIGHT OWL (12:00 AM - 4:00 AM)", groupId: "grp_owl" },
+    { id: "am_12_1", label: "12:00 - 1:00 AM", hour24: 0, groupId: "grp_owl" },
+    { id: "am_1_2", label: "1:00 - 2:00 AM", hour24: 1, groupId: "grp_owl" },
+    { id: "am_2_3", label: "2:00 - 3:00 AM", hour24: 2, groupId: "grp_owl" },
+    { id: "am_3_4", label: "3:00 - 4:00 AM", hour24: 3, groupId: "grp_owl" }
+  ];
+
+  const orderedSlotIds = timeSlots.filter(s => !s.group).map(s => s.id);
+  let collapsedGroups = {};
+  let isFocusSectionView = false;
+
+  function getLocalDateString(dateObj = new Date()) {
+    const y = dateObj.getFullYear();
+    const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const d = String(dateObj.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  function getLogicalStudyDate() {
+    const now = new Date();
+    if (now.getHours() < 4) {
+      const prev = new Date(now);
+      prev.setDate(now.getDate() - 1);
+      return getLocalDateString(prev);
+    }
+    return getLocalDateString(now);
+  }
+
+  let currentDate = getLocalDateString();
+  let currentPriorities = [];
+  let timerInterval = null;
+  let timerDurationSec = 15 * 60;
+  let timerRemainingSec = 15 * 60;
+  let timerEndTime = null;
+  const BASE_PAGE_TITLE = "A/L Ultimate Study & Time Management System";
+
+  let audioCtx = null;
+  let noiseNode = null;
+  let isNoisePlaying = false;
+
+  // OMR State
+  let omrAnswers = {};
+  let omrCorrectFlags = {};
+  let omrGradingMode = false;
+  let omrTimerInterval = null;
+  let omrRemainingSec = 2 * 60 * 60;
+  let omrEndTime = null;
+
+  function formatMinutes(mins) {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return `${h}h ${String(m).padStart(2, '0')}m`;
+  }
+
+  function getCurrentSlotId() {
+    const nowH = new Date().getHours();
+    const found = timeSlots.find(s => s.hour24 === nowH);
+    return found ? found.id : null;
+  }
+
+  function refreshLiveHourHighlight() {
+    const liveSlotId = getCurrentSlotId();
+    timeSlots.forEach(slot => {
+      if (slot.group) return;
+      const row = document.getElementById(`row_${slot.id}`);
+      const badgeBox = document.getElementById(`livebadge_${slot.id}`);
+      if (!row || !badgeBox) return;
+      if (slot.id === liveSlotId) {
+        row.classList.add('current-hour-row');
+        badgeBox.innerHTML = '<span class="live-badge">LIVE</span>';
+      } else {
+        row.classList.remove('current-hour-row');
+        badgeBox.innerHTML = '';
+      }
+    });
+  }
+
+  // Smart Lesson Auto-Complete Builder (Zero-Typing Lesson Picker)
+  function updateSmartLessonSuggestions(forSlotId = null) {
+    const dl = document.getElementById('smartLessonSuggestions');
+    if (!dl) return;
+    const suggestions = new Set();
+
+    // 1. Add Today's Priority Tasks first
+    currentPriorities.forEach(p => {
+      if (p.txt && p.txt.trim()) suggestions.add(p.txt.trim());
+    });
+
+    // 2. Add Syllabus Units based on the row's selected subject (or all subjects)
+    const sylData = getSyllabusData();
+    const selectedSubj = forSlotId ? (document.getElementById(`subj_${forSlotId}`) || {}).value : null;
+
+    if (selectedSubj && ['s1', 's2', 's3'].includes(selectedSubj)) {
+      (sylData[selectedSubj] || []).forEach(u => {
+        if (!u.t || !u.r || !u.p) suggestions.add(u.title);
+      });
+    } else {
+      ['s1', 's2', 's3'].forEach(sKey => {
+        (sylData[sKey] || []).forEach(u => {
+          if (!u.t || !u.r || !u.p) suggestions.add(u.title);
+        });
+      });
+    }
+
+    dl.innerHTML = Array.from(suggestions).slice(0, 45).map(txt => `<option value="${escHtml(txt)}">`).join('');
+  }
+
+  // Collapsible Time Sections (Click group header to expand/collapse)
+  function toggleSectionGroup(groupId) {
+    collapsedGroups[groupId] = !collapsedGroups[groupId];
+    applyCollapsedGroupStates();
+  }
+
+  function applyCollapsedGroupStates() {
+    timeSlots.forEach(slot => {
+      if (slot.group) {
+        const iconEl = document.getElementById(`grp_icon_${slot.groupId}`);
+        if (iconEl) iconEl.textContent = collapsedGroups[slot.groupId] ? '▶' : '▼';
+      } else {
+        const row = document.getElementById(`row_${slot.id}`);
+        if (row) {
+          if (collapsedGroups[slot.groupId]) row.classList.add('collapsed-group-row');
+          else row.classList.remove('collapsed-group-row');
+        }
+      }
+    });
+  }
+
+  // 1-Click Focus View: Only keep current time section expanded
+  function toggleFocusViewSections() {
+    isFocusSectionView = !isFocusSectionView;
+    const btn = document.getElementById('focusViewBtn');
+    const liveSlotId = getCurrentSlotId();
+    const liveSlotObj = timeSlots.find(s => s.id === liveSlotId);
+    const activeGrp = liveSlotObj ? liveSlotObj.groupId : 'grp_morning';
+
+    ['grp_early', 'grp_morning', 'grp_afternoon', 'grp_night', 'grp_owl'].forEach(g => {
+      collapsedGroups[g] = isFocusSectionView ? (g !== activeGrp) : false;
+    });
+    applyCollapsedGroupStates();
+    if (btn) {
+      btn.textContent = isFocusSectionView ? '👁️ සියලුම පැය පෙන්වන්න (Show All 24h)' : '👁️ දැන් කොටස පමණක් පෙන්වන්න';
+    }
+  }
+
+  // 1-Click Quick Start Study Now
+  function quickStartStudyNow() {
+    scrollToLiveHour();
+    const liveId = getCurrentSlotId() || 'am_7_8';
+    const taskInput = document.getElementById(`task_${liveId}`);
+    if (taskInput && !taskInput.value.trim()) {
+      const firstUnfinished = currentPriorities.find(p => p.txt && p.txt.trim() && !p.chk);
+      if (firstUnfinished) {
+        sendTaskTextToSlot(firstUnfinished.txt.trim(), liveId);
+      }
+    }
+    if (!timerInterval) startPauseTimer();
+    showToast('🚀 දැන් ගතවන පැය සඳහා ටයිමරය ක්‍රියාත්මක විය! ජය වේවා!');
+  }
+
+  // Quick Add Stepper for MCQs and Essays (+1, +5, +10)
+  function quickAddCount(inputId, delta) {
+    const el = document.getElementById(inputId);
+    if (!el) return;
+    const cur = parseInt(el.value || '0');
+    el.value = Math.max(0, cur + delta);
+    saveData();
+    renderAnalytics();
+    showToast(`✅ +${delta} ක් එක් කරන ලදී! (මුළු ගණන: ${el.value})`);
+  }
+
+  // Copy Row to Next Hour (1-Click Multi-Hour Filler)
+  function copyRowToNextHour(slotId) {
+    const idx = orderedSlotIds.indexOf(slotId);
+    if (idx === -1 || idx >= orderedSlotIds.length - 1) {
+      return showToast('⚠️ මෙය අවසාන පැය පේළියයි!');
+    }
+    const nextSlotId = orderedSlotIds[idx + 1];
+    document.getElementById(`subj_${nextSlotId}`).value = document.getElementById(`subj_${slotId}`).value;
+    document.getElementById(`mode_${nextSlotId}`).value = document.getElementById(`mode_${slotId}`).value;
+    document.getElementById(`task_${nextSlotId}`).value = document.getElementById(`task_${slotId}`).value;
+    saveData();
+    renderTotals();
+    showToast('⏬ විෂය සහ පාඩම ඊළඟ පැයටත් පිටපත් කරන ලදී!');
+  }
+
+  // Dynamic Priority Tasks Renderer
+  function createDefaultPriorities(count = 6) {
+    const arr = [];
+    for (let i = 0; i < count; i++) arr.push({ chk: false, txt: '' });
+    return arr;
+  }
+
+  function renderPriorityList() {
+    const pContainer = document.getElementById('priorityList');
+    if (!pContainer) return;
+    if (!currentPriorities || currentPriorities.length === 0) {
+      currentPriorities = createDefaultPriorities(6);
+    }
+
+    pContainer.innerHTML = currentPriorities.map((item, i) => `
+      <div class="task-item">
+        <input type="checkbox" id="prio_chk_${i}" ${item.chk ? 'checked' : ''} onchange="updateTaskItem(${i}, 'chk', this.checked)">
+        <input type="text" id="prio_txt_${i}" list="smartLessonSuggestions" class="${item.chk ? 'done' : ''}" value="${escHtml(item.txt)}" placeholder="ප්‍රධාන වැඩේ ${i + 1}..." onfocus="updateSmartLessonSuggestions()" oninput="updateTaskItem(${i}, 'txt', this.value)">
+        <button type="button" class="mini-btn" onclick="sendTaskToCurrentHour(${i})" title="දැන් ගතවන පැයට මෙම වැඩේ සහ විෂය යවන්න">↳</button>
+        <button type="button" class="mini-btn" onclick="scheduleSpacedRepetition(${i})" title="දින 3, 7 සහ 21 කින් නැවත පුනරීක්ෂණයට එක් කරන්න">🔁</button>
+        ${currentPriorities.length > 2 ? `<button type="button" class="mini-btn btn-danger" onclick="removeTaskRow(${i})" title="මෙම වැඩේ ඉවත් කරන්න" style="padding:2px 5px;">✕</button>` : ''}
+      </div>
+    `).join('');
+
+    updateTaskCounterBadge();
+  }
+
+  function updateTaskItem(index, field, val) {
+    if (!currentPriorities[index]) return;
+    currentPriorities[index][field] = val;
+    if (field === 'chk') {
+      toggleTaskStyle(`prio_txt_${index}`, val);
+    }
+    updateTaskCounterBadge();
+    saveData();
+  }
+
+  function updateTaskCounterBadge() {
+    const badge = document.getElementById('taskCounterBadge');
+    if (!badge) return;
+    const filled = currentPriorities.filter(p => (p.txt || '').trim() !== '');
+    const done = filled.filter(p => p.chk).length;
+    const total = Math.max(filled.length, currentPriorities.length);
+    badge.textContent = `${done}/${total} Done`;
+  }
+
+  function addNewTaskRow(prefillText = '') {
+    currentPriorities.push({ chk: false, txt: prefillText });
+    renderPriorityList();
+    saveData();
+    const lastIdx = currentPriorities.length - 1;
+    const input = document.getElementById(`prio_txt_${lastIdx}`);
+    if (input) input.focus();
+  }
+
+  function removeTaskRow(index) {
+    if (currentPriorities.length <= 2) return;
+    currentPriorities.splice(index, 1);
+    renderPriorityList();
+    saveData();
+  }
+
+  function carryOverUnfinishedTasks() {
+    const unfinished = currentPriorities.filter(p => p.txt && p.txt.trim() !== '' && !p.chk);
+    if (unfinished.length === 0) {
+      return showToast('ℹ️ අද දිනයේ ඉතිරි වූ (ලකුණු නොකළ) ප්‍රධාන වැඩ කිසිවක් නැත!');
+    }
+
+    const cur = new Date(currentDate + 'T00:00:00');
+    const tmrw = new Date(cur);
+    tmrw.setDate(cur.getDate() + 1);
+    const tmrwStr = getLocalDateString(tmrw);
+    const key = `al_plan_${tmrwStr}`;
+
+    const existingRaw = localStorage.getItem(key);
+    const data = existingRaw ? JSON.parse(existingRaw) : { priorities: createDefaultPriorities(6), rows: {} };
+    if (!Array.isArray(data.priorities)) data.priorities = createDefaultPriorities(6);
+
+    let addedCount = 0;
+    unfinished.forEach(task => {
+      const alreadyExists = data.priorities.some(p => (p.txt || '').trim() === task.txt.trim());
+      if (!alreadyExists) {
+        const emptySlot = data.priorities.find(p => !p.txt || p.txt.trim() === '');
+        if (emptySlot) {
+          emptySlot.txt = task.txt.trim();
+          emptySlot.chk = false;
+        } else {
+          data.priorities.push({ chk: false, txt: task.txt.trim() });
+        }
+        addedCount++;
+      }
+    });
+
+    localStorage.setItem(key, JSON.stringify(data));
+    showToast(`↪ ඉතිරි වැඩ ${addedCount}ක් හෙට (${tmrwStr}) දිනයේ ප්‍රධාන වැඩ ලැයිස්තුවට යොමු කරන ලදී!`);
+  }
+
+  function initUI() {
+    currentDate = getLogicalStudyDate();
+    document.getElementById('planDate').value = currentDate;
+
+    const tbody = document.getElementById('scheduleBody');
+    tbody.innerHTML = '';
+    const liveSlotId = getCurrentSlotId();
+
+    timeSlots.forEach(slot => {
+      if (slot.group) {
+        tbody.innerHTML += `
+          <tr class="section-row" onclick="toggleSectionGroup('${slot.groupId}')" title="මෙම කාල කොටස හැකිළීමට හෝ දිගහැරීමට ක්ලික් කරන්න">
+            <td colspan="10">
+              <span id="grp_icon_${slot.groupId}" style="display:inline-block; width:16px;">▼</span>
+              ${slot.group}
+              <span style="float:right; font-size:10px; opacity:0.8;">[Click to Collapse/Expand]</span>
+            </td>
+          </tr>`;
+      } else {
+        const isLive = (slot.id === liveSlotId);
+        tbody.innerHTML += `
+          <tr id="row_${slot.id}" class="${isLive ? 'current-hour-row' : ''}">
+            <td class="time-cell">
+              <div class="time-cell-inner">
+                <span>${slot.label}<span id="livebadge_${slot.id}">${isLive ? '<span class="live-badge">LIVE</span>' : ''}</span></span>
+                <div class="row-action-btns">
+                  <button type="button" class="quick-hr-btn" onclick="toggleFullHourStudy('${slot.id}')" title="මෙම පැයේ මිනිත්තු 15 කොටු 4ම එකවර ලකුණු කරන්න">1h</button>
+                  <button type="button" class="quick-hr-btn" onclick="copyRowToNextHour('${slot.id}')" title="මෙම පැයේ විෂය සහ පාඩම ඊළඟ පැයටත් පිටපත් කරන්න">⏬</button>
+                </div>
+              </div>
+            </td>
+            <td class="task-cell">
+              <div class="task-cell-inner">
+                <select id="subj_${slot.id}" class="subj-select" onchange="saveData(); renderTotals(); updateSmartLessonSuggestions('${slot.id}');">
+                  <option value="none">-- විෂය --</option>
+                  <option value="s1">Subject 1</option>
+                  <option value="s2">Subject 2</option>
+                  <option value="s3">Subject 3</option>
+                  <option value="common">Gen.Eng / GIT</option>
+                  <option value="other">Class / Other</option>
+                </select>
+                <select id="mode_${slot.id}" class="mode-select" onchange="saveData(); renderTotals();">
+                  <option value="theory">Theory</option>
+                  <option value="revision">Revision</option>
+                  <option value="paper">Past Paper</option>
+                  <option value="tute">Tute / ගැටලු</option>
+                  <option value="practical">Practical</option>
+                  <option value="notes">Short Notes</option>
+                  <option value="class">Class</option>
+                </select>
+                <input type="text" id="task_${slot.id}" list="smartLessonSuggestions" onfocus="updateSmartLessonSuggestions('${slot.id}')" placeholder="පාඩම ටයිප් කරන්න හෝ ක්ලික් කර තෝරන්න..." oninput="saveData(); updateEmptyRowClasses();">
+              </div>
+            </td>
+            ${[0, 1, 2, 3].map(q => `
+              <td>
+                <button type="button" id="slot_${slot.id}_${q}" class="slot-btn" onclick="toggleSlot('${slot.id}',${q})">15m</button>
+              </td>
+            `).join('')}
+            <td><button type="button" id="sleep_${slot.id}" class="waste-btn" onclick="cycleWaste('${slot.id}', 'sleep')">0m</button></td>
+            <td><button type="button" id="online_${slot.id}" class="waste-btn" onclick="cycleWaste('${slot.id}', 'online')">0m</button></td>
+            <td><button type="button" id="other_${slot.id}" class="waste-btn" onclick="cycleWaste('${slot.id}', 'other')">0m</button></td>
+            <td id="wtotal_${slot.id}" class="waste-row-total">0m</td>
+          </tr>`;
+      }
+    });
+
+    loadGlobalSettings();
+    loadData(currentDate);
+    loadOmrState();
+    renderSyllabus();
+    renderAnalytics();
+    initOmrSheet();
+    renderVaultCards();
+    updateSmartLessonSuggestions();
+
+    setInterval(refreshLiveHourHighlight, 60000);
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeZenMode();
+        closeShareCard();
+      }
+    });
+  }
+
+  function stepDate(offsetDays) {
+    if (offsetDays === 0) {
+      currentDate = getLogicalStudyDate();
+    } else {
+      const cur = new Date(currentDate + 'T00:00:00');
+      cur.setDate(cur.getDate() + offsetDays);
+      currentDate = getLocalDateString(cur);
+    }
+    document.getElementById('planDate').value = currentDate;
+    loadData(currentDate);
+    renderAnalytics();
+  }
+
+  function toggleFullHourStudy(slotId) {
+    const rm = getRowMinutes(slotId);
+    const allActive = (rm.using === 60);
+    if (!allActive) {
+      setWasteButtonState(document.getElementById(`sleep_${slotId}`), 0);
+      setWasteButtonState(document.getElementById(`online_${slotId}`), 0);
+      setWasteButtonState(document.getElementById(`other_${slotId}`), 0);
+      [0, 1, 2, 3].forEach(q => document.getElementById(`slot_${slotId}_${q}`).classList.add('active'));
+    } else {
+      [0, 1, 2, 3].forEach(q => document.getElementById(`slot_${slotId}_${q}`).classList.remove('active'));
+    }
+    saveData();
+    renderTotals();
+  }
+
+  function autoFillNightSleep() {
+    const sleepSlotIds = ["pm_11_12", "am_12_1", "am_1_2", "am_2_3", "am_3_4", "am_4_5"];
+    sleepSlotIds.forEach(slotId => {
+      const rm = getRowMinutes(slotId);
+      if (rm.using === 0) {
+        setWasteButtonState(document.getElementById(`online_${slotId}`), 0);
+        setWasteButtonState(document.getElementById(`other_${slotId}`), 0);
+        setWasteButtonState(document.getElementById(`sleep_${slotId}`), 60);
+      }
+    });
+    saveData();
+    renderTotals();
+    showToast('😴 රාත්‍රී 11:00 සිට අලුයම 5:00 දක්වා නින්ද ස්වයංක්‍රීයව ලකුණු කරන ලදී!');
+  }
+
+  function saveRoutineTemplate() {
+    const slotType = document.getElementById('templateSlotSelect').value || 'study';
+    const tpl = {};
+    timeSlots.forEach(slot => {
+      if (slot.group) return;
+      tpl[slot.id] = {
+        subj: document.getElementById(`subj_${slot.id}`).value,
+        mode: document.getElementById(`mode_${slot.id}`).value,
+        task: document.getElementById(`task_${slot.id}`).value
+      };
+    });
+    localStorage.setItem(`al_pro_routine_template_${slotType}`, JSON.stringify(tpl));
+    showToast('💾 තෝරාගත් කාලසටහන් ආකෘතිය සාර්ථකව සුරකින ලදී!');
+  }
+
+  function loadRoutineTemplate() {
+    const slotType = document.getElementById('templateSlotSelect').value || 'study';
+    const raw = localStorage.getItem(`al_pro_routine_template_${slotType}`) || localStorage.getItem('al_pro_routine_template');
+    if (!raw) return showToast('⚠️ මෙම ආකෘතිය සඳහා තවම කාලසටහනක් සුරකිනු ලැබ නැත! පළමුව "💾 Save" ඔබන්න.');
+    try {
+      const tpl = JSON.parse(raw);
+      timeSlots.forEach(slot => {
+        if (slot.group) return;
+        if (tpl[slot.id]) {
+          document.getElementById(`subj_${slot.id}`).value = tpl[slot.id].subj || 'none';
+          document.getElementById(`mode_${slot.id}`).value = tpl[slot.id].mode || 'theory';
+          document.getElementById(`task_${slot.id}`).value = tpl[slot.id].task || '';
+        }
+      });
+      saveData();
+      renderTotals();
+      showToast('📂 සුරකින ලද කාලසටහන් ආකෘතිය අද දිනයට යොදන ලදී!');
+    } catch (e) {}
+  }
+
+  function togglePrintEmptyMode(checked) {
+    if (checked) document.body.classList.add('hide-empty-print');
+    else document.body.classList.remove('hide-empty-print');
+    updateEmptyRowClasses();
+  }
+
+  function updateEmptyRowClasses() {
+    timeSlots.forEach(slot => {
+      if (slot.group) return;
+      const row = document.getElementById(`row_${slot.id}`);
+      if (!row) return;
+      const rm = getRowMinutes(slot.id);
+      const taskTxt = document.getElementById(`task_${slot.id}`).value.trim();
+      const subjVal = document.getElementById(`subj_${slot.id}`).value;
+      const isEmpty = (rm.using === 0 && rm.totalWaste === 0 && !taskTxt && subjVal === 'none');
+      if (isEmpty) row.classList.add('empty-slot-row');
+      else row.classList.remove('empty-slot-row');
+    });
+  }
+
+  function copyYesterdaySchedule() {
+    const cur = new Date(currentDate + 'T00:00:00');
+    const yest = new Date(cur);
+    yest.setDate(cur.getDate() - 1);
+    const yestKey = `al_plan_${getLocalDateString(yest)}`;
+    const raw = localStorage.getItem(yestKey);
+    if (!raw) return showToast('⚠️ ඊයේ දිනයට අදාළ සැලසුමක් හමු නොවීය!');
+
+    try {
+      const yData = JSON.parse(raw);
+      if (yData.rows) {
+        timeSlots.forEach(slot => {
+          if (slot.group) return;
+          const r = yData.rows[slot.id];
+          if (r) {
+            document.getElementById(`subj_${slot.id}`).value = r.subj || 'none';
+            document.getElementById(`mode_${slot.id}`).value = r.mode || 'theory';
+            document.getElementById(`task_${slot.id}`).value = r.task || '';
+          }
+        });
+      }
+      saveData();
+      renderTotals();
+      showToast('📋 ඊයේ දිනයේ කාලසටහන් සැලසුම සාර්ථකව අද දිනයට පිටපත් කරන ලදී!');
+    } catch (e) {}
+  }
+
+  function applyStreamPreset(streamKey) {
+    if (STREAM_PRESETS[streamKey]) {
+      const p = STREAM_PRESETS[streamKey];
+      document.getElementById('subj1Name').value = p.s1;
+      document.getElementById('subj2Name').value = p.s2;
+      document.getElementById('subj3Name').value = p.s3;
+      saveGlobalSettings();
+      renderTotals();
+      loadDefaultSyllabusForCurrentSubjects(false);
+      renderSyllabus();
+      renderAnalytics();
+      showToast(`🎓 ${p.s1}, ${p.s2}, ${p.s3} විෂය ධාරාව සක්‍රීය කරන ලදී!`);
+    } else {
+      saveGlobalSettings();
+    }
+  }
+
+  function getPresetUnitsForSubjectName(subjName) {
+    const clean = (subjName || '').trim().toLowerCase();
+    if (SYLLABUS_PRESETS[clean]) return SYLLABUS_PRESETS[clean];
+    for (const key of Object.keys(SYLLABUS_PRESETS)) {
+      if (clean.includes(key) || key.includes(clean)) {
+        return SYLLABUS_PRESETS[key];
+      }
+    }
+    return [
+      "ඒකකය 01 (Unit 1)", "ඒකකය 02 (Unit 2)", "ඒකකය 03 (Unit 3)",
+      "ඒකකය 04 (Unit 4)", "ඒකකය 05 (Unit 5)", "ඒකකය 06 (Unit 6)",
+      "ඒකකය 07 (Unit 7)", "ඒකකය 08 (Unit 8)", "ඒකකය 09 (Unit 9)", "ඒකකය 10 (Unit 10)"
+    ];
+  }
+
+  function loadDefaultSyllabusForCurrentSubjects(askConfirm = true) {
+    const names = getSubjectNames();
+    const data = getSyllabusData();
+    const hasExisting = (data.s1 && data.s1.length > 0) || (data.s2 && data.s2.length > 0) || (data.s3 && data.s3.length > 0);
+
+    if (askConfirm && hasExisting) {
+      if (!confirm(`ඔබගේ වත්මන් විෂයයන් (${names.s1}, ${names.s2}, ${names.s3}) සඳහා නව විෂය නිර්දේශ ඒකක පූරණය කරන්නද?`)) {
+        return;
+      }
+    } else if (!askConfirm && hasExisting) {
+      return;
+    }
+
+    ['s1', 's2', 's3'].forEach((sKey, idx) => {
+      const units = getPresetUnitsForSubjectName(names[sKey]);
+      data[sKey] = units.map((uTitle, uIdx) => ({
+        id: Date.now() + idx * 1000 + uIdx,
+        title: uTitle,
+        t: false,
+        r: false,
+        p: false
+      }));
+    });
+
+    saveSyllabusData(data);
+    renderSyllabus();
+    updateSmartLessonSuggestions();
+    if (askConfirm) {
+      showToast(`✅ ${names.s1}, ${names.s2} සහ ${names.s3} සඳහා විෂය නිර්දේශ ඒකක පූරණය කරන ලදී!`);
+    }
+  }
+
+  function switchTab(tabName, btnEl) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+    if (btnEl) btnEl.classList.add('active');
+    if (tabName === 'analytics') renderAnalytics();
+    if (tabName === 'syllabus') renderSyllabus();
+    if (tabName === 'vault') renderVaultCards();
+  }
+
+  function scrollToLiveHour() {
+    switchTab('planner', document.getElementById('tabBtn_planner'));
+    const liveSlotId = getCurrentSlotId();
+    if (!liveSlotId) return;
+    const liveSlotObj = timeSlots.find(s => s.id === liveSlotId);
+    if (liveSlotObj && collapsedGroups[liveSlotObj.groupId]) {
+      collapsedGroups[liveSlotObj.groupId] = false;
+      applyCollapsedGroupStates();
+    }
+    const row = document.getElementById(`row_${liveSlotId}`);
+    if (row) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function getRowMinutes(slotId) {
+    let using = 0;
+    for (let q = 0; q < 4; q++) {
+      const el = document.getElementById(`slot_${slotId}_${q}`);
+      if (el && el.classList.contains('active')) using += 15;
+    }
+    const s = parseInt(document.getElementById(`sleep_${slotId}`).dataset.mins || '0');
+    const o = parseInt(document.getElementById(`online_${slotId}`).dataset.mins || '0');
+    const ot = parseInt(document.getElementById(`other_${slotId}`).dataset.mins || '0');
+    return { using, s, o, ot, totalWaste: s + o + ot };
+  }
+
+  function toggleSlot(slotId, q) {
+    const btn = document.getElementById(`slot_${slotId}_${q}`);
+    const isActivating = !btn.classList.contains('active');
+    if (isActivating) {
+      const rm = getRowMinutes(slotId);
+      if (rm.using + 15 + rm.totalWaste > 60) {
+        showToast('⚠️ මෙම පැයේ මිනිත්තු 60 සම්පූර්ණ වී ඇත! අපතේ ගිය/නින්ද කාලය අඩු කර නැවත උත්සාහ කරන්න.');
+        return;
+      }
+    }
+    btn.classList.toggle('active');
+    saveData();
+    renderTotals();
+  }
+
+  function cycleWaste(slotId, type) {
+    const btn = document.getElementById(`${type}_${slotId}`);
+    let val = parseInt(btn.dataset.mins || '0');
+    const rm = getRowMinutes(slotId);
+    const otherWaste = rm.totalWaste - val;
+    const maxAllowed = 60 - rm.using - otherWaste;
+
+    val = (val + 15) > maxAllowed ? 0 : val + 15;
+    setWasteButtonState(btn, val);
+    saveData();
+    renderTotals();
+  }
+
+  function setWasteButtonState(btn, mins) {
+    btn.dataset.mins = mins;
+    btn.textContent = `${mins}m`;
+    if (mins > 0) btn.classList.add('has-waste');
+    else btn.classList.remove('has-waste');
+  }
+
+  // Smart Task Sender: Automatically detects Subject & Mode from task text!
+  function sendTaskTextToSlot(txt, slotId) {
+    const targetInput = document.getElementById(`task_${slotId}`);
+    const subjSelect = document.getElementById(`subj_${slotId}`);
+    const modeSelect = document.getElementById(`mode_${slotId}`);
+    if (!targetInput) return;
+
+    targetInput.value = txt;
+    const names = getSubjectNames();
+    const lower = txt.toLowerCase();
+
+    if (subjSelect) {
+      if (lower.includes(names.s1.toLowerCase())) subjSelect.value = 's1';
+      else if (lower.includes(names.s2.toLowerCase())) subjSelect.value = 's2';
+      else if (lower.includes(names.s3.toLowerCase())) subjSelect.value = 's3';
+      else if (lower.includes('english') || lower.includes('git')) subjSelect.value = 'common';
+    }
+    if (modeSelect) {
+      if (lower.includes('paper') || lower.includes('mcq')) modeSelect.value = 'paper';
+      else if (lower.includes('rev')) modeSelect.value = 'revision';
+      else if (lower.includes('tute')) modeSelect.value = 'tute';
+    }
+    saveData();
+    renderTotals();
+  }
+
+  function sendTaskToCurrentHour(taskIndex) {
+    const item = currentPriorities[taskIndex];
+    const txt = item ? (item.txt || '').trim() : '';
+    if (!txt) return showToast('⚠️ පළමුව ප්‍රධාන වැඩෙහි නම ටයිප් කරන්න!');
+    const liveSlotId = getCurrentSlotId() || 'am_7_8';
+    sendTaskTextToSlot(txt, liveSlotId);
+    scrollToLiveHour();
+    showToast(`⚡ "${txt}" දැන් ගතවන පැයට යොමු කරන ලදී!`);
+  }
+
+  function scheduleSpacedRepetition(taskIndex) {
+    const item = currentPriorities[taskIndex];
+    const txt = item ? (item.txt || '').trim() : '';
+    if (!txt) return showToast('⚠️ පළමුව පාඩමේ නම ටයිප් කරන්න!');
+    const intervals = [3, 7, 21];
+    const baseDate = new Date(currentDate + 'T00:00:00');
+
+    intervals.forEach(days => {
+      const targetDate = new Date(baseDate);
+      targetDate.setDate(baseDate.getDate() + days);
+      const dStr = getLocalDateString(targetDate);
+      const key = `al_plan_${dStr}`;
+      const existingRaw = localStorage.getItem(key);
+      const data = existingRaw ? JSON.parse(existingRaw) : { priorities: createDefaultPriorities(6), rows: {} };
+      if (!Array.isArray(data.priorities)) data.priorities = createDefaultPriorities(6);
+
+      const revLabel = `[Rev +${days}d] ${txt}`;
+      const alreadyScheduled = data.priorities.some(p => (p.txt || '').trim() === revLabel);
+      if (!alreadyScheduled) {
+        const emptySlot = data.priorities.find(p => !p.txt || p.txt.trim() === '');
+        if (emptySlot) {
+          emptySlot.txt = revLabel;
+          emptySlot.chk = false;
+        } else {
+          data.priorities.push({ chk: false, txt: revLabel });
+        }
+      }
+      localStorage.setItem(key, JSON.stringify(data));
+    });
+
+    showToast(`🔁 "${txt}" දින 3, 7 සහ 21 කින් පුනරීක්ෂණයට ස්වයංක්‍රීයව එක් කරන ලදී!`);
+  }
+
+  function playBellSound() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const now = audioCtx.currentTime;
+      [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.15);
+        gain.gain.setValueAtTime(0.2, now + idx * 0.15);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.15 + 0.6);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now + idx * 0.15);
+        osc.stop(now + idx * 0.15 + 0.6);
+      });
+    } catch (e) {}
+  }
+
+  function toggleFocusSound() {
+    const btn = document.getElementById('noiseBtn');
+    const floatBtn = document.getElementById('floatSoundBtn');
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    if (isNoisePlaying) {
+      if (noiseNode) { noiseNode.disconnect(); noiseNode = null; }
+      isNoisePlaying = false;
+      btn.textContent = '🎧 Sound';
+      btn.classList.remove('btn-primary');
+      if (floatBtn) floatBtn.textContent = '🎧 Sound';
+      return;
+    }
+
+    const bufferSize = audioCtx.sampleRate * 2;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const output = buffer.getChannelData(0);
+    let lastOut = 0.0;
+    for (let i = 0; i < bufferSize; i++) {
+      const white = Math.random() * 2 - 1;
+      output[i] = (lastOut + (0.02 * white)) / 1.02;
+      lastOut = output[i];
+      output[i] *= 0.12;
+    }
+
+    noiseNode = audioCtx.createBufferSource();
+    noiseNode.buffer = buffer;
+    noiseNode.loop = true;
+    noiseNode.connect(audioCtx.destination);
+    noiseNode.start();
+    isNoisePlaying = true;
+    btn.textContent = '🔊 Sound ON';
+    btn.classList.add('btn-primary');
+    if (floatBtn) floatBtn.textContent = '🔊 ON';
+  }
+
+  function openZenMode() {
+    const liveId = getCurrentSlotId();
+    const taskEl = liveId ? document.getElementById(`task_${liveId}`) : null;
+    const curTask = (taskEl && taskEl.value.trim()) ? `📖 දැන් පාඩම: ${taskEl.value.trim()}` : '📖 දැන් ගතවන පැයේ පාඩම කෙරෙහි පූර්ණ අවධානය යොමු කරන්න';
+    const ambition = document.getElementById('studentAmbition').value.trim();
+    document.getElementById('zenCurrentTaskText').textContent = curTask;
+    document.getElementById('zenAmbitionText').textContent = ambition ? `🎯 ${ambition}` : '';
+    document.getElementById('zenOverlay').classList.add('open');
+  }
+
+  function closeZenMode() {
+    document.getElementById('zenOverlay').classList.remove('open');
+  }
+
+  function changeTimerPreset() {
+    const mins = parseInt(document.getElementById('timerModeSelect').value || '15');
+    timerDurationSec = mins * 60;
+    resetTimer();
+  }
+
+  function updateTimerDisplay(sec) {
+    const m = String(Math.floor(sec / 60)).padStart(2, '0');
+    const s = String(sec % 60).padStart(2, '0');
+    const str = `${m}:${s}`;
+    document.getElementById('timerDisplay').textContent = str;
+    document.getElementById('zenTimerDisplay').textContent = str;
+    const floatTxt = document.getElementById('floatTimerText');
+    if (floatTxt) floatTxt.textContent = `⏱️ ${str}`;
+    if (timerInterval) {
+      document.title = `⏱️ ${str} | ${BASE_PAGE_TITLE}`;
+    } else {
+      document.title = BASE_PAGE_TITLE;
+    }
+  }
+
+  function startPauseTimer() {
+    const btn = document.getElementById('timerStartBtn');
+    const floatBtn = document.getElementById('floatStartBtn');
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerRemainingSec = Math.max(0, Math.round((timerEndTime - Date.now()) / 1000));
+      btn.textContent = '▶ Resume';
+      if (floatBtn) floatBtn.textContent = '▶ Resume';
+      document.title = BASE_PAGE_TITLE;
+      return;
+    }
+
+    timerEndTime = Date.now() + timerRemainingSec * 1000;
+    btn.textContent = '⏸ Pause';
+    if (floatBtn) floatBtn.textContent = '⏸ Pause';
+
+    timerInterval = setInterval(() => {
+      const left = Math.max(0, Math.round((timerEndTime - Date.now()) / 1000));
+      timerRemainingSec = left;
+      updateTimerDisplay(left);
+
+      if (left <= 0) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        timerRemainingSec = timerDurationSec;
+        updateTimerDisplay(timerDurationSec);
+        btn.textContent = '▶ Start';
+        if (floatBtn) floatBtn.textContent = '▶ Start';
+        document.title = BASE_PAGE_TITLE;
+        playBellSound();
+
+        const blocksToTick = Math.floor(timerDurationSec / (15 * 60));
+        if (blocksToTick > 0) {
+          const tickedCount = autoTickCurrentHourSlots(blocksToTick);
+          showToast(`🎉 කාල කොටස අවසන්! 15m කොටු ${tickedCount}ක් ස්වයංක්‍රීයව ලකුණු කරන ලදී.`);
+        } else {
+          showToast('☕ විවේක කාලය අවසන්! නැවත පාඩම් ආරම්භ කරමු.');
+        }
+      }
+    }, 500);
+  }
+
+  function resetTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = null;
+    timerRemainingSec = timerDurationSec;
+    updateTimerDisplay(timerDurationSec);
+    document.getElementById('timerStartBtn').textContent = '▶ Start';
+    const floatBtn = document.getElementById('floatStartBtn');
+    if (floatBtn) floatBtn.textContent = '▶ Start';
+    document.title = BASE_PAGE_TITLE;
+  }
+
+  function autoTickCurrentHourSlots(count = 1) {
+    const liveSlotId = getCurrentSlotId();
+    if (!liveSlotId) return 0;
+    const startIdx = orderedSlotIds.indexOf(liveSlotId);
+    if (startIdx === -1) return 0;
+
+    let ticked = 0;
+    for (let sIdx = startIdx; sIdx < orderedSlotIds.length && ticked < count; sIdx++) {
+      const sId = orderedSlotIds[sIdx];
+      for (let q = 0; q < 4 && ticked < count; q++) {
+        const btn = document.getElementById(`slot_${sId}_${q}`);
+        if (btn && !btn.classList.contains('active')) {
+          const rm = getRowMinutes(sId);
+          if (rm.using + 15 + rm.totalWaste <= 60) {
+            btn.classList.add('active');
+            ticked++;
+          }
+        }
+      }
+    }
+    if (ticked > 0) {
+      saveData();
+      renderTotals();
+    }
+    return ticked;
+  }
+
+  function getSubjectNames() {
+    return {
+      s1: document.getElementById('subj1Name').value || 'Subject 1',
+      s2: document.getElementById('subj2Name').value || 'Subject 2',
+      s3: document.getElementById('subj3Name').value || 'Subject 3'
+    };
+  }
+
+  function updateSubjectDropdownLabels() {
+    const names = getSubjectNames();
+    timeSlots.forEach(slot => {
+      if (!slot.group) {
+        const sel = document.getElementById(`subj_${slot.id}`);
+        if (sel) {
+          sel.options[1].text = names.s1;
+          sel.options[2].text = names.s2;
+          sel.options[3].text = names.s3;
+        }
+      }
+    });
+
+    ['paperSubjInput', 'omrSubjectSelect', 'vaultSubjSelect'].forEach(id => {
+      const sel = document.getElementById(id);
+      if (sel) {
+        const curVal = sel.value || 's1';
+        sel.innerHTML = `
+          <option value="s1">${escHtml(names.s1)}</option>
+          <option value="s2">${escHtml(names.s2)}</option>
+          <option value="s3">${escHtml(names.s3)}</option>
+          <option value="common">General English / GIT</option>
+        `;
+        sel.value = curVal;
+      }
+    });
+
+    ['paperChartFilter', 'vaultFilterSubj'].forEach(id => {
+      const sel = document.getElementById(id);
+      if (sel && sel.options.length >= 5) {
+        sel.options[1].text = names.s1;
+        sel.options[2].text = names.s2;
+        sel.options[3].text = names.s3;
+      }
+    });
+  }
+
+  function toggleTaskStyle(inputId, checked) {
+    const el = document.getElementById(inputId);
+    if (!el) return;
+    if (checked) el.classList.add('done');
+    else el.classList.remove('done');
+  }
+
+  function calculateHistoricalTotals(dateStr) {
+    const cur = new Date(dateStr + 'T00:00:00');
+
+    const yest = new Date(cur);
+    yest.setDate(cur.getDate() - 1);
+    const yestKey = `al_plan_${getLocalDateString(yest)}`;
+    const yestMins = getSavedDayUsingMinutes(yestKey);
+
+    const dayOfWeek = cur.getDay() || 7;
+    let weekMins = 0;
+    for (let d = 1; d <= dayOfWeek; d++) {
+      const temp = new Date(cur);
+      temp.setDate(cur.getDate() - (dayOfWeek - d));
+      const dKey = `al_plan_${getLocalDateString(temp)}`;
+      weekMins += getSavedDayUsingMinutes(dKey);
+    }
+
+    document.getElementById('yesterdayTotalDisplay').textContent = formatMinutes(yestMins);
+    document.getElementById('weekTotalDisplay').textContent = formatMinutes(weekMins);
+
+    let streak = 0;
+    const logicalTodayStr = getLogicalStudyDate();
+    let checkDate = new Date(logicalTodayStr + 'T00:00:00');
+    if (getSavedDayUsingMinutes(`al_plan_${getLocalDateString(checkDate)}`) < 30) {
+      checkDate.setDate(checkDate.getDate() - 1);
+    }
+    while (true) {
+      const m = getSavedDayUsingMinutes(`al_plan_${getLocalDateString(checkDate)}`);
+      if (m >= 30) {
+        streak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+    document.getElementById('streakBadge').textContent = `🔥 ${streak} Day Streak`;
+
+    let allTimeMins = 0;
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('al_plan_')) {
+        allTimeMins += getSavedDayUsingMinutes(k);
+      }
+    }
+    const totalHours = Math.floor(allTimeMins / 60);
+    let levelTitle = 'Lv.1 Starter';
+    if (totalHours >= 500) levelTitle = `👑 Lv.6 Legend (${totalHours}h)`;
+    else if (totalHours >= 250) levelTitle = `💎 Lv.5 Master (${totalHours}h)`;
+    else if (totalHours >= 100) levelTitle = `🔥 Lv.4 Scholar (${totalHours}h)`;
+    else if (totalHours >= 40) levelTitle = `⚡ Lv.3 Achiever (${totalHours}h)`;
+    else if (totalHours >= 10) levelTitle = `🌟 Lv.2 Learner (${totalHours}h)`;
+    else levelTitle = `🌱 Lv.1 Starter (${totalHours}h)`;
+
+    document.getElementById('levelBadge').textContent = levelTitle;
+  }
+
+  function getSavedDayUsingMinutes(storageKey) {
+    const raw = localStorage.getItem(storageKey);
+    if (!raw) return 0;
+    try {
+      const data = JSON.parse(raw);
+      let mins = 0;
+      if (data.rows) {
+        Object.values(data.rows).forEach(r => {
+          if (r.slots) {
+            r.slots.forEach(active => { if (active) mins += 15; });
+          }
+        });
+      }
+      return mins;
+    } catch (e) { return 0; }
+  }
+
+  function renderTotals() {
+    updateSubjectDropdownLabels();
+    let totalUsingMins = 0;
+    let totalSleepMins = 0;
+    let totalOnlineMins = 0;
+    let totalOtherWasteMins = 0;
+    let subjMins = { s1: 0, s2: 0, s3: 0, common: 0, other: 0 };
+    let modeMins = { theory: 0, revision: 0, paper: 0, tute: 0, practical: 0, notes: 0, class: 0 };
+
+    timeSlots.forEach(slot => {
+      if (slot.group) return;
+      let rowUsing = 0;
+      for (let q = 0; q < 4; q++) {
+        if (document.getElementById(`slot_${slot.id}_${q}`).classList.contains('active')) {
+          rowUsing += 15;
+        }
+      }
+      totalUsingMins += rowUsing;
+
+      const subj = document.getElementById(`subj_${slot.id}`).value;
+      if (subj === 's1') subjMins.s1 += rowUsing;
+      else if (subj === 's2') subjMins.s2 += rowUsing;
+      else if (subj === 's3') subjMins.s3 += rowUsing;
+      else if (subj === 'common') subjMins.common += rowUsing;
+      else if (rowUsing > 0) subjMins.other += rowUsing;
+
+      const mode = document.getElementById(`mode_${slot.id}`).value;
+      if (modeMins[mode] !== undefined) modeMins[mode] += rowUsing;
+
+      const s = parseInt(document.getElementById(`sleep_${slot.id}`).dataset.mins || '0');
+      const o = parseInt(document.getElementById(`online_${slot.id}`).dataset.mins || '0');
+      const ot = parseInt(document.getElementById(`other_${slot.id}`).dataset.mins || '0');
+      const rowWaste = s + o + ot;
+
+      totalSleepMins += s;
+      totalOnlineMins += o;
+      totalOtherWasteMins += ot;
+
+      document.getElementById(`wtotal_${slot.id}`).textContent = `${rowWaste}m`;
+    });
+
+    const grandWaste = totalSleepMins + totalOnlineMins + totalOtherWasteMins;
+    const totalPaperAndTuteMins = modeMins.paper + modeMins.tute;
+
+    document.getElementById('tableUsingTotal').textContent = formatMinutes(totalUsingMins);
+    document.getElementById('todayTotalDisplay').textContent = formatMinutes(totalUsingMins);
+
+    document.getElementById('sumSleep').textContent = `${totalSleepMins}m`;
+    document.getElementById('sumOnline').textContent = `${totalOnlineMins}m`;
+    document.getElementById('sumOther').textContent = `${totalOtherWasteMins}m`;
+    document.getElementById('tableWasteTotal').textContent = formatMinutes(grandWaste);
+    document.getElementById('wasteTotalDisplay').textContent = formatMinutes(grandWaste);
+
+    document.getElementById('subj1Hours').textContent = formatMinutes(subjMins.s1);
+    document.getElementById('subj2Hours').textContent = formatMinutes(subjMins.s2);
+    document.getElementById('subj3Hours').textContent = formatMinutes(subjMins.s3);
+    document.getElementById('subjCommonHours').textContent = formatMinutes(subjMins.common + subjMins.other);
+    document.getElementById('paperHoursBadge').textContent = formatMinutes(totalPaperAndTuteMins);
+
+    const tHrs = Math.round((modeMins.theory + modeMins.notes) / 60 * 10) / 10;
+    const rHrs = Math.round(modeMins.revision / 60 * 10) / 10;
+    const pHrs = Math.round(totalPaperAndTuteMins / 60 * 10) / 10;
+    const prHrs = Math.round(modeMins.practical / 60 * 10) / 10;
+
+    document.getElementById('modeBreakdownText').textContent =
+      `T:${tHrs}h | R:${rHrs}h | P:${pHrs}h | Prac:${prHrs}h`;
+
+    const goalMins = (parseFloat(document.getElementById('dailyGoalHours').value) || 10) * 60;
+    const pct = Math.min(100, Math.round((totalUsingMins / goalMins) * 100));
+    document.getElementById('goalProgressBar').style.width = `${pct}%`;
+    document.getElementById('goalProgressText').textContent = `${pct}% of ${goalMins/60}h Goal`;
+
+    const distractionMins = totalOnlineMins + totalOtherWasteMins;
+    const activeTracked = totalUsingMins + distractionMins;
+    const eff = activeTracked > 0 ? Math.round((totalUsingMins / activeTracked) * 100) : 0;
+    const effEl = document.getElementById('efficiencyBadge');
+    effEl.textContent = `Efficiency: ${eff}%`;
+    effEl.className = 'stat-badge ' + (eff >= 75 ? 'stat-good' : eff >= 50 ? 'stat-warn' : 'stat-bad');
+
+    updateEmptyRowClasses();
+    calculateHistoricalTotals(currentDate);
+  }
+
+  function renderAnalytics() {
+    const chartEl = document.getElementById('sevenDayChart');
+    const distEl = document.getElementById('subjectDistBox');
+    const heatEl = document.getElementById('heatmapGrid');
+    const coachEl = document.getElementById('smartCoachList');
+    if (!chartEl || !distEl) return;
+
+    const cur = new Date(currentDate + 'T00:00:00');
+    const goalHrs = parseFloat(document.getElementById('dailyGoalHours').value) || 10;
+    let daysData = [];
+    let total7Mins = 0;
+    let sTotals = { s1: 0, s2: 0, s3: 0, common: 0, other: 0 };
+    let mTotals = { theory: 0, paper: 0 };
+    let onlineWaste7 = 0;
+
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(cur);
+      d.setDate(cur.getDate() - i);
+      const dStr = getLocalDateString(d);
+      const raw = localStorage.getItem(`al_plan_${dStr}`);
+      let dayMins = 0;
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (parsed.rows) {
+            Object.values(parsed.rows).forEach(r => {
+              let rMins = 0;
+              if (r.slots) r.slots.forEach(a => { if (a) rMins += 15; });
+              dayMins += rMins;
+              if (r.subj === 's1') sTotals.s1 += rMins;
+              else if (r.subj === 's2') sTotals.s2 += rMins;
+              else if (r.subj === 's3') sTotals.s3 += rMins;
+              else if (r.subj === 'common') sTotals.common += rMins;
+              else if (rMins > 0) sTotals.other += rMins;
+
+              if (r.mode === 'paper' || r.mode === 'tute') mTotals.paper += rMins;
+              else mTotals.theory += rMins;
+
+              onlineWaste7 += parseInt(r.online || 0);
+            });
+          }
+        } catch (e) {}
+      }
+      total7Mins += dayMins;
+      daysData.push({ label: dStr.slice(5), mins: dayMins });
+    }
+
+    const avgHrs = (total7Mins / 60 / 7).toFixed(1);
+    document.getElementById('sevenDayAvgBadge').textContent = `Avg: ${avgHrs}h / day`;
+
+    const maxBarMins = Math.max(goalHrs * 60, ...daysData.map(d => d.mins), 60);
+    chartEl.innerHTML = daysData.map(d => {
+      const hPct = Math.round((d.mins / maxBarMins) * 100);
+      const hrsText = (d.mins / 60).toFixed(1) + 'h';
+      return `
+        <div class="bar-col">
+          <div class="bar-val">${hrsText}</div>
+          <div class="bar-fill" style="height:${Math.max(4, hPct)}%;"></div>
+          <div class="bar-lbl">${d.label}</div>
+        </div>
+      `;
+    }).join('');
+
+    const names = getSubjectNames();
+    const grandSubj = Math.max(1, sTotals.s1 + sTotals.s2 + sTotals.s3 + sTotals.common + sTotals.other);
+    const items = [
+      { name: names.s1, mins: sTotals.s1, color: 'var(--primary)' },
+      { name: names.s2, mins: sTotals.s2, color: 'var(--success)' },
+      { name: names.s3, mins: sTotals.s3, color: 'var(--purple)' },
+      { name: 'Gen. English / GIT / Class', mins: sTotals.common + sTotals.other, color: 'var(--warning)' }
+    ];
+
+    distEl.innerHTML = items.map(it => {
+      const p = Math.round((it.mins / grandSubj) * 100);
+      return `
+        <div style="margin-bottom:10px;">
+          <div style="display:flex; justify-content:space-between; font-weight:700; font-size:12px; margin-bottom:3px;">
+            <span>${escHtml(it.name)}</span>
+            <span>${formatMinutes(it.mins)} (${p}%)</span>
+          </div>
+          <div class="progress-wrap" style="height:9px;">
+            <div style="height:100%; width:${p}%; background:${it.color};"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    if (heatEl) {
+      let heatHtml = '';
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(cur);
+        d.setDate(cur.getDate() - i);
+        const dStr = getLocalDateString(d);
+        const mins = getSavedDayUsingMinutes(`al_plan_${dStr}`);
+        const hrs = (mins / 60).toFixed(1);
+        let cls = 'heat-0';
+        if (mins >= 480) cls = 'heat-4';
+        else if (mins >= 300) cls = 'heat-3';
+        else if (mins >= 120) cls = 'heat-2';
+        else if (mins > 0) cls = 'heat-1';
+        heatHtml += `<div class="heat-cell ${cls}" onclick="jumpToDateFromHeatmap('${dStr}')" title="${dStr}: ${hrs} Hours (විවෘත කිරීමට ක්ලික් කරන්න)">${dStr.slice(5)}<br>${hrs}h</div>`;
+      }
+      heatEl.innerHTML = heatHtml;
+    }
+
+    if (coachEl) {
+      let tips = [];
+      const minSubj = [
+        { name: names.s1, m: sTotals.s1 },
+        { name: names.s2, m: sTotals.s2 },
+        { name: names.s3, m: sTotals.s3 }
+      ].sort((a, b) => a.m - b.m)[0];
+
+      if (total7Mins === 0) {
+        tips.push('💡 ඔබ තවම මේ සතියේ පාඩම් කාලයන් සටහන් කර නැත. ඉහළ ඇති "🚀 දැන් පාඩම් අරඹන්න" බොත්තම ඔබා ආරම්භ කරන්න.');
+      } else {
+        tips.push(`⚖️ විෂය සමබරතාවය: පසුගිය දින 7 තුළ ඔබ අඩුවෙන්ම අවධානය යොමු කර ඇත්තේ "${escHtml(minSubj.name)}" (${formatMinutes(minSubj.m)}) විෂයටයි. හෙට දිනයේ එම විෂයට වැඩි කාලයක් වෙන් කරන්න.`);
+        if (mTotals.paper < total7Mins * 0.25) {
+          tips.push(`📝 ප්‍රශ්න පත්‍ර පුහුණුව: ඔබේ මුළු කාලයෙන් Past Papers හා ගැටලු සඳහා වැය කර ඇත්තේ 25% කටත් අඩු ප්‍රමාණයකි. ඉහළ Z-Score එකක් සඳහා දිනපතා Past Papers කිරීම වැඩි කරන්න.`);
+        } else {
+          tips.push(`🌟 විශිෂ්ටයි! ඔබ සිද්ධාන්ත සහ ප්‍රශ්න පත්‍ර (Past Papers/Tutes) අතර ඉතා හොඳ සමබරතාවයක් පවත්වාගෙන යයි.`);
+        }
+        if (onlineWaste7 > 300) {
+          tips.push(`⚠️ අවධානයට: පසුගිය දින 7 තුළ Online/Social Media නිසා ඔබගේ කාලයෙන් ${formatMinutes(onlineWaste7)} ක් අපතේ ගොස් ඇත. පාඩම් කරන විට "🧘 Zen Mode" භාවිත කරන්න.`);
+        }
+      }
+      coachEl.innerHTML = tips.map(t => `<li class="coach-item">${t}</li>`).join('');
+    }
+
+    renderPaperScores();
+  }
+
+  function jumpToDateFromHeatmap(dStr) {
+    currentDate = dStr;
+    document.getElementById('planDate').value = dStr;
+    loadData(dStr);
+    switchTab('planner', document.getElementById('tabBtn_planner'));
+    showToast(`📅 ${dStr} දිනයේ කාලසටහන විවෘත කරන ලදී!`);
+  }
+
+  function addPaperScore() {
+    const subj = document.getElementById('paperSubjInput').value;
+    const name = document.getElementById('paperNameInput').value.trim();
+    const marks = parseFloat(document.getElementById('paperMarksInput').value);
+    if (!name || isNaN(marks)) return showToast('⚠️ කරුණාකර ප්‍රශ්න පත්‍රයේ නම සහ ලකුණු ඇතුළත් කරන්න!');
+
+    const list = JSON.parse(localStorage.getItem('al_pro_papers') || '[]');
+    list.unshift({ id: Date.now(), date: currentDate, subj, name, marks: Math.min(100, Math.max(0, marks)) });
+    localStorage.setItem('al_pro_papers', JSON.stringify(list));
+
+    document.getElementById('paperNameInput').value = '';
+    document.getElementById('paperMarksInput').value = '';
+    renderPaperScores();
+    showToast('✅ ප්‍රශ්න පත්‍ර ලකුණු සාර්ථකව එක් කරන ලදී!');
+  }
+
+  function deletePaperScore(id) {
+    let list = JSON.parse(localStorage.getItem('al_pro_papers') || '[]');
+    list = list.filter(item => item.id !== id);
+    localStorage.setItem('al_pro_papers', JSON.stringify(list));
+    renderPaperScores();
+  }
+
+  function renderPaperScores() {
+    const container = document.getElementById('paperScoreList');
+    const chartBox = document.getElementById('paperChartBox');
+    if (!container) return;
+    const allList = JSON.parse(localStorage.getItem('al_pro_papers') || '[]');
+    const filterSubj = (document.getElementById('paperChartFilter') || {}).value || 'all';
+    const filtered = filterSubj === 'all' ? allList : allList.filter(i => i.subj === filterSubj);
+
+    const names = getSubjectNames();
+    names.common = 'General English / GIT';
+
+    if (chartBox) {
+      const chronological = [...filtered].reverse().slice(-12);
+      if (chronological.length < 2) {
+        chartBox.innerHTML = `<div style="font-size:11.5px; color:var(--muted); text-align:center; padding:8px;">📈 ලකුණු වර්ධන රේඛා ප්‍රස්තාරය (Line Graph) දැකගැනීමට අවම වශයෙන් ප්‍රශ්න පත්‍ර 2ක ලකුණු ඇතුළත් කරන්න.</div>`;
+      } else {
+        const w = 680, h = 130, padX = 36, padY = 18;
+        const plotW = w - padX * 2, plotH = h - padY * 2;
+        const y75 = padY + plotH * (1 - 0.75);
+        const pts = chronological.map((it, idx) => {
+          const x = padX + (idx / (chronological.length - 1)) * plotW;
+          const y = padY + plotH * (1 - (it.marks / 100));
+          return { x, y, marks: it.marks };
+        });
+        const polyPoints = pts.map(p => `${p.x},${p.y}`).join(' ');
+
+        chartBox.innerHTML = `
+          <svg viewBox="0 0 ${w} ${h}" style="width:100%; height:130px; display:block;">
+            <line x1="${padX}" y1="${y75}" x2="${w - padX}" y2="${y75}" stroke="#16a34a" stroke-dasharray="4,4" stroke-width="1.2" />
+            <text x="${padX + 4}" y="${y75 - 4}" fill="#16a34a" font-size="9.5" font-weight="bold">75% (A Grade Target)</text>
+            <polyline fill="none" stroke="#2563eb" stroke-width="2.5" points="${polyPoints}" />
+            ${pts.map(p => `
+              <circle cx="${p.x}" cy="${p.y}" r="4.5" fill="#16a34a" />
+              <text x="${p.x}" y="${p.y - 7}" text-anchor="middle" fill="currentColor" font-size="10" font-weight="bold">${p.marks}%</text>
+            `).join('')}
+          </svg>
+        `;
+      }
+    }
+
+    if (filtered.length === 0) {
+      container.innerHTML = `<div style="color:var(--muted); text-align:center; padding:12px;">තවම ප්‍රශ්න පත්‍ර ලකුණු ඇතුළත් කර නැත.</div>`;
+      return;
+    }
+    container.innerHTML = filtered.map(item => {
+      const sName = names[item.subj] || item.subj;
+      const badgeCls = item.marks >= 75 ? 'stat-good' : item.marks >= 50 ? 'stat-warn' : 'stat-bad';
+      return `
+        <div class="unit-item">
+          <div>
+            <strong style="color:var(--primary);">[${escHtml(sName)}]</strong> ${escHtml(item.name)}
+            <span style="font-size:11px; color:var(--muted); margin-left:6px;">(${escHtml(item.date)})</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="stat-badge ${badgeCls}">${item.marks}%</span>
+            <button class="mini-btn btn-danger" onclick="deletePaperScore(${item.id})">✕</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Syllabus Tracker Functions
+  function getSyllabusData() {
+    const raw = localStorage.getItem('al_pro_syllabus');
+    if (raw) return JSON.parse(raw);
+    return { s1: [], s2: [], s3: [] };
+  }
+
+  function saveSyllabusData(data) {
+    localStorage.setItem('al_pro_syllabus', JSON.stringify(data));
+  }
+
+  function addSyllabusUnit(subjKey) {
+    const input = document.getElementById(`new_unit_${subjKey}`);
+    const title = input.value.trim();
+    if (!title) return;
+    const data = getSyllabusData();
+    data[subjKey].push({ id: Date.now(), title, t: false, r: false, p: false });
+    saveSyllabusData(data);
+    input.value = '';
+    renderSyllabus();
+    updateSmartLessonSuggestions();
+  }
+
+  function sendSyllabusUnitToTodayTasks(subjKey, unitId) {
+    const data = getSyllabusData();
+    const names = getSubjectNames();
+    const unit = (data[subjKey] || []).find(u => u.id === unitId);
+    if (!unit) return;
+    const taskLabel = `[${names[subjKey]}] ${unit.title}`;
+
+    const emptySlot = currentPriorities.find(p => !p.txt || p.txt.trim() === '');
+    if (emptySlot) {
+      emptySlot.txt = taskLabel;
+      emptySlot.chk = false;
+    } else {
+      currentPriorities.push({ chk: false, txt: taskLabel });
+    }
+    renderPriorityList();
+    saveData();
+    showToast(`📌 "${taskLabel}" අද දවසේ ප්‍රධාන වැඩ ලැයිස්තුවට එක් කරන ලදී!`);
+  }
+
+  function toggleSyllabusCheck(subjKey, unitId, field) {
+    const data = getSyllabusData();
+    const unit = data[subjKey].find(u => u.id === unitId);
+    if (unit) {
+      unit[field] = !unit[field];
+      saveSyllabusData(data);
+      renderSyllabus();
+    }
+  }
+
+  function deleteSyllabusUnit(subjKey, unitId) {
+    const data = getSyllabusData();
+    data[subjKey] = data[subjKey].filter(u => u.id !== unitId);
+    saveSyllabusData(data);
+    renderSyllabus();
+  }
+
+  function renderSyllabus() {
+    const container = document.getElementById('syllabusContainer');
+    if (!container) return;
+    const names = getSubjectNames();
+    const data = getSyllabusData();
+    const searchQ = ((document.getElementById('syllabusSearchInput') || {}).value || '').trim().toLowerCase();
+    const filterMode = ((document.getElementById('syllabusFilterMode') || {}).value || 'all');
+
+    container.innerHTML = ['s1', 's2', 's3'].map(sKey => {
+      const allUnits = data[sKey] || [];
+      const totalChecks = allUnits.length * 3;
+      let doneChecks = 0;
+      allUnits.forEach(u => {
+        if (u.t) doneChecks++;
+        if (u.r) doneChecks++;
+        if (u.p) doneChecks++;
+      });
+      const pct = totalChecks > 0 ? Math.round((doneChecks / totalChecks) * 100) : 0;
+
+      const units = allUnits.filter(u => {
+        const matchesSearch = !searchQ || (u.title || '').toLowerCase().includes(searchQ);
+        const isFullyDone = (u.t && u.r && u.p);
+        const matchesFilter = filterMode === 'all' || (filterMode === 'completed' && isFullyDone) || (filterMode === 'incomplete' && !isFullyDone);
+        return matchesSearch && matchesFilter;
+      });
+
+      return `
+        <div class="panel" style="background:var(--card);">
+          <div class="panel-title">
+            <span>📘 ${escHtml(names[sKey])}</span>
+            <span class="stat-badge stat-good">${pct}% Done</span>
+          </div>
+          <div class="progress-wrap" style="height:8px; margin-bottom:10px;">
+            <div class="progress-fill" style="width:${pct}%;"></div>
+          </div>
+          <div style="display:flex; gap:6px; margin-bottom:10px;">
+            <input type="text" id="new_unit_${sKey}" placeholder="නව පාඩමක් එක් කරන්න..." onkeydown="if(event.key==='Enter') addSyllabusUnit('${sKey}')">
+            <button class="btn-primary mini-btn" onclick="addSyllabusUnit('${sKey}')">+ එක් කරන්න</button>
+          </div>
+          <div style="max-height:280px; overflow-y:auto;">
+            ${allUnits.length === 0 ? `<div style="font-size:11.5px; color:var(--muted); text-align:center; padding:12px;">පාඩම් ඒකක ඇතුළත් කර නැත.<br><button onclick="loadDefaultSyllabusForCurrentSubjects(true)" class="mini-btn btn-primary" style="margin-top:6px;">📥 ${escHtml(names[sKey])} ඒකක ස්වයංක්‍රීයව එක් කරන්න</button></div>` : ''}
+            ${units.map(u => `
+              <div class="unit-item">
+                <span style="font-weight:600; font-size:11.5px;">${escHtml(u.title)}</span>
+                <div class="unit-checks">
+                  <button type="button" class="mini-btn" onclick="sendSyllabusUnitToTodayTasks('${sKey}', ${u.id})" title="මෙම පාඩම අද දවසේ ප්‍රධාන වැඩ ලැයිස්තුවට යවන්න" style="padding:1px 4px; font-size:9.5px;">+අදට</button>
+                  <label title="Theory"><input type="checkbox" ${u.t ? 'checked' : ''} onchange="toggleSyllabusCheck('${sKey}', ${u.id}, 't')">T</label>
+                  <label title="Revision / Tutes"><input type="checkbox" ${u.r ? 'checked' : ''} onchange="toggleSyllabusCheck('${sKey}', ${u.id}, 'r')">R</label>
+                  <label title="Past Papers"><input type="checkbox" ${u.p ? 'checked' : ''} onchange="toggleSyllabusCheck('${sKey}', ${u.id}, 'p')">P</label>
+                  <button class="mini-btn btn-danger" onclick="deleteSyllabusUnit('${sKey}', ${u.id})" style="padding:1px 4px;">✕</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Digital 50-MCQ OMR Simulator Functions
+  function saveOmrState() {
+    const state = {
+      subj: (document.getElementById('omrSubjectSelect') || {}).value || 's1',
+      title: (document.getElementById('omrPaperTitle') || {}).value || '',
+      answers: omrAnswers,
+      flags: omrCorrectFlags
+    };
+    localStorage.setItem('al_pro_omr_state', JSON.stringify(state));
+  }
+
+  function loadOmrState() {
+    const raw = localStorage.getItem('al_pro_omr_state');
+    if (!raw) return;
+    try {
+      const state = JSON.parse(raw);
+      omrAnswers = state.answers || {};
+      omrCorrectFlags = state.flags || {};
+      if (state.subj && document.getElementById('omrSubjectSelect')) {
+        document.getElementById('omrSubjectSelect').value = state.subj;
+      }
+      if (state.title && document.getElementById('omrPaperTitle')) {
+        document.getElementById('omrPaperTitle').value = state.title;
+      }
+    } catch (e) {}
+  }
+
+  function initOmrSheet() {
+    const container = document.getElementById('omrGridContainer');
+    if (!container) return;
+    let html = '';
+    for (let col = 0; col < 5; col++) {
+      html += `<div>`;
+      for (let q = col * 10 + 1; q <= (col + 1) * 10; q++) {
+        const sel = omrAnswers[q] || 0;
+        const st = omrCorrectFlags[q];
+        const rowCls = st === true ? 'correct' : st === false ? 'wrong' : '';
+        html += `
+          <div class="omr-row ${rowCls}" id="omr_row_${q}" onclick="handleOmrRowClick(${q})">
+            <span style="font-weight:800; width:26px; text-align:left;">${String(q).padStart(2, '0')}.</span>
+            <div class="omr-bubbles">
+              ${[1, 2, 3, 4, 5].map(opt => `
+                <button type="button" class="omr-bubble ${sel === opt ? 'selected' : ''}" onclick="selectOmrBubble(event, ${q}, ${opt})">${opt}</button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+      html += `</div>`;
+    }
+    container.innerHTML = html;
+    updateOmrScoreDisplay();
+  }
+
+  function selectOmrBubble(e, q, opt) {
+    e.stopPropagation();
+    if (omrGradingMode) {
+      handleOmrRowClick(q);
+      return;
+    }
+    omrAnswers[q] = (omrAnswers[q] === opt) ? 0 : opt;
+    saveOmrState();
+    initOmrSheet();
+  }
+
+  function toggleOmrGradingMode() {
+    omrGradingMode = !omrGradingMode;
+    const btn = document.getElementById('omrGradeModeBtn');
+    if (omrGradingMode) {
+      btn.textContent = '✏️ පිළිතුරු ලකුණු කිරීමට යන්න';
+      showToast('✔️ දැන් එක් එක් ප්‍රශ්න පේළිය මත ක්ලික් කර හරි (කොළ) හෝ වැරදි (රතු) ලකුණු කරන්න.');
+    } else {
+      btn.textContent = '✔️ හරි/වැරදි ලකුණු කරන්න';
+    }
+  }
+
+  function gradeWithAnswerKey() {
+    const input = prompt('පිළිතුරු පත්‍රිකාවේ (Marking Scheme) 1 සිට 50 දක්වා නිවැරදි පිළිතුරු අනුපිළිවෙළින් ඇතුළත් කරන්න (උදා: 24153... හෝ කොමා/හිස්තැන් සහිතව):');
+    if (!input) return;
+    const digits = input.replace(/[^1-5]/g, '').split('').map(Number);
+    if (digits.length === 0) return showToast('⚠️ වලංගු පිළිතුරු අංක (1-5) හමු නොවීය!');
+
+    digits.forEach((correctAns, idx) => {
+      const qNum = idx + 1;
+      if (qNum <= 50) {
+        const studentAns = omrAnswers[qNum] || 0;
+        omrCorrectFlags[qNum] = (studentAns === correctAns);
+      }
+    });
+    saveOmrState();
+    initOmrSheet();
+    showToast(`🔑 ප්‍රශ්න ${Math.min(50, digits.length)}ක් ස්වයංක්‍රීයව පරීක්ෂා කර ලකුණු ගණනය කරන ලදී!`);
+  }
+
+  function handleOmrRowClick(q) {
+    if (!omrGradingMode) return;
+    if (omrCorrectFlags[q] === undefined) omrCorrectFlags[q] = true;
+    else if (omrCorrectFlags[q] === true) omrCorrectFlags[q] = false;
+    else delete omrCorrectFlags[q];
+    saveOmrState();
+    initOmrSheet();
+  }
+
+  function updateOmrScoreDisplay() {
+    const answeredCount = Object.values(omrAnswers).filter(v => v > 0).length;
+    const correctCount = Object.values(omrCorrectFlags).filter(v => v === true).length;
+    const wrongQs = Object.keys(omrCorrectFlags).filter(k => omrCorrectFlags[k] === false).map(k => `#${k}`);
+    const pct = Math.round((correctCount / 50) * 100);
+    document.getElementById('omrScoreBadge').textContent = `Answered: ${answeredCount}/50 | Score: ${correctCount}/50 (${pct}%)`;
+
+    const wrongEl = document.getElementById('omrWrongListText');
+    if (wrongEl) {
+      wrongEl.textContent = wrongQs.length > 0 ? `❌ වැරදුණු ප්‍රශ්න (${wrongQs.length}): ${wrongQs.join(', ')}` : '';
+    }
+  }
+
+  function saveOmrToScores() {
+    const subj = document.getElementById('omrSubjectSelect').value;
+    const name = document.getElementById('omrPaperTitle').value.trim() || `MCQ Paper (${currentDate})`;
+    const correctCount = Object.values(omrCorrectFlags).filter(v => v === true).length;
+    const wrongQs = Object.keys(omrCorrectFlags).filter(k => omrCorrectFlags[k] === false).map(k => `#${k}`);
+    const pct = Math.round((correctCount / 50) * 100);
+
+    const list = JSON.parse(localStorage.getItem('al_pro_papers') || '[]');
+    list.unshift({ id: Date.now(), date: currentDate, subj, name: `${name} [${correctCount}/50]`, marks: pct });
+    localStorage.setItem('al_pro_papers', JSON.stringify(list));
+
+    if (wrongQs.length > 0) {
+      const vaultList = JSON.parse(localStorage.getItem('al_pro_vault') || '[]');
+      vaultList.unshift({
+        id: Date.now() + 1,
+        date: currentDate,
+        subj,
+        q: `${name} - නැවත බැලිය යුතු වැරදුණු MCQ ප්‍රශ්න අංක`,
+        a: `වැරදුණු ප්‍රශ්න: ${wrongQs.join(', ')} (ලකුණු: ${correctCount}/50)`
+      });
+      localStorage.setItem('al_pro_vault', JSON.stringify(vaultList));
+    }
+
+    const curMcq = parseInt(document.getElementById('mcqCount').value || '0');
+    document.getElementById('mcqCount').value = curMcq + 50;
+    saveData();
+    renderPaperScores();
+    renderVaultCards();
+    showToast(`✅ ${name} ලකුණු (${correctCount}/50 = ${pct}%) සහ වැරදුණු ප්‍රශ්න සුරකින ලදී!`);
+  }
+
+  function clearOmrSheet() {
+    if (!confirm('OMR පත්‍රිකාවේ ලකුණු කළ සියල්ල මකා දමන්නද?')) return;
+    omrAnswers = {};
+    omrCorrectFlags = {};
+    omrGradingMode = false;
+    document.getElementById('omrPaperTitle').value = '';
+    saveOmrState();
+    initOmrSheet();
+  }
+
+  function startPauseOmrTimer() {
+    const btn = document.getElementById('omrTimerBtn');
+    if (omrTimerInterval) {
+      clearInterval(omrTimerInterval);
+      omrTimerInterval = null;
+      omrRemainingSec = Math.max(0, Math.round((omrEndTime - Date.now()) / 1000));
+      btn.textContent = '▶ Resume Exam';
+      return;
+    }
+    omrEndTime = Date.now() + omrRemainingSec * 1000;
+    btn.textContent = '⏸ Pause Exam';
+    omrTimerInterval = setInterval(() => {
+      const left = Math.max(0, Math.round((omrEndTime - Date.now()) / 1000));
+      omrRemainingSec = left;
+      const h = String(Math.floor(left / 3600)).padStart(2, '0');
+      const m = String(Math.floor((left % 3600) / 60)).padStart(2, '0');
+      const s = String(left % 60).padStart(2, '0');
+      document.getElementById('omrTimerDisplay').textContent = `${h}:${m}:${s}`;
+      if (left <= 0) {
+        clearInterval(omrTimerInterval);
+        omrTimerInterval = null;
+        playBellSound();
+        showToast('⏰ පැය 2 ක MCQ විභාග කාලය අවසන්!');
+      }
+    }, 500);
+  }
+
+  function resetOmrTimer() {
+    if (omrTimerInterval) clearInterval(omrTimerInterval);
+    omrTimerInterval = null;
+    omrRemainingSec = 2 * 60 * 60;
+    document.getElementById('omrTimerDisplay').textContent = '02:00:00';
+    document.getElementById('omrTimerBtn').textContent = '▶ Start 2h Exam';
+  }
+
+  // Flashcards & Mistake Vault Functions
+  function addVaultCard() {
+    const subj = document.getElementById('vaultSubjSelect').value;
+    const q = document.getElementById('vaultQuestionInput').value.trim();
+    const a = document.getElementById('vaultAnswerInput').value.trim();
+    if (!q || !a) return showToast('⚠️ කරුණාකර ප්‍රශ්නය/මාතෘකාව සහ පිළිතුර/සූත්‍රය යන දෙකම ඇතුළත් කරන්න!');
+
+    const list = JSON.parse(localStorage.getItem('al_pro_vault') || '[]');
+    list.unshift({ id: Date.now(), date: currentDate, subj, q, a });
+    localStorage.setItem('al_pro_vault', JSON.stringify(list));
+
+    document.getElementById('vaultQuestionInput').value = '';
+    document.getElementById('vaultAnswerInput').value = '';
+    renderVaultCards();
+    showToast('🧠 නව කෙටි සටහන් කාඩ්පත එක් කරන ලදී!');
+  }
+
+  function shuffleVaultCards() {
+    let list = JSON.parse(localStorage.getItem('al_pro_vault') || '[]');
+    for (let i = list.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [list[i], list[j]] = [list[j], list[i]];
+    }
+    localStorage.setItem('al_pro_vault', JSON.stringify(list));
+    renderVaultCards();
+    showToast('🔀 කාඩ්පත් අහඹු ලෙස කලවම් කරන ලදී! දැන් ඔබේ මතකය පරීක්ෂා කරන්න.');
+  }
+
+  function deleteVaultCard(e, id) {
+    e.stopPropagation();
+    let list = JSON.parse(localStorage.getItem('al_pro_vault') || '[]');
+    list = list.filter(c => c.id !== id);
+    localStorage.setItem('al_pro_vault', JSON.stringify(list));
+    renderVaultCards();
+  }
+
+  function renderVaultCards() {
+    const container = document.getElementById('vaultCardsContainer');
+    if (!container) return;
+    const allList = JSON.parse(localStorage.getItem('al_pro_vault') || '[]');
+    const searchQ = ((document.getElementById('vaultSearchInput') || {}).value || '').trim().toLowerCase();
+    const filterSubj = ((document.getElementById('vaultFilterSubj') || {}).value || 'all');
+
+    const list = allList.filter(c => {
+      const matchSubj = filterSubj === 'all' || c.subj === filterSubj;
+      const matchSearch = !searchQ || (c.q || '').toLowerCase().includes(searchQ) || (c.a || '').toLowerCase().includes(searchQ);
+      return matchSubj && matchSearch;
+    });
+
+    const names = getSubjectNames();
+    names.common = 'General English / GIT';
+
+    if (list.length === 0) {
+      container.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--muted); padding:20px;">කෙටි සටහන් හෝ වැරදුණු කරුණු හමු නොවීය. ඉහතින් නව කාඩ්පතක් එක් කරන්න.</div>`;
+      return;
+    }
+
+    container.innerHTML = list.map(card => {
+      const sName = names[card.subj] || card.subj;
+      return `
+        <div class="flashcard" onclick="this.classList.toggle('revealed')">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span class="stat-badge stat-warn" style="font-size:10.5px;">${escHtml(sName)}</span>
+            <button class="mini-btn btn-danger" onclick="deleteVaultCard(event, ${card.id})">✕</button>
+          </div>
+          <div style="font-weight:700; font-size:13px;">❓ ${escHtml(card.q)}</div>
+          <div style="font-size:10.5px; color:var(--muted); margin-top:4px;">(පිළිතුර බැලීමට ක්ලික් කරන්න)</div>
+          <div class="flashcard-ans">💡 ${escHtml(card.a)}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Shareable Study Card
+  function openShareCard() {
+    document.getElementById('shareModal').classList.add('open');
+    const canvas = document.getElementById('shareCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const grad = ctx.createLinearGradient(0, 0, 600, 360);
+    grad.addColorStop(0, '#0f172a');
+    grad.addColorStop(1, '#1e3a8a');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 600, 360);
+
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = 'bold 22px Segoe UI, sans-serif';
+    ctx.fillText('🎓 A/L DAILY STUDY REPORT', 30, 42);
+
+    ctx.fillStyle = '#cbd5e1';
+    ctx.font = 'bold 14px Segoe UI, sans-serif';
+    ctx.fillText(`📅 Date: ${currentDate}   |   ${document.getElementById('streakBadge').textContent}`, 30, 68);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.fillRect(30, 88, 250, 110);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = 'bold 13px Segoe UI, sans-serif';
+    ctx.fillText('TODAY TOTAL STUDY TIME', 45, 115);
+    ctx.fillStyle = '#4ade80';
+    ctx.font = 'bold 40px Segoe UI, sans-serif';
+    ctx.fillText(document.getElementById('todayTotalDisplay').textContent, 45, 165);
+    ctx.fillStyle = '#facc15';
+    ctx.font = 'bold 13px Segoe UI, sans-serif';
+    ctx.fillText(document.getElementById('efficiencyBadge').textContent, 45, 188);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.fillRect(300, 88, 270, 185);
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = 'bold 14px Segoe UI, sans-serif';
+    ctx.fillText('SUBJECT BREAKDOWN', 318, 115);
+
+    const names = getSubjectNames();
+    const s1T = document.getElementById('subj1Hours').textContent;
+    const s2T = document.getElementById('subj2Hours').textContent;
+    const s3T = document.getElementById('subj3Hours').textContent;
+    const sComT = document.getElementById('subjCommonHours').textContent;
+
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = 'bold 14px Segoe UI, sans-serif';
+    ctx.fillText(`• ${names.s1}: ${s1T}`, 318, 145);
+    ctx.fillText(`• ${names.s2}: ${s2T}`, 318, 175);
+    ctx.fillText(`• ${names.s3}: ${s3T}`, 318, 205);
+    ctx.fillText(`• Gen.Eng/Class: ${sComT}`, 318, 232);
+
+    ctx.fillStyle = '#cbd5e1';
+    ctx.font = '12px Segoe UI, sans-serif';
+    ctx.fillText(document.getElementById('modeBreakdownText').textContent, 318, 258);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.fillRect(30, 210, 250, 63);
+    const mcqs = document.getElementById('mcqCount').value || 0;
+    const essays = document.getElementById('essayCount').value || 0;
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = 'bold 14px Segoe UI, sans-serif';
+    ctx.fillText(`✅ MCQs: ${mcqs}  |  ✍️ Essays/Tutes: ${essays}`, 45, 238);
+    ctx.fillStyle = '#93c5fd';
+    ctx.fillText(`📊 Week Total: ${document.getElementById('weekTotalDisplay').textContent}`, 45, 260);
+
+    const ambition = document.getElementById('studentAmbition').value.trim() || 'Dedicated A/L Scholar';
+    ctx.fillStyle = '#facc15';
+    ctx.font = 'bold 14px Segoe UI, sans-serif';
+    ctx.fillText(`🎯 ${ambition}`, 30, 325);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = 'bold 13px Segoe UI, sans-serif';
+    ctx.fillText(document.getElementById('levelBadge').textContent, 380, 325);
+  }
+
+  function closeShareCard() {
+    document.getElementById('shareModal').classList.remove('open');
+  }
+
+  function downloadShareCard() {
+    const canvas = document.getElementById('shareCanvas');
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = `Study_Summary_${currentDate}.png`;
+    a.click();
+  }
+
+  function updateExamCountdown() {
+    const examVal = document.getElementById('examDate').value;
+    const badge = document.getElementById('alCountdownBadge');
+    const txt = document.getElementById('daysForALText');
+    if (!examVal) {
+      badge.textContent = 'Set A/L Date';
+      txt.textContent = 'Set Date Above';
+      return;
+    }
+    const today = new Date(currentDate + 'T00:00:00');
+    const exam = new Date(examVal + 'T00:00:00');
+    const diff = Math.ceil((exam - today) / (1000 * 60 * 60 * 24));
+    const label = diff >= 0 ? `${diff} Days Left` : 'Exam Passed';
+    badge.textContent = `⏳ A/L: ${label}`;
+    txt.textContent = label;
+  }
+
+  function saveGlobalSettings() {
+    const settings = {
+      stream: document.getElementById('streamSelect').value,
+      ambition: document.getElementById('studentAmbition').value,
+      examDate: document.getElementById('examDate').value,
+      dailyGoalHours: document.getElementById('dailyGoalHours').value,
+      s1: document.getElementById('subj1Name').value,
+      s2: document.getElementById('subj2Name').value,
+      s3: document.getElementById('subj3Name').value
+    };
+    localStorage.setItem('al_pro_settings', JSON.stringify(settings));
+  }
+
+  function loadGlobalSettings() {
+    const raw = localStorage.getItem('al_pro_settings');
+    if (raw) {
+      try {
+        const s = JSON.parse(raw);
+        if (s.stream) document.getElementById('streamSelect').value = s.stream;
+        if (s.ambition) document.getElementById('studentAmbition').value = s.ambition;
+        if (s.examDate) document.getElementById('examDate').value = s.examDate;
+        if (s.dailyGoalHours) document.getElementById('dailyGoalHours').value = s.dailyGoalHours;
+        if (s.s1) document.getElementById('subj1Name').value = s.s1;
+        if (s.s2) document.getElementById('subj2Name').value = s.s2;
+        if (s.s3) document.getElementById('subj3Name').value = s.s3;
+      } catch (e) {}
+    } else {
+      loadDefaultSyllabusForCurrentSubjects(false);
+    }
+    if (localStorage.getItem('al_planner_theme') === 'dark') {
+      document.body.classList.add('dark');
+      document.getElementById('themeBtn').textContent = '☀️ Light';
+    }
+    updateExamCountdown();
+  }
+
+  function saveData() {
+    const data = {
+      mcqCount: document.getElementById('mcqCount').value,
+      essayCount: document.getElementById('essayCount').value,
+      mainDistraction: document.getElementById('mainDistraction').value,
+      tomorrowFix: document.getElementById('tomorrowFix').value,
+      priorities: currentPriorities,
+      rows: {}
+    };
+
+    timeSlots.forEach(slot => {
+      if (slot.group) return;
+      data.rows[slot.id] = {
+        subj: document.getElementById(`subj_${slot.id}`).value,
+        mode: document.getElementById(`mode_${slot.id}`).value,
+        task: document.getElementById(`task_${slot.id}`).value,
+        slots: [0, 1, 2, 3].map(q => document.getElementById(`slot_${slot.id}_${q}`).classList.contains('active')),
+        sleep: parseInt(document.getElementById(`sleep_${slot.id}`).dataset.mins || '0'),
+        online: parseInt(document.getElementById(`online_${slot.id}`).dataset.mins || '0'),
+        other: parseInt(document.getElementById(`other_${slot.id}`).dataset.mins || '0')
+      };
+    });
+
+    localStorage.setItem(`al_plan_${currentDate}`, JSON.stringify(data));
+  }
+
+  function loadData(dateStr) {
+    updateExamCountdown();
+    const raw = localStorage.getItem(`al_plan_${dateStr}`);
+    if (!raw) {
+      clearFormFields();
+      renderTotals();
+      return;
+    }
+
+    const data = JSON.parse(raw);
+    document.getElementById('mcqCount').value = data.mcqCount || '';
+    document.getElementById('essayCount').value = data.essayCount || '';
+    document.getElementById('mainDistraction').value = data.mainDistraction || '';
+    document.getElementById('tomorrowFix').value = data.tomorrowFix || '';
+
+    if (Array.isArray(data.priorities) && data.priorities.length > 0) {
+      currentPriorities = data.priorities.map(p => ({ chk: !!p.chk, txt: p.txt || '' }));
+      while (currentPriorities.length < 6) {
+        currentPriorities.push({ chk: false, txt: '' });
+      }
+    } else {
+      currentPriorities = createDefaultPriorities(6);
+    }
+    renderPriorityList();
+
+    timeSlots.forEach(slot => {
+      if (slot.group) return;
+      const r = (data.rows && data.rows[slot.id]) || {};
+      document.getElementById(`subj_${slot.id}`).value = r.subj || 'none';
+      document.getElementById(`mode_${slot.id}`).value = r.mode || 'theory';
+      document.getElementById(`task_${slot.id}`).value = r.task || '';
+      [0, 1, 2, 3].forEach(q => {
+        const btn = document.getElementById(`slot_${slot.id}_${q}`);
+        if (r.slots && r.slots[q]) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+      setWasteButtonState(document.getElementById(`sleep_${slot.id}`), parseInt(r.sleep || 0));
+      setWasteButtonState(document.getElementById(`online_${slot.id}`), parseInt(r.online || 0));
+      setWasteButtonState(document.getElementById(`other_${slot.id}`), parseInt(r.other || 0));
+    });
+
+    renderTotals();
+  }
+
+  function clearFormFields() {
+    document.getElementById('mcqCount').value = '';
+    document.getElementById('essayCount').value = '';
+    document.getElementById('mainDistraction').value = '';
+    document.getElementById('tomorrowFix').value = '';
+    currentPriorities = createDefaultPriorities(6);
+    renderPriorityList();
+
+    timeSlots.forEach(slot => {
+      if (slot.group) return;
+      document.getElementById(`subj_${slot.id}`).value = 'none';
+      document.getElementById(`mode_${slot.id}`).value = 'theory';
+      document.getElementById(`task_${slot.id}`).value = '';
+      [0, 1, 2, 3].forEach(q => document.getElementById(`slot_${slot.id}_${q}`).classList.remove('active'));
+      setWasteButtonState(document.getElementById(`sleep_${slot.id}`), 0);
+      setWasteButtonState(document.getElementById(`online_${slot.id}`), 0);
+      setWasteButtonState(document.getElementById(`other_${slot.id}`), 0);
+    });
+  }
+
+  function changeDate(newDate) {
+    if (!newDate) return;
+    currentDate = newDate;
+    loadData(currentDate);
+    renderAnalytics();
+  }
+
+  function resetCurrentDay() {
+    if (confirm('අද දවසේ සටහන් කළ දත්ත සියල්ල මකා දැමීමට අවශ්‍යද?')) {
+      localStorage.removeItem(`al_plan_${currentDate}`);
+      clearFormFields();
+      renderTotals();
+      renderAnalytics();
+      showToast('🗑️ අද දිනයේ දත්ත මකා දමන ලදී.');
+    }
+  }
+
+  function toggleTheme() {
+    document.body.classList.toggle('dark');
+    const isDark = document.body.classList.contains('dark');
+    localStorage.setItem('al_planner_theme', isDark ? 'dark' : 'light');
+    document.getElementById('themeBtn').textContent = isDark ? '☀️ Light' : '🌙 Dark';
+  }
+
+  function exportBackup() {
+    const backup = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('al_')) backup[k] = localStorage.getItem(k);
+    }
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `AL_Study_Backup_${currentDate}.json`;
+    a.click();
+    showToast('💾 Backup ගොනුව බාගත කරන ලදී!');
+  }
+
+  function importBackup(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        Object.keys(data).forEach(k => {
+          if (k.startsWith('al_')) localStorage.setItem(k, data[k]);
+        });
+        loadGlobalSettings();
+        loadData(currentDate);
+        loadOmrState();
+        initOmrSheet();
+        renderSyllabus();
+        renderAnalytics();
+        renderVaultCards();
+        showToast('✅ Backup දත්ත සාර්ථකව ප්‍රතිස්ථාපනය (Restore) කරන ලදී!');
+      } catch (err) {
+        showToast('⚠️ Backup ගොනුව කියවීමේ දෝෂයක්!');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  window.onload = initUI;
+</script>
+</body>
+</html>
