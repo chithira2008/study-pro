@@ -5231,7 +5231,277 @@
     reader.readAsText(file);
   }
 
-  window.onload = initUI;
+  /* ================= 📖 FIRST-TIME USER AUTO-GUIDE, BOT SETUP & AUTO CHAT-ID FINDER ================= */
+  function injectWelcomeGuideSystem() {
+    // 1. ඉහළ Header එකට "❓ Guide" බොත්තම ස්වයංක්‍රීයව එක් කිරීම
+    const themeBtn = document.getElementById('themeBtn');
+    if (themeBtn && themeBtn.parentElement && !document.getElementById('helpGuideBtn')) {
+      const helpBtn = document.createElement('button');
+      helpBtn.id = 'helpGuideBtn';
+      helpBtn.className = 'mini-btn btn-primary';
+      helpBtn.innerHTML = '❓ Guide';
+      helpBtn.title = 'භාවිත කරන ආකාරය සහ Telegram Bot සකසන ආකාරය';
+      helpBtn.onclick = () => openUserGuideModal();
+      themeBtn.parentElement.insertBefore(helpBtn, themeBtn);
+    }
+
+    // 2. Guide Modal එක HTML වෙත එක් කිරීම
+    if (!document.getElementById('welcomeGuideModal')) {
+      const modalHtml = `
+        <div class="modal-overlay" id="welcomeGuideModal">
+          <div class="modal-card" style="max-width:640px; text-align:left;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--primary); padding-bottom:8px; margin-bottom:10px;">
+              <h3 style="color:var(--primary); font-size:15.5px;">🎓 A/L ISLAND RANKER PRO - සම්පූර්ණ මාර්ගෝපදේශය (GUIDE)</h3>
+              <button type="button" class="mini-btn" onclick="closeUserGuideModal()">✖</button>
+            </div>
+
+            <div style="display:grid; gap:10px; font-size:12.5px; line-height:1.45; max-height:66vh; overflow-y:auto; padding-right:4px;">
+
+              <!-- STEP A: QUICK STREAM & GOAL SETUP -->
+              <div style="background:var(--primary-bg); border:1.5px solid var(--primary); border-radius:10px; padding:10px;">
+                <div style="font-weight:900; font-size:13px; color:var(--primary); margin-bottom:6px;">🎯 1. පළමුව ඔබේ විෂය ධාරාව සහ ඉලක්කය තෝරන්න:</div>
+                <div class="field-row">
+                  <label>විෂය ධාරාව (Stream):</label>
+                  <select id="guideQuickStream" onchange="document.getElementById('streamSelect').value=this.value; applyStreamPreset(this.value);">
+                    <option value="maths">📐 Physical Science (Maths)</option>
+                    <option value="bio">🧬 Bio Science</option>
+                    <option value="commerce">📊 Commerce</option>
+                    <option value="etech">⚙️ E-Tech</option>
+                    <option value="btech">🌱 B-Tech</option>
+                    <option value="arts">🎨 Arts</option>
+                    <option value="custom">✨ Custom</option>
+                  </select>
+                </div>
+                <div class="field-row" style="margin-bottom:0;">
+                  <label>ඔබේ සිහිනය / ඉලක්කය:</label>
+                  <input type="text" id="guideQuickAmbition" placeholder="උදා: Medicine / Engineering / Island Rank" oninput="document.getElementById('studentAmbition').value=this.value; saveGlobalSettings();">
+                </div>
+              </div>
+
+              <!-- STEP B: HOW TO GET BOT TOKEN & CHAT ID + DIRECT SETUP -->
+              <div style="background:var(--warning-bg); border:1.5px solid var(--warning); border-radius:10px; padding:10px;">
+                <div style="font-weight:900; font-size:13px; color:var(--warning); margin-bottom:6px;">🤖 2. Telegram Bot Token & Chat ID ලබාගෙන Notification ON කරන හැටි:</div>
+                
+                <div style="background:var(--card); padding:8px; border-radius:8px; margin-bottom:8px; border:1px solid var(--border);">
+                  <strong>🔑 පියවර A - Bot Token එක ගන්නා හැටි:</strong><br>
+                  1. Telegram හි <a href="https://t.me/BotFather" target="_blank" style="color:var(--primary); font-weight:900;">@BotFather</a> වෙත ගොස් <strong>Start</strong> ඔබා <code>/newbot</code> ලෙස යවන්න.<br>
+                  2. Bot ට කැමති නමක් (උදා: <code>My AL Coach</code>) සහ අගට <code>bot</code> එන Username එකක් (උදා: <code>my_al2026_bot</code>) දෙන්න.<br>
+                  3. එවිට ලැබෙන දිග <strong>Token කේතය</strong> Copy කර පහත කොටුවට Paste කරන්න.<br>
+                  4. ⚠️ <strong>ඉතා වැදගත්:</strong> ඔබ සෑදූ අලුත් Bot ගේ Link එක ඔබා එම Bot ව විවෘත කර අනිවාර්යයෙන්ම <strong>Start</strong> ඔබා තබන්න!
+                </div>
+
+                <div style="background:var(--card); padding:8px; border-radius:8px; margin-bottom:8px; border:1px solid var(--border);">
+                  <strong>🆔 පියවර B - Telegram Chat ID එක ගන්නා හැටි (ක්‍රම 2කි):</strong><br>
+                  • <strong>ලේසිම ක්‍රමය:</strong> ඔබේ අලුත් Bot ට <code>Start</code> හෝ <code>Hi</code> ලෙස පණිවිඩයක් යවා, පහත <strong>"🔍 Auto-Find ID"</strong> බොත්තම ඔබන්න! එවිට ID එක ඉබේම වැටේ!<br>
+                  • <strong>නැතිනම්:</strong> Telegram හි <a href="https://t.me/userinfobot" target="_blank" style="color:var(--primary); font-weight:900;">@userinfobot</a> වෙත ගොස් <strong>Start</strong> ඔබා ලැබෙන <strong>Id</strong> අංකය පහතින් Paste කරන්න.
+                </div>
+
+                <!-- Direct Bot Input Fields inside Guide -->
+                <div class="field-row">
+                  <label>Bot Notifications:</label>
+                  <select id="guideBotNotify" onchange="document.getElementById('botNotifyEnabled').value=this.value; saveGlobalSettings();" style="width:160px; font-weight:800;">
+                    <option value="on">🔔 ක්‍රියාත්මකයි (ON)</option>
+                    <option value="off">🔕 අක්‍රියයි (OFF)</option>
+                  </select>
+                </div>
+                <div class="field-row">
+                  <label>Bot Token:</label>
+                  <input type="text" id="guideBotToken" placeholder="123456789:ABC-DEF... මෙහි Paste කරන්න" oninput="document.getElementById('tgBotTokenInput').value=this.value.trim(); saveGlobalSettings();">
+                </div>
+                <div class="field-row">
+                  <label>TG Chat ID:</label>
+                  <div style="display:flex; gap:5px; width:100%;">
+                    <input type="text" id="guideChatId" placeholder="Chat ID එක හෝ Auto-Find ඔබන්න" oninput="document.getElementById('tgChatIdInput').value=this.value.trim(); saveGlobalSettings();" style="flex:1;">
+                    <button type="button" class="mini-btn btn-primary" onclick="autoDetectTelegramChatId()" style="flex-shrink:0;">🔍 Auto-Find ID</button>
+                  </div>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;">
+                  <button type="button" class="mini-btn btn-success" onclick="sendWelcomeGuideToTelegram(true)">✈️ Test & Send Guide to TG</button>
+                  <button type="button" class="mini-btn btn-danger" onclick="trigger15MinMotivationAlert(true, true)">💀 Test Brutal Alert</button>
+                  <button type="button" class="mini-btn btn-primary" onclick="requestBrowserNotificationPerm()">🔔 Phone/Browser Alert ON</button>
+                </div>
+              </div>
+
+              <!-- STEP C: HOW TO USE THE APP DAILY -->
+              <div style="padding:8px 10px; background:var(--header-bg); border-left:4px solid var(--sleep); border-radius:6px;">
+                <strong>3️⃣ 🌅 උදෑසනම නින්ද ලකුණු කරන්න:</strong><br>
+                ඉහළ ඇති <code>12-6</code> හෝ <code>11-5</code> බොත්තම ඔබා ඔබ නිදාගත් පැය ගණන ලකුණු කරන්න. එම පැය රතු (Waste) ලෙස ගණන් නොගැනේ.
+              </div>
+
+              <div style="padding:8px 10px; background:var(--header-bg); border-left:4px solid var(--primary); border-radius:6px;">
+                <strong>4️⃣ 📌 අද ප්‍රධාන වැඩ (0/1) සහ වේලාවන් යොදන්න:</strong><br>
+                <strong>"📌 අද වැඩ"</strong> වල අද කරන ප්‍රධාන පාඩම සහ වේලාව (⏰ Start → End) තෝරන්න. එය ස්වයංක්‍රීයව පැය 24 කාලසටහනට වැටේ! තවත් වැඩ අවශ්‍ය නම් පමණක් <strong>"➕ අලුත් වැඩක්"</strong> ඔබන්න.
+              </div>
+
+              <div style="padding:8px 10px; background:var(--header-bg); border-left:4px solid var(--success); border-radius:6px;">
+                <strong>5️⃣ 🟢/🔴 විනාඩි 15න් 15 කොටු ලකුණු කරන්න:</strong><br>
+                <strong>"📅 කාලසටහන"</strong> තුළ සෑම පැයක්ම විනාඩි 15 කොටු 4කට බෙදා ඇත.<br>
+                • <strong>1 වරක් ඔබන්න = 🟢 කොළ (පාඩම් කළා)</strong> | <strong>2 වරක් ඔබන්න = 🔴 රතු (අපතේ ගියා)</strong><br>
+                ⚠️ විනාඩි 15 අවසන් වී <strong>විනාඩි 5ක්</strong> ඇතුළත ලකුණු නොකළොත් එය ඉබේම <strong>🔴 රතු</strong> වේ!
+              </div>
+
+              <div style="padding:8px 10px; background:var(--danger-bg); border-left:4px solid var(--danger); border-radius:6px; color:var(--danger);">
+                <strong>6️⃣ 🚨 කොටු 2කට වඩා වැඩ නොකළොත් (5-Min Telegram Penalty):</strong><br>
+                ඔබ කොටු 2කට වඩා වැඩ නොකර සිටියහොත්, ඔබ නැවත 15m කොටුවක් <strong>🟢 කොළ පාටින්</strong> ලකුණු කරන තුරුම <strong>විනාඩි 5න් 5ට</strong> Telegram වෙත දරුණු අවවාද පණිවිඩ එවනු ලැබේ!
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; gap:8px; margin-top:12px; pt-2; border-top:1px solid var(--border); padding-top:10px; flex-wrap:wrap;">
+              <button type="button" class="mini-btn" onclick="copyGuideTextForSharing()">📋 Guide එක Copy කරගන්න</button>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button type="button" class="btn-primary" onclick="sendWelcomeGuideToTelegram(true)">✈️ Telegram එකට Guide එක යවන්න</button>
+                <button type="button" class="btn-success" onclick="finishOnboardingAndStart()">🚀 වැඩ පටන් ගමු!</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+
+    // 3. අලුත්ම පරිශීලකයෙක් නම් Start කරද්දීම ස්වයංක්‍රීයව Guide එක පෙන්වීම සහ Telegram වෙත යැවීම
+    const hasSeenGuide = localStorage.getItem('al_pro_first_time_guide_shown');
+    if (!hasSeenGuide) {
+      setTimeout(() => {
+        openUserGuideModal();
+        sendWelcomeGuideToTelegram(false);
+      }, 500);
+    }
+  }
+
+  // Bot Token එක පමණක් දමා අලුත් Bot ට "Start" එබූ පසු ස්වයංක්‍රීයව Chat ID එක සොයාගන්නා Function එක
+  function autoDetectTelegramChatId() {
+    triggerHaptic('medium');
+    const token = ((document.getElementById('guideBotToken') || {}).value || (document.getElementById('tgBotTokenInput') || {}).value || '').trim();
+    if (!token) {
+      return showToast('⚠️ පළමුව ඉහත කොටුවේ ඔබේ Bot Token එක Paste කරන්න!');
+    }
+
+    showToast('🔍 ඔබේ Telegram Chat ID එක සොයමින් පවතී...');
+    fetch(`https://api.telegram.org/bot${token}/getUpdates`)
+      .then(r => r.json())
+      .then(res => {
+        if (res && res.ok && Array.isArray(res.result) && res.result.length > 0) {
+          for (let i = res.result.length - 1; i >= 0; i--) {
+            const msg = res.result[i].message || res.result[i].edited_message || (res.result[i].my_chat_member && res.result[i].my_chat_member.chat);
+            const chatObj = msg && (msg.chat || msg);
+            if (chatObj && chatObj.id) {
+              const foundId = String(chatObj.id);
+              if (document.getElementById('tgChatIdInput')) document.getElementById('tgChatIdInput').value = foundId;
+              if (document.getElementById('guideChatId')) document.getElementById('guideChatId').value = foundId;
+              saveGlobalSettings();
+              sendWelcomeGuideToTelegram(false);
+              return showToast(`✅ ඔබේ Chat ID එක (${foundId}) සාර්ථකව සොයාගත්තා! Guide එක Telegram වෙත යැවුණා!`);
+            }
+          }
+        }
+        showToast('⚠️ Chat ID එක හමු නොවීය! කරුණාකර ඔබ සෑදූ අලුත් Bot වෙත ගොස් "Start" හෝ "Hi" යවා නැවත Auto-Find ඔබන්න.');
+      })
+      .catch(() => {
+        showToast('⚠️ Bot Token එක නිවැරදිදැයි පරීක්ෂා කරන්න!');
+      });
+  }
+
+  function openUserGuideModal() {
+    triggerHaptic('light');
+    const modal = document.getElementById('welcomeGuideModal');
+    if (!modal) return;
+    if (document.getElementById('guideQuickStream') && document.getElementById('streamSelect')) {
+      document.getElementById('guideQuickStream').value = document.getElementById('streamSelect').value;
+    }
+    if (document.getElementById('guideQuickAmbition') && document.getElementById('studentAmbition')) {
+      document.getElementById('guideQuickAmbition').value = document.getElementById('studentAmbition').value;
+    }
+    if (document.getElementById('guideBotNotify') && document.getElementById('botNotifyEnabled')) {
+      document.getElementById('guideBotNotify').value = document.getElementById('botNotifyEnabled').value;
+    }
+    if (document.getElementById('guideBotToken') && document.getElementById('tgBotTokenInput')) {
+      document.getElementById('guideBotToken').value = document.getElementById('tgBotTokenInput').value;
+    }
+    if (document.getElementById('guideChatId') && document.getElementById('tgChatIdInput')) {
+      document.getElementById('guideChatId').value = document.getElementById('tgChatIdInput').value;
+    }
+    modal.classList.add('open');
+  }
+
+  function closeUserGuideModal() {
+    localStorage.setItem('al_pro_first_time_guide_shown', 'yes');
+    const modal = document.getElementById('welcomeGuideModal');
+    if (modal) modal.classList.remove('open');
+  }
+
+  function finishOnboardingAndStart() {
+    triggerHaptic('medium');
+    localStorage.setItem('al_pro_first_time_guide_shown', 'yes');
+    sendWelcomeGuideToTelegram(false);
+    closeUserGuideModal();
+    showToast('🔥 සාදරයෙන් පිළිගනිමු! දැන්ම අද ප්‍රධාන වැඩේ ඇතුළත් කර පළමු විනාඩි 15 කොළ පාට කරන්න!');
+  }
+
+  function getFormattedWelcomeGuideText() {
+    return [
+      `🎓 *A/L ISLAND RANKER PRO - සම්පූර්ණ මාර්ගෝපදේශය (USER GUIDE)* 🔥`,
+      ``,
+      `🤖 *1. TELEGRAM BOT TOKEN සහ CHAT ID ලබාගන්නා ආකාරය:*`,
+      `• *Bot Token:* Telegram හි @BotFather වෙත ගොස් \`/newbot\` යවා නමක් සහ අගට \`bot\` එන username එකක් දී ලැබෙන Token එක Copy කරගන්න. *(ඉන්පසු ඔබ සෑදූ අලුත් Bot ව විවෘත කර අනිවාර්යයෙන්ම Start ඔබන්න!)*`,
+      `• *Chat ID:* ඇප් එකේ Token එක දමා *"🔍 Auto-Find ID"* ඔබන්න (නැතිනම් @userinfobot වෙත ගොස් Start ඔබා ලැබෙන Id අංකය ගන්න).`,
+      `• *Notification ON කිරීම:* ⚙️ සැකසුම් (හෝ ❓ Guide) තුළ Token සහ Chat ID දමා Notifications *ON* කරන්න.`,
+      ``,
+      `📅 *2. දිනපතා භාවිත කරන ආකාරය:*`,
+      `• *🌅 නින්ද:* උදෑසනම \`12-6\` හෝ \`11-5\` ඔබා නින්ද ලකුණු කරන්න (එම පැය රතු ලෙස ගණන් නොගැනේ).`,
+      `• *📌 අද ප්‍රධාන වැඩ (0/1):* අද කරන පාඩම සහ වේලාව (⏰ Start → End) තෝරන්න. එය ඉබේම පැය 24 කාලසටහනට වැටේ! තවත් වැඩ අවශ්‍ය නම් *"➕ අලුත් වැඩක්"* ඔබන්න.`,
+      `• *🟢/🔴 විනාඩි 15 කොටු:* 1 වරක් ඔබන්න = 🟢 කොළ (පාඩම් කළා) | 2 වරක් ඔබන්න = 🔴 රතු (අපතේ ගියා). විනාඩි 15 අවසන් වී විනාඩි 5ක් තුළ ලකුණු නොකළොත් ඉබේම 🔴 රතු වේ!`,
+      `• *🚨 විනාඩි 5න් 5ට එන දරුණු අවවාද:* කොටු 2කට වඩා වැඩ නොකර සිටියහොත්, ඔබ නැවත 15m කොටුවක් 🟢 කොළ පාටින් ලකුණු කරන තුරුම *විනාඩි 5න් 5ට* Telegram වෙත දරුණු අවවාද පණිවිඩ එවනු ලැබේ!`,
+      ``,
+      `🔥 *දැන්ම පොත අතට ගෙන පළමු විනාඩි 15 කොළ පාට (🟢) කරන්න!*`
+    ].join('\n');
+  }
+
+  function copyGuideTextForSharing() {
+    navigator.clipboard.writeText(getFormattedWelcomeGuideText()).then(() => {
+      showToast('📋 සම්පූර්ණ User Guide එක Copy විය! දැන් ඕනෑම කෙනෙක්ට Paste කර යැවිය හැක.');
+    });
+  }
+
+  function sendWelcomeGuideToTelegram(isManualClick = false) {
+    const token = ((document.getElementById('tgBotTokenInput') || {}).value || '').trim();
+    let chatId = ((document.getElementById('tgChatIdInput') || {}).value || '').trim();
+
+    if (!chatId && window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+      chatId = String(window.Telegram.WebApp.initDataUnsafe.user.id);
+    }
+
+    if (!token || !chatId) {
+      if (isManualClick) {
+        showToast('💡 පළමුව ඉහත Bot Token එක දමා "🔍 Auto-Find ID" ඔබන්න!');
+      }
+      return;
+    }
+
+    fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: getFormattedWelcomeGuideText(),
+        parse_mode: 'Markdown'
+      })
+    })
+    .then(r => r.json())
+    .then(res => {
+      if (res && res.ok) {
+        if (isManualClick) showToast('✈️ සම්පූර්ණ User Guide එක ඔබේ Telegram වෙත සාර්ථකව යවන ලදී!');
+      } else if (isManualClick) {
+        showToast('⚠️ පණිවිඩය යැවීමට නොහැකි විය. ඔබ සෑදූ අලුත් Bot වෙත ගොස් "Start" ඔබා ඇත්දැයි පරීක්ෂා කරන්න!');
+      }
+    })
+    .catch(() => {});
+  }
+
+  window.onload = function() {
+    initUI();
+    injectWelcomeGuideSystem();
+  };
 </script>
 </body>
 </html>
