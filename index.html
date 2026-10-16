@@ -1033,7 +1033,7 @@
   <!-- 2. Collapsible Settings Drawer -->
   <div id="settingsDrawer" class="settings-drawer">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-      <strong style="color:var(--primary); font-size:13px;">⚙️ ප්‍රධාන විෂයයන් 3 සහ TELEGRAM BOT (5-MIN PUNISHMENT) සැකසුම්</strong>
+      <strong style="color:var(--primary); font-size:13px;">⚙️ ප්‍රධාන විෂයයන් 3 සහ TELEGRAM BOT (30-MIN REMINDER) සැකසුම්</strong>
       <button onclick="toggleSettingsDrawer()" class="mini-btn">✖ වසන්න</button>
     </div>
     <div class="settings-grid">
@@ -1090,7 +1090,7 @@
       </div>
 
       <div class="panel" style="background:var(--card);">
-        <div class="panel-title">🤖 5-MIN RELENTLESS TELEGRAM BOT ENGINE</div>
+        <div class="panel-title">🤖 30-MIN BRUTAL MOTIVATION & REMINDER BOT</div>
         <div class="field-row">
           <label>Bot & Red Alerts:</label>
           <select id="botNotifyEnabled" onchange="saveGlobalSettings()" style="width:140px; font-weight:800;">
@@ -1107,7 +1107,7 @@
           <input type="text" id="tgChatIdInput" placeholder="Auto-detected හෝ ඔබේ Telegram ID" oninput="saveGlobalSettings()">
         </div>
         <div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;">
-          <button type="button" class="mini-btn btn-warning" onclick="trigger15MinMotivationAlert(true, false)">🚀 Test 15m Msg</button>
+          <button type="button" class="mini-btn btn-warning" onclick="trigger15MinMotivationAlert(true)">🚀 Test 30m Reminder</button>
           <button type="button" class="mini-btn btn-danger" onclick="trigger15MinMotivationAlert(true, true)">💀 Test Brutal Alert</button>
           <button type="button" class="mini-btn btn-primary" onclick="requestBrowserNotificationPerm()">🔔 Browser Alert</button>
         </div>
@@ -1287,7 +1287,7 @@
       </div>
 
       <div style="font-size:11px; color:var(--muted); margin-bottom:6px; font-weight:800;">
-        👆 <strong>1 වරක් ඔබන්න = 🟢 කොළ (පාඩම් කළා)</strong> | <strong>2 වරක් ඔබන්න = 🔴 රතු (අපතේ ගියා)</strong> | කොටු 2කට වඩා වැඩ නොකළොත් <strong>විනාඩි 5න් 5ට Telegram ප්‍රහාර</strong> එවනු ලැබේ!
+        👆 <strong>1 වරක් ඔබන්න = 🟢 කොළ (පාඩම් කළා)</strong> | <strong>2 වරක් ඔබන්න = 🔴 රතු (අපතේ ගියා)</strong> | සෑම <strong>පැය භාගයකට වරක්ම (විනාඩි 30න් 30ට)</strong> කාලසටහන Mark කිරීමට දරුණු සිහිකැඳවීමක් ලැබේ!
       </div>
 
       <!-- 4 x 15m Green/Red Slots -->
@@ -1587,18 +1587,18 @@
 <!-- Toast -->
 <div id="toastBox" class="toast-box"></div>
 
-<!-- 💀 Extreme Fear & Relentless Discipline Alert Modal -->
+<!-- 💀 30-Min Brutal Motivation & Timetable Mark Reminder Modal -->
 <div class="modal-overlay" id="motivationModal">
-  <div class="modal-card motivation-fire-card" id="motivationModalCard">
+  <div class="modal-card motivation-fire-card red-emergency-mode" id="motivationModalCard">
     <div id="motivTopTag" style="font-size:12.5px; font-weight:900; color:#fde047; letter-spacing:0.8px; margin-bottom:8px;">
-      💀 BRUTAL WAKE-UP CALL 💀
+      ⏰ පැය භාගයේ දරුණු සිහිකැඳවීම (30-MIN REMINDER) 💀
     </div>
     <h2 id="motivHeadline" style="font-size:20px; color:#fff; margin-bottom:10px; line-height:1.35;"></h2>
     <div id="motivQuoteBox" style="background:rgba(0,0,0,0.45); border-left:4px solid #ef4444; padding:12px; border-radius:8px; text-align:left; font-size:13.5px; line-height:1.55; margin-bottom:12px; color:#f8fafc;"></div>
     <div id="motivCurrentTaskBox" style="background:rgba(34,197,94,0.18); border:1.5px solid #22c55e; padding:10px; border-radius:8px; font-weight:800; font-size:13px; color:#4ade80; margin-bottom:14px;"></div>
     <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
-      <button onclick="mark15MinFromMotivationModal()" class="btn-success" style="padding:11px 16px; font-size:13px; font-weight:900;">🟢 දැන් 15m පාඩම් කළා! (Stop 5m Alerts)</button>
-      <button onclick="closeMotivationModal()" class="btn-danger" style="padding:11px 16px; font-size:13px; font-weight:900;">🔥 දැන්ම පොත අතට ගන්නවා!</button>
+      <button onclick="mark15MinFromMotivationModal()" class="btn-success" style="padding:11px 16px; font-size:13px; font-weight:900;">📅 දැන්ම කාලසටහන Mark කරන්න යන්න</button>
+      <button onclick="closeMotivationModal()" class="btn-danger" style="padding:11px 16px; font-size:13px; font-weight:900;">✖ වසන්න</button>
     </div>
   </div>
 </div>
@@ -1955,74 +1955,51 @@
     toastTimeout = setTimeout(() => box.classList.remove('show'), 3800);
   }
 
-  /* ================= 💀 EXTREME FEAR & BRUTAL WAKE-UP MOTIVATION ENGINE (5-MIN RELENTLESS LOOP) ================= */
+  /* ================= 💀 30-MINUTE BRUTAL MOTIVATION & TIMETABLE REMINDER ENGINE ================= */
   const BRUTAL_TICKER_MESSAGES = [
     "💀 මේ තත්පරයේත් ලංකාවේ දහස් ගාණක් ළමයි නිදිමරාගෙන Past Papers හදනවා! ඔයා තාම ෆෝන් එක අතේ තියාගෙන කාලය කනවද?!",
     "🩸 Results එන දවසට යාළුවෝ ඔක්කොම A3 දාලා Campus යද්දී, කාමරේ දොර වහගෙන තනියම අඬන්නද ඔයාට ඕනි?! දැන්ම පොත අතට ගන්න!",
-    "🔥 අම්මයි තාත්තයි ඔයා වෙනුවෙන් විඳින දුකට, හෙළන දහඩියට ඔයා දෙන උත්තරේ මේ රතු කොටු පිරුණු කාලසටහනද?! ලැජ්ජ වෙන්න!",
-    "⚡ ඔයා කාබාසිනියා කරන හැම විනාඩි 15කින්ම ඔයාගේ Z-Score එක දශම ගාණකින් පහළට වැටෙනවා! වහාම මේසයට වාඩි වෙන්න!",
+    "🔥 අම්මයි තාත්තයි ඔයා වෙනුවෙන් විඳින දුකට, හෙළන දහඩියට ඔයා දෙන උත්තරේ මේකද?! දැන්ම වැඩ කරලා කාලසටහන Mark කරන්න!",
+    "⚡ ගෙවෙන හැම පැය භාගයක්ම ඔයාගේ ජීවිතේ ඉරණම තීරණය කරනවා! වහාම මේසයට වාඩි වෙලා පාඩම් කරන්න!",
     "🚨 විභාග ශාලාවේදී Paper එක අතට ගත්තම උත්තර මතක් වෙන්නේ නැති වුණාම දැනෙන භීතිය මතක් කරගන්න! ඒ නරක හීනය සැබෑ කරගන්න එපා!",
-    "💣 නිදහසට කරුණු කියන අයට ඉතිරි වෙන්නේ පසුතැවීම විතරයි! මොන දේ වුණත් දමලා ගහලා දැන්ම මේ විනාඩි 15 කොළ පාට කරන්න!",
+    "💣 නිදහසට කරුණු කියන අයට ඉතිරි වෙන්නේ පසුතැවීම විතරයි! ගෙවුණු පැය භාගය අවංකවම කාලසටහනේ Mark කරන්න!",
     "👁️ ඔයා අසමත් වෙනකන් බලාගෙන හිනාවෙන්න ඉන්න මිනිස්සු ඉස්සරහ පරාජිතයෙක් වෙන්න එපා! දැන්ම වැඩ පටන් ගන්න!",
     "⏳ A/L වලට තව දවස් කීයද තියෙන්නේ?! ගෙවෙන එක තත්පරයක්වත් ආයේ සල්ලි දීලාවත් ගන්න බෑ! දැන්ම පොත පෙරළන්න!"
   ];
 
-  const GOOSEBUMP_QUOTES = [
+  const BRUTAL_30MIN_QUOTES = [
     {
       headline: "💀 Results එන රෑට ඔයාගේ Index Number එක ගහද්දී අත වෙව්ලන හැටි මවාගන්න!",
-      body: "එදාට Screen එකේ වැටෙන Result එක දැකලා අම්මයි තාත්තයි ආඩම්බරයෙන් අඬනවද, නැත්නම් ඔළුවෙ අත ගහගෙන සුසුම් හෙළනවද කියන එක තීරණය වෙන්නේ මේ ගෙවෙන විනාඩි 15 ඇතුළත ඔයා කරන වැඩෙන්! ෆෝන් එක විසි කරලා දැන්ම පොතට ඇස් දෙක ගන්න!"
+      body: "එදාට Screen එකේ වැටෙන Result එක දැකලා අම්මයි තාත්තයි ආඩම්බරයෙන් අඬනවද, නැත්නම් ඔළුවෙ අත ගහගෙන සුසුම් හෙළනවද කියන එක තීරණය වෙන්නේ දැන් ඔයා ගත කරන කාලයෙන්! තවත් තත්පරයක්වත් නාස්ති නොකර ගෙවුණු පැය භාගය කාලසටහනේ Mark කරලා ඊළඟ කොටසට බහින්න!"
     },
     {
-      headline: "🩸 ඔයා නිකන් ඉන්න හැම තත්පරයකම තව කෙනෙක් ඔයාගේ Campus Seat එක උදුරගන්නවා!",
-      body: "මේක අනුකම්පාවක් නැති තරඟයක්! ඔයා කම්මැලිකමට ඇඳට වෙලා ඉද්දී, තව ළමයෙක් නිදිමත පරද්දලා ගණන් 50ක් හදලා ඉවරයි! ඔයාගේ හීනය වෙන කෙනෙක්ට ලියාගන්න දෙනවද? දැන්ම නැගිටලා වැඩට බහින්න!"
+      headline: "🩸 අම්මගේ තාත්තගේ මූණ දිහා කෙලින් බලලා 'මම Fail' කියන්න පුළුවන්ද?!",
+      body: "ඔයාට පන්ති ගාස්තු ගෙවන්න, පොත් අරන් දෙන්න ඒ මිනිස්සු තමන්ගේ ආසාවන් කීයක් නම් යටපත් කරගෙන ඇතිද? ඒ දහඩිය මහන්සියට ද්‍රෝහී වෙන්න එපා! පපුවට අත තියලා අවංකවම පහුගිය පැය භාගයේ කරපු දේ කාලසටහනේ ලකුණු (Mark) කරන්න!"
     },
     {
-      headline: "🔥 අම්මගේ තාත්තගේ මූණ දිහා කෙලින් බලලා 'මම Fail' කියන්න පුළුවන්ද?!",
-      body: "ඔයාට පන්ති ගාස්තු ගෙවන්න, පොත් අරන් දෙන්න ඒ මිනිස්සු තමන්ගේ ආසාවන් කීයක් නම් යටපත් කරගෙන ඇතිද? ඒ දහඩිය මහන්සියට ද්‍රෝහී වෙන්න එපා! පපුවට අත තියලා හිතන්න—මේ විනාඩි 15 අනිවාර්යයෙන්ම කොළ පාට කරන්න!"
+      headline: "🔥 ඔයා නිකන් ඉන්න හැම තත්පරයකම තව කෙනෙක් ඔයාගේ Campus Seat එක උදුරගන්නවා!",
+      body: "මේක අනුකම්පාවක් නැති තරඟයක්! ඔයා කම්මැලිකමට ඇඳට වෙලා ඉද්දී, තව ළමයෙක් නිදිමත පරද්දලා ගණන් 50ක් හදලා ඉවරයි! ඔයාගේ හීනය වෙන කෙනෙක්ට ලියාගන්න දෙනවද? දැන්ම කාලසටහන Mark කරලා වැඩට බහින්න!"
     },
     {
       headline: "⚡ විභාග ශාලාවේ පැය 3 ඇතුළත දැනෙන අසරණකම මතක් කරගන්න!",
-      body: "අද පාඩම් නොකර ලිස්සලා ගියොත්, විභාග දවසට Paper එක දිහා බලාගෙන හූල්ලන්න වෙනවා. එදාට කඳුළු හෙළුවට ලකුණු ලැබෙන්නේ නෑ! දැන් තියෙන හැම විකාරයක්ම නවත්තලා පාඩම පටන් ගන්න!"
+      body: "අද පාඩම් නොකර ලිස්සලා ගියොත්, විභාග දවසට Paper එක දිහා බලාගෙන හූල්ලන්න වෙනවා. එදාට කඳුළු හෙළුවට ලකුණු ලැබෙන්නේ නෑ! ගෙවුණු විනාඩි 30ට අවංක වෙලා දැන්ම කාලසටහන Mark කරන්න!"
     },
     {
-      headline: "💣 තවත් හෙටට කල් දාන්න එපා! 'හෙට' කියලා දවසක් එන්නේ නෑ!",
-      body: "'තව චුට්ටකින් පටන් ගන්නවා' කියලා කියලා ඔයා දැනටමත් මාස කීයක් නාස්ති කළාද? ඔයාගේ මොළය ඔයාව රවට්ටනවා! ඒ රැවටීමට අහුවෙන්න එපා. මේ තත්පරයේම පෑන අතට ගන්න!"
+      headline: "💣 තවත් හෙටට කල් දාන්න එපා! ගෙවෙන එක පැය භාගයක්වත් ආයේ ගන්න බෑ!",
+      body: "'තව චුට්ටකින් පටන් ගන්නවා' කියලා ඔයා දැනටමත් මාස කීයක් නාස්ති කළාද? ඔයාගේ මොළය ඔයාව රවට්ටනවා! ඒ රැවටීමට අහුවෙන්න එපා. මේ තත්පරයේම කාලසටහන Mark කරලා පොත අතට ගන්න!"
     },
     {
       headline: "👑 ඔයාව පහත් කරපු, ඔයාට බෑ කියපු හැමෝගෙම කටවල් වැහෙන්න වැඩ පෙන්නන්න!",
-      body: "සමාජය ගරු කරන්නේ දිනන මිනිස්සුන්ට විතරයි. පරදින කෙනාගේ නිදහසට කරුණු කවුරුත් අහන්නේ නෑ! ඔයාට පුළුවන් කියලා ඔප්පු කරන්න තියෙන එකම අවස්ථාව මේකයි. දැන්ම ගේමට බහින්න!"
-    }
-  ];
-
-  const RED_EMERGENCY_QUOTES = [
-    {
-      headline: "🚨 අවවාදයයි! ඔබ 15m කොටු 2කට වඩා වැඩ නොකර ඔබේ අනාගතය විනාශ කරමින් සිටී!",
-      body: "මොන මගුලක්ද මේ කරන්නේ?! විනාඩි 30කට වඩා කාලයක් කිසිම වැඩක් නොකර කාබාසිනියා කරලා! ඔයාට A/L ගැන කිසිම බයක්, ගාණක් නැද්ද?! ඔයා 15m කොටුවක් කොළ පාටින් ලකුණු කරනකන් විනාඩි 5න් 5ට මේ පණිවිඩය නොනවත්වා එවනවා! දැන්ම පොත අතට ගන්න!"
-    },
-    {
-      headline: "💀 ලැජ්ජ නැද්ද මෙහෙම කාලය කන්න?! අම්මා තාත්තා පව් නැද්ද?!",
-      body: "ගෙදර මිනිස්සු හිතන් ඉන්නේ ඔයා ලොකුවට පාඩම් කරනවා කියලා! හැබැයි කාලසටහනේ එක දිගට වැඩ නොකරපු රතු කොටු! තමන්ටම වංචා කරගන්න එක දැන්වත් නවත්තන්න! මොන වැඩේ කර කර හිටියත් ඒක දමලා ගහලා දැන්ම මේසයට එන්න!"
+      body: "සමාජය ගරු කරන්නේ දිනන මිනිස්සුන්ට විතරයි. පරදින කෙනාගේ නිදහසට කරුණු කවුරුත් අහන්නේ නෑ! ඔයාට පුළුවන් කියලා ඔප්පු කරන්න තියෙන එකම අවස්ථාව මේකයි. වහාම කාලසටහනේ අදාළ කොටු ටික Mark කරන්න!"
     },
     {
       headline: "🩸 Results එන දවසට 'F' හෝ 'S' වැටුණම දැනෙන මරණීය වේදනාව මතක් කරගන්න!",
-      body: "අද ඔයා මේ ගන්න තාවකාලික සැප නිසා ජීවිත කාලෙම විඳවන්න වෙනවා! යාළුවෝ Campus ගිහින් ජීවිතේ දිනද්දී ඔයාට වෙන්නේ පසුතැවි තැවී ඉන්න! තාමත් පරක්කු නෑ—වහාම මේ විනාඩි 15 පාඩම් කරලා කොළ පාට කරන්න!"
-    },
-    {
-      headline: "🔥 DANGER LEVEL MAXIMUM! ඔබේ විනය බිංදුවටම වැටී ඇත!",
-      body: "කොටු 2කට වඩා වැඩ නොකර හිටියා කියන්නේ ඔයා සම්පූර්ණයෙන්ම Track එකෙන් පැනලා! ඔයාගේ තරඟකරුවෝ මේ දැන් පිස්සුවෙන් වගේ MCQ හදනවා! ෆෝන් එක පැත්තකට දාලා, පොත පෙරළලා මේ විනාඩි 15 කොළ පාට කරනකන් මම ඔයාට නිදහසක් දෙන්නේ නෑ!"
-    },
-    {
-      headline: "⚡ නැගිටින්න! තවත් එක තත්පරයක්වත් කාලය කන්න තහනම්!",
-      body: "හිත නලියන්නේ නැද්ද මේ විදියට දවසේ පැය ගණන් නිකරුණේ ගෙවිලා යද්දී?! විභාගයට තව දවස් කීයද තියෙන්නේ?! දැන්ම කර කර හිටපු බාහිර වැඩේ නවත්තලා පාඩමට බහින්න! කොටුවක් කොළ පාට කරනකන් විනාඩි 5න් 5ට Telegram Alert එනවා!"
-    },
-    {
-      headline: "💣 අවසන් නිවේදනයයි! ඔබේ සිහිනය ඔබේ අතින්ම මරා දමන්න එපා!",
-      body: "Island Rank එකක්, Medicine/Engineering හීනයක් තියාගෙන මෙහෙමද වැඩ කරන්නේ?! කටින් විතරක් හීන දැක්කට වැඩක් නෑ, ක්‍රියාවෙන් පෙන්නන්න! දැන්ම විනාඩි 15ක් එක දිගට පාඩම් කරලා 🟢 කොළ කොටුව ඔබන්න!"
+      body: "අද ඔයා මේ ගන්න තාවකාලික සැප නිසා ජීවිත කාලෙම විඳවන්න වෙනවා! යාළුවෝ Campus ගිහින් ජීවිතේ දිනද්දී ඔයාට වෙන්නේ පසුතැවි තැවී ඉන්න! තාමත් පරක්කු නෑ—දැන්ම කාලසටහන Mark කරලා පාඩමට බහින්න!"
     }
   ];
 
   let tickerIdx = 0;
-  let lastNotifiedQuarterKey = "";
+  let lastNotifiedHalfHourKey = "";
   let lastFiveMinPenaltyAlertTime = 0;
 
   function cycleBrutalRealityTicker(isManual = false) {
@@ -2032,13 +2009,12 @@
     if (el) el.textContent = BRUTAL_TICKER_MESSAGES[tickerIdx];
   }
 
-  // Emergency Siren Sound for Red Streak / Unworked Alert
   function playEmergencySiren() {
     try {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const now = audioCtx.currentTime;
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 3; i++) {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sawtooth';
@@ -2055,60 +2031,24 @@
     } catch (e) {}
   }
 
-  // Calculates both explicit Red slots AND unworked past slots in active study hours
   function getRedStreakStats() {
     let totalRedSlots = 0;
-    let currentConsecutiveRed = 0;
-    let currentUnworkedStreak = 0;
-    let maxConsecutiveRed = 0;
-
-    const now = new Date();
-    const nowH = now.getHours();
-    const nowQ = getCurrentQuarterIndex();
-    const nowM = now.getMinutes();
-    const isToday = (currentDate === getLogicalStudyDate());
-
     timeSlots.forEach(slot => {
       if (slot.group) return;
-      const rm = getRowMinutes(slot.id);
-      const isFullSleepHour = (rm.s >= 60);
-      const sleepQuarters = Math.floor(rm.s / 15);
-
       for (let q = 0; q < 4; q++) {
-        if (isToday && (slot.hour24 > nowH || (slot.hour24 === nowH && q > nowQ))) continue;
-        if (isFullSleepHour || q < sleepQuarters) continue;
-
-        const st = getSlotState(slot.id, q);
-        const qEndMin = (q + 1) * 15;
-        const isPastQuarter = !isToday || (slot.hour24 < nowH) || (slot.hour24 === nowH && nowM >= qEndMin);
-
-        if (st === 2) {
-          totalRedSlots++;
-          currentConsecutiveRed++;
-          currentUnworkedStreak++;
-          if (currentConsecutiveRed > maxConsecutiveRed) maxConsecutiveRed = currentConsecutiveRed;
-        } else if (st === 1) {
-          // Marking a GREEN slot resets the consecutive red/unworked streak!
-          currentConsecutiveRed = 0;
-          currentUnworkedStreak = 0;
-        } else if (st === 0 && isPastQuarter && slot.hour24 >= 6) {
-          // Unmarked past waking quarter counts towards unworked streak
-          currentUnworkedStreak++;
-        }
+        if (getSlotState(slot.id, q) === 2) totalRedSlots++;
       }
     });
-
-    const isInPenaltyMode = (currentUnworkedStreak > 2 || currentConsecutiveRed >= 2);
     return {
       totalRedSlots,
-      currentConsecutiveRed,
-      currentUnworkedStreak,
-      maxConsecutiveRed,
-      isInPenaltyMode
+      currentConsecutiveRed: 0,
+      currentUnworkedStreak: 0,
+      maxConsecutiveRed: 0,
+      isInPenaltyMode: false
     };
   }
 
-  function getMotivationContextData(isRedEmergency = false) {
+  function getMotivationContextData() {
     const names = getSubjectNames();
     const ambition = (document.getElementById('studentAmbition').value || '').trim() || 'ඉහළම Island Rank එකක් සහ සුපිරි Campus සිහිනය';
     const parentPromise = (document.getElementById('parentPromiseInput').value || '').trim() || 'අම්මා තාත්තාගේ දහඩිය මහන්සියට ජයග්‍රහණයකින්ම උත්තර දෙනවා!';
@@ -2124,15 +2064,10 @@
       .map(p => p.txt.trim());
 
     const activeLessonText = taskVal
-      ? `${subjName} -${taskVal}`
-      : (unfinishedTasks.length > 0 ? unfinishedTasks[0] : `${names.s1} / ${names.s2} /${names.s3}`);
+      ? `${subjName} - ${taskVal}`
+      : (unfinishedTasks.length > 0 ? unfinishedTasks[0] : `${names.s1} / ${names.s2} / ${names.s3}`);
 
-    const studySoFar = document.getElementById('todayTotalDisplay').textContent || '0h 00m';
-    const wasteSoFar = document.getElementById('wasteTotalDisplay').textContent || '0h 00m';
-    const redStats = getRedStreakStats();
-
-    const pool = isRedEmergency ? RED_EMERGENCY_QUOTES : GOOSEBUMP_QUOTES;
-    const quote = pool[Math.floor(Math.random() * pool.length)];
+    const quote = BRUTAL_30MIN_QUOTES[Math.floor(Math.random() * BRUTAL_30MIN_QUOTES.length)];
 
     return {
       ambition,
@@ -2140,67 +2075,56 @@
       timeLabel: slotObj ? slotObj.label : 'දැන් ගතවන පැය',
       activeLessonText,
       unfinishedTasks,
-      studySoFar,
-      wasteSoFar,
-      redStats,
       quote
     };
   }
 
-  function trigger15MinMotivationAlert(isManualTest = false, forceRedEmergency = false) {
+  // පැය භාගයකට වරක් (විනාඩි 30න් 30ට) හිත සසල වන දරුණු Motivation එකක් සමඟ කාලසටහන Mark කිරීමට මතක් කරන ප්‍රධාන ශ්‍රිතය
+  function trigger15MinMotivationAlert(isManualTest = false) {
     const notifyEnabled = (document.getElementById('botNotifyEnabled') || {}).value || 'on';
     if (!isManualTest && notifyEnabled === 'off') return;
 
     const liveId = getCurrentSlotId();
     if (!isManualTest && liveId) {
       const rm = getRowMinutes(liveId);
-      if (rm.s >= 45 && rm.using === 0) return; // Sleeping
+      if (rm.s >= 45 && rm.using === 0) return; // නිදාගන්නා පැයවලදී බාධා නොකරයි
     }
 
-    const redStats = getRedStreakStats();
-    const isEmergency = forceRedEmergency || redStats.isInPenaltyMode;
-    const ctx = getMotivationContextData(isEmergency);
+    const ctx = getMotivationContextData();
 
     triggerHaptic('heavy');
-    if (isEmergency) playEmergencySiren();
-    else playBellSound();
+    playEmergencySiren();
 
     const cardEl = document.getElementById('motivationModalCard');
     const topTagEl = document.getElementById('motivTopTag');
     if (cardEl && topTagEl) {
-      if (isEmergency) {
-        cardEl.classList.add('red-emergency-mode');
-        topTagEl.textContent = `🚨 5-MIN RELENTLESS PENALTY ALERT (වැඩ නොකළ කොටු: ${Math.max(ctx.redStats.currentUnworkedStreak, ctx.redStats.totalRedSlots)}) 🚨`;
-      } else {
-        cardEl.classList.remove('red-emergency-mode');
-        topTagEl.textContent = `⚡ 15-MINUTE HIGH-VOLTAGE WAKE UP CALL ⚡`;
-      }
+      cardEl.classList.add('red-emergency-mode');
+      topTagEl.textContent = `⏰ පැය භාගයේ දරුණු සිහිකැඳවීම (30-MIN REMINDER) 💀`;
     }
 
     document.getElementById('motivHeadline').textContent = ctx.quote.headline;
     document.getElementById('motivQuoteBox').innerHTML = `
-      <div style="margin-bottom:8px; font-weight:800; color:#fef2f2;">${escHtml(ctx.quote.body)}</div>
+      <div style="margin-bottom:8px; font-weight:800; color:#fef2f2; font-size:14px;">${escHtml(ctx.quote.body)}</div>
       <div style="color:#fde047; font-weight:900; margin-top:6px;">🎯 ඔබේ ඉලක්කය: ${escHtml(ctx.ambition)}</div>
-      <div style="color:#38bdf8; font-weight:900; margin-top:4px;">❤️ දෙමාපිය අධිෂ්ඨානය: ${escHtml(ctx.parentPromise)}</div>${isEmergency ? `<div style="margin-top:8px; padding:6px 8px; background:rgba(220,38,38,0.35); border:1px solid #fca5a5; border-radius:6px; font-size:12px; font-weight:900; color:#fef08a;">⚠️ ඔබ 15m කොටුවක් කොළ පාටින් (🟢) ලකුණු කරන තුරු සෑම විනාඩි 5කට වරක්ම Telegram වෙත මෙම අවවාදය යැවේ!</div>` : ''}
+      <div style="color:#38bdf8; font-weight:900; margin-top:4px;">❤️ දෙමාපිය අධිෂ්ඨානය: ${escHtml(ctx.parentPromise)}</div>
     `;
     document.getElementById('motivCurrentTaskBox').innerHTML = `
-      ⏰ <strong>${escHtml(ctx.timeLabel)}</strong> \vert{} 📖 දැන්ම කළ යුතු වැඩේ: <u>${escHtml(ctx.activeLessonText)}</u><br>
-      <span style="font-size:11.5px; color:#cbd5e1;">🟢 අද පාඩම් කළ කාලය: ${escHtml(ctx.studySoFar)} \vert{} 🔴 අපතේ ගිය කාලය: ${escHtml(ctx.wasteSoFar)}</span>
+      📌 <strong>දැන්ම කාලසටහනට ගොස් ගෙවුණු පැය භාගය (${escHtml(ctx.timeLabel)}) අවංකවම ලකුණු කරන්න (Mark කරන්න)!</strong>
     `;
     document.getElementById('motivationModal').classList.add('open');
 
     try {
       if ("Notification" in window && Notification.permission === "granted") {
         new Notification(ctx.quote.headline, {
-          body: `${ctx.quote.body}\n📖 දැන් වැඩේ: ${ctx.activeLessonText}`
+          body: `${ctx.quote.body}\n\n📌 දැන්ම කාලසටහනේ ගෙවුණු පැය භාගය Mark කරන්න!`
         });
       }
     } catch (e) {}
 
-    sendTelegramBotMotivationMessage(ctx, isManualTest, isEmergency);
+    sendTelegramBotMotivationMessage(ctx, isManualTest);
   }
 
-  function sendTelegramBotMotivationMessage(ctx, isManualTest = false, isEmergency = false) {
+  function sendTelegramBotMotivationMessage(ctx, isManualTest = false) {
     const token = ((document.getElementById('tgBotTokenInput') || {}).value || '').trim();
     let chatId = ((document.getElementById('tgChatIdInput') || {}).value || '').trim();
 
@@ -2215,33 +2139,16 @@
       return;
     }
 
-    const pendingListStr = ctx.unfinishedTasks.length > 0
-      ? ctx.unfinishedTasks.slice(0, 4).map((t, i) => `   ${i + 1}.${t}`).join('\n')
-      : '   ✅ ප්‍රධාන වැඩ ලැයිස්තුව සම්පූර්ණයි - Syllabus / Past Papers කරන්න!';
-
-    const unworkedCount = Math.max(ctx.redStats.currentUnworkedStreak, ctx.redStats.totalRedSlots);
-    const headerBanner = isEmergency
-      ? `🚨💀 *5-MINUTE RELENTLESS PUNISHMENT ALERT!* 💀🚨\n⚠️ *ඔබ 15m කොටු ${unworkedCount}ක් වැඩ නොකර කාලය කා දමා ඇත! (${ctx.wasteSoFar} WASTED)*\n🛑 *ඔබ 15m කොටුවක් කොළ පාටින් (🟢) ලකුණු කරන තුරු විනාඩි 5න් 5ට මෙම පණිවිඩය නොනවත්වා එවනු ලැබේ!*`
-      : `⚡🔥 *15-MINUTE BRUTAL WAKE-UP CALL* 🔥⚡`;
-
     const tgMessage = [
-      headerBanner,
+      `⏰💀 *පැය භාගයේ දරුණු සිහිකැඳවීම (30-MIN REMINDER)* 💀⏰`,
       ``,
       `*${ctx.quote.headline}*`,
       `_${ctx.quote.body}_`,
       ``,
-      `❤️ *දෙමාපිය අධිෂ්ඨානය:* ${ctx.parentPromise}`,
       `🎯 *ඔබේ ඉලක්කය:* ${ctx.ambition}`,
+      `❤️ *දෙමාපිය අධිෂ්ඨානය:* ${ctx.parentPromise}`,
       ``,
-      `⏰ *දැන් වේලාව:* ${ctx.timeLabel}`,
-      `📖 *දැන්ම කළ යුතු පාඩම:* *${ctx.activeLessonText}*`,
-      `🟢 *අද පාඩම් කළ කාලය:* ${ctx.studySoFar}`,
-      `🔴 *අද අපතේ ගිය කාලය:* ${ctx.wasteSoFar}`,
-      ``,
-      `📌 *අද ඉතිරි ප්‍රධාන වැඩ:*`,
-      pendingListStr,
-      ``,
-      `🔥 *මොන මගුල කර කර හිටියත් දැන්ම ඒක දමලා ගහලා පොත අතට ගන්න! විනාඩි 15ක් පාඩම් කරලා 🟢 කොළ කොටුව ලකුණු කරන්න!*`
+      `📌 *වහාම කාලසටහනට (Timetable) ගොස් ගෙවුණු පැය භාගය (${ctx.timeLabel}) අවංකවම ලකුණු කරන්න (Mark කරන්න)!*`
     ].join('\n');
 
     fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -2256,7 +2163,7 @@
     .then(r => r.json())
     .then(res => {
       if (isManualTest) {
-        if (res && res.ok) showToast('🚀 Telegram Bot හරහා දරුණු Motivation පණිවිඩය සාර්ථකව යවන ලදී!');
+        if (res && res.ok) showToast('🚀 Telegram Bot හරහා පැය භාගයේ දරුණු සිහිකැඳවීම සාර්ථකව යවන ලදී!');
         else showToast('⚠️ Bot Token හෝ Chat ID පරීක්ෂා කරන්න.');
       }
     })
@@ -2270,15 +2177,9 @@
   }
 
   function mark15MinFromMotivationModal() {
-    const ticked = autoTickCurrentHourSlots(1);
     closeMotivationModal();
-    lastFiveMinPenaltyAlertTime = Date.now();
-    renderTotals();
-    if (ticked > 0) {
-      showToast('🟢 විශිෂ්ටයි! 15m කොටුව කොළ පාටින් ලකුණු විය! (විනාඩි 5 දඬුවම් පණිවිඩ නතර විය)');
-    } else {
-      showToast('🟢 මෙම පැයේ 15m කොටුව කොළ පාටින් ලකුණු විය!');
-    }
+    scrollToLiveHour();
+    showToast('📌 දැන් ගෙවුණු පැය භාගයට අදාළ කොටු කාලසටහනේ Mark කරන්න!');
   }
 
   function requestBrowserNotificationPerm() {
@@ -2291,7 +2192,7 @@
     });
   }
 
-  /* ================= 5-MINUTE GRACE AUTO-RED & EXACT 5-MINUTE RELENTLESS TELEGRAM ENGINE ================= */
+  /* ================= 30-MINUTE INTERVAL REMINDER CHECKER ================= */
   function checkAutoRedAndMotivationEngine() {
     const isToday = (currentDate === getLogicalStudyDate());
     if (!isToday) return;
@@ -2299,85 +2200,13 @@
     const now = new Date();
     const nowH = now.getHours();
     const nowM = now.getMinutes();
-    let autoRedAddedCount = 0;
 
-    // Auto-mark Red if 5 minutes have elapsed after any 15m slot in active waking/scheduled hours
-    timeSlots.forEach(slot => {
-      if (slot.group) return;
-      if (slot.hour24 > nowH) return;
-
-      const rm = getRowMinutes(slot.id);
-      if (rm.s >= 60) return; // Full sleep hour is protected
-
-      const subjVal = (document.getElementById(`subj_${slot.id}`) || {}).value || 'none';
-      const taskVal = ((document.getElementById(`task_${slot.id}`) || {}).value || '').trim();
-      const isActiveTrackingWindow = (slot.hour24 === nowH) || (slot.hour24 === nowH - 1) || (subjVal !== 'none' || taskVal !== '');
-
-      if (!isActiveTrackingWindow) return;
-
-      for (let q = 0; q < 4; q++) {
-        const st = getSlotState(slot.id, q);
-        if (st !== 0) continue;
-
-        const sleepQuarters = Math.floor(rm.s / 15);
-        if (q < sleepQuarters) continue;
-
-        const qEndMin = (q + 1) * 15;
-        let minsSinceQuarterEnded = -1;
-
-        if (slot.hour24 === nowH) {
-          minsSinceQuarterEnded = nowM - qEndMin;
-        } else if (slot.hour24 < nowH) {
-          minsSinceQuarterEnded = (nowH - slot.hour24 - 1) * 60 + (60 - qEndMin) + nowM;
-        }
-
-        if (minsSinceQuarterEnded >= 5) {
-          setSlotState(slot.id, q, 2);
-          autoRedAddedCount++;
-        }
-      }
-    });
-
-    if (autoRedAddedCount > 0) {
-      saveData();
-      renderTotals();
-      showToast(`🔴 විනාඩි 5ක් තුළ ලකුණු නොකළ නිසා 15m කොටු ${autoRedAddedCount}ක් ස්වයංක්‍රීයව රතු (Waste) විය!`);
-    }
-
-    const redStats = getRedStreakStats();
-
-    // Update live 5-minute countdown pill on the Red Danger Banner
-    if (redStats.isInPenaltyMode) {
-      if (!lastFiveMinPenaltyAlertTime) {
-        lastFiveMinPenaltyAlertTime = Date.now();
-        trigger15MinMotivationAlert(false, true);
-        return;
-      }
-      const elapsedMs = Date.now() - lastFiveMinPenaltyAlertTime;
-      const intervalMs = 5 * 60 * 1000; // EXACTLY 5 MINUTES (300,000 ms)
-      const remainingSec = Math.max(0, Math.ceil((intervalMs - elapsedMs) / 1000));
-      const mStr = String(Math.floor(remainingSec / 60)).padStart(2, '0');
-      const sStr = String(remainingSec % 60).padStart(2, '0');
-      const pillEl = document.getElementById('penaltyCountdownPill');
-      if (pillEl) {
-        pillEl.textContent = `⏱️ ඊළඟ TG ප්‍රහාරය: ${mStr}:${sStr}`;
-      }
-
-      if (elapsedMs >= intervalMs) {
-        lastFiveMinPenaltyAlertTime = Date.now();
-        trigger15MinMotivationAlert(false, true);
-        return;
-      }
-    } else {
-      lastFiveMinPenaltyAlertTime = 0;
-    }
-
-    // Standard 15-minute wall clock wake-up call
-    if (nowM % 15 === 0) {
-      const qKey = `${nowH}_${nowM}`;
-      if (lastNotifiedQuarterKey !== qKey) {
-        lastNotifiedQuarterKey = qKey;
-        trigger15MinMotivationAlert(false, redStats.isInPenaltyMode);
+    // සෑම පැය භාගයකට වරක්ම (විනාඩි 00 සහ 30 දී) පමණක් ක්‍රියාත්මක වේ
+    if (nowM % 30 === 0) {
+      const halfHourKey = `${nowH}_${nowM}`;
+      if (lastNotifiedHalfHourKey !== halfHourKey) {
+        lastNotifiedHalfHourKey = halfHourKey;
+        trigger15MinMotivationAlert(false);
       }
     }
   }
@@ -2805,7 +2634,7 @@
         const isCurrentQuarter = (isThisHourLive && q === liveQuarterIdx);
 
         const qEndMin = (q + 1) * 15;
-        const inGraceWindow = isThisHourLive && st === 0 && (nowM >= qEndMin && nowM < qEndMin + 5);
+        const inGraceWindow = false;
 
         slotBtn.classList.toggle('current-quarter-slot', isCurrentQuarter);
         slotBtn.classList.toggle('grace-warning-slot', inGraceWindow);
@@ -2845,9 +2674,7 @@
     if (warnEl) {
       if (!isToday) {
         warnEl.textContent = `⚠️ ඔබ බලන්නේ ${currentDate} දිනයයි`;
-      } else if (liveQuarterIdx > 0 && getSlotState(liveId, liveQuarterIdx - 1) === 0 && (nowM % 15) < 5) {
-        const minsLeft = 5 - (nowM % 15);
-        warnEl.textContent = `⏳ පෙර 15m ලකුණු කිරීමට තව විනාඩි ${minsLeft}යි! නැතිනම් Auto 🔴 රතු වැටේ!`;
+
       } else {
         warnEl.textContent = '';
       }
@@ -5337,12 +5164,12 @@
                 <strong>5️⃣ 🟢/🔴 විනාඩි 15න් 15 කොටු ලකුණු කරන්න:</strong><br>
                 <strong>"📅 කාලසටහන"</strong> තුළ සෑම පැයක්ම විනාඩි 15 කොටු 4කට බෙදා ඇත.<br>
                 • <strong>1 වරක් ඔබන්න = 🟢 කොළ (පාඩම් කළා)</strong> | <strong>2 වරක් ඔබන්න = 🔴 රතු (අපතේ ගියා)</strong><br>
-                ⚠️ විනාඩි 15 අවසන් වී <strong>විනාඩි 5ක්</strong> ඇතුළත ලකුණු නොකළොත් එය ඉබේම <strong>🔴 රතු</strong> වේ!
+                ⏰ සෑම <strong>පැය භාගයකට වරක්ම</strong> කාලසටහන Mark කිරීමට ඔබට සිහිකැඳවීමක් ලැබේ!
               </div>
 
               <div style="padding:8px 10px; background:var(--danger-bg); border-left:4px solid var(--danger); border-radius:6px; color:var(--danger);">
-                <strong>6️⃣ 🚨 කොටු 2කට වඩා වැඩ නොකළොත් (5-Min Telegram Penalty):</strong><br>
-                ඔබ කොටු 2කට වඩා වැඩ නොකර සිටියහොත්, ඔබ නැවත 15m කොටුවක් <strong>🟢 කොළ පාටින්</strong> ලකුණු කරන තුරුම <strong>විනාඩි 5න් 5ට</strong> Telegram වෙත දරුණු අවවාද පණිවිඩ එවනු ලැබේ!
+                <strong>6️⃣ ⏰ පැය භාගයකට වරක් ලැබෙන දරුණු සිහිකැඳවීම (30-Min Reminder):</strong><br>
+                සෑම විනාඩි 30කට වරක්ම හිත සසල වන දරුණු Motivation පණිවිඩයක් සමඟ කාලසටහනේ ගෙවුණු කාලය <strong>Mark කරන ලෙස</strong> Screen එකට සහ Telegram වෙත සිහිකැඳවීමක් ලැබේ!
               </div>
             </div>
 
@@ -5450,8 +5277,8 @@
       `📅 *2. දිනපතා භාවිත කරන ආකාරය:*`,
       `• *🌅 නින්ද:* උදෑසනම \`12-6\` හෝ \`11-5\` ඔබා නින්ද ලකුණු කරන්න (එම පැය රතු ලෙස ගණන් නොගැනේ).`,
       `• *📌 අද ප්‍රධාන වැඩ (0/1):* අද කරන පාඩම සහ වේලාව (⏰ Start → End) තෝරන්න. එය ඉබේම පැය 24 කාලසටහනට වැටේ! තවත් වැඩ අවශ්‍ය නම් *"➕ අලුත් වැඩක්"* ඔබන්න.`,
-      `• *🟢/🔴 විනාඩි 15 කොටු:* 1 වරක් ඔබන්න = 🟢 කොළ (පාඩම් කළා) | 2 වරක් ඔබන්න = 🔴 රතු (අපතේ ගියා). විනාඩි 15 අවසන් වී විනාඩි 5ක් තුළ ලකුණු නොකළොත් ඉබේම 🔴 රතු වේ!`,
-      `• *🚨 විනාඩි 5න් 5ට එන දරුණු අවවාද:* කොටු 2කට වඩා වැඩ නොකර සිටියහොත්, ඔබ නැවත 15m කොටුවක් 🟢 කොළ පාටින් ලකුණු කරන තුරුම *විනාඩි 5න් 5ට* Telegram වෙත දරුණු අවවාද පණිවිඩ එවනු ලැබේ!`,
+      `• *🟢/🔴 විනාඩි 15 කොටු:* 1 වරක් ඔබන්න = 🟢 කොළ (පාඩම් කළා) | 2 වරක් ඔබන්න = 🔴 රතු (අපතේ ගියා).`,
+      `• *⏰ පැය භාගයකට වරක් එන දරුණු සිහිකැඳවීම:* සෑම විනාඩි 30කට වරක්ම හිත සසල වන දරුණු Motivation පණිවිඩයක් සමඟ කාලසටහන Mark කරන ලෙස ඔබට සිහිකැඳවීමක් ලැබේ!`,
       ``,
       `🔥 *දැන්ම පොත අතට ගෙන පළමු විනාඩි 15 කොළ පාට (🟢) කරන්න!*`
     ].join('\n');
