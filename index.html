@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>A/L Ultimate Study & Time Management System</title>
+<title>A/L Ultimate Study & Time Management System - Pro Edition</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root {
@@ -55,7 +55,7 @@
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: var(--bg);
     color: var(--text);
-    padding: 8px 8px 125px 8px;
+    padding: 8px 8px 128px 8px;
     font-size: 13.5px;
     transition: background 0.2s, color 0.2s;
   }
@@ -130,14 +130,14 @@
     color: var(--text);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 8px 10px;
-    font-size: 14px; /* Prevents mobile auto-zoom on focus */
+    padding: 7px 10px;
+    font-size: 13.5px;
     width: 100%;
     font-family: inherit;
   }
   input[type="number"] { width: 68px; text-align: center; }
 
-  /* Quick Summary KPI Cards (Study / Sleep / Waste / Goal) */
+  /* Quick Summary KPI Cards */
   .kpi-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -160,7 +160,38 @@
   .kpi-val { font-size: 18px; font-weight: 900; margin-top: 2px; }
   .kpi-sub { font-size: 11px; font-weight: 700; margin-top: 2px; }
 
-  /* Date & Quick Action Bar */
+  /* 24-Hour Complete Day Breakdown Bar */
+  .day-breakdown-card {
+    background: var(--header-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+  }
+  .day-breakdown-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11.5px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .stacked-bar-24h {
+    width: 100%;
+    height: 12px;
+    background: var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+  }
+  .sb-seg { height: 100%; transition: width 0.3s ease; }
+  .sb-sleep { background: var(--sleep); }
+  .sb-study { background: var(--success); }
+  .sb-waste { background: var(--danger); }
+
+  /* Morning Sleep Check-in & Date Bar */
   .date-bar {
     display: flex;
     justify-content: space-between;
@@ -172,6 +203,40 @@
     margin-bottom: 10px;
     gap: 8px;
     flex-wrap: wrap;
+  }
+  .custom-sleep-widget {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    background: var(--sleep-bg);
+    border: 1px solid var(--sleep);
+    padding: 5px 8px;
+    border-radius: 8px;
+  }
+  .custom-sleep-widget select {
+    width: auto;
+    padding: 4px 6px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 6px;
+  }
+  .custom-sleep-input {
+    width: 82px !important;
+    padding: 4px 6px !important;
+    font-size: 12px !important;
+    font-weight: 800;
+    text-align: center;
+    border-radius: 6px !important;
+  }
+  .sleep-preset-chip {
+    padding: 3px 7px;
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 6px;
+    background: var(--card);
+    color: var(--sleep);
+    border: 1px solid var(--sleep);
   }
 
   /* Collapsible Settings Drawer */
@@ -193,7 +258,7 @@
     .settings-grid { grid-template-columns: 1fr; }
   }
 
-  /* Live Active Hour Hero Card (Thumb-Friendly) */
+  /* Live Active Hour Hero Card */
   .live-hero-card {
     background: linear-gradient(135deg, var(--primary-bg), var(--card));
     border: 2px solid var(--primary);
@@ -317,6 +382,184 @@
     transition: width 0.3s ease;
   }
 
+  /* ================= GOOGLE CALENDAR WEEKLY & DAILY VIEW STYLES ================= */
+  .view-mode-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--header-bg);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .view-switch-group {
+    display: inline-flex;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3px;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .view-switch-btn {
+    border: none;
+    background: transparent;
+    padding: 6px 11px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--muted);
+  }
+  .view-switch-btn.active {
+    background: var(--primary);
+    color: #fff;
+  }
+
+  .gcal-wrapper {
+    display: none;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .gcal-wrapper.active { display: block; }
+
+  .gcal-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .gcal-scroll-area {
+    max-height: 640px;
+    overflow-y: auto;
+    overflow-x: auto;
+    position: relative;
+  }
+
+  .gcal-grid {
+    display: grid;
+    min-width: 780px;
+    border-collapse: collapse;
+  }
+  .gcal-grid.daily-mode {
+    min-width: 100%;
+    grid-template-columns: 84px 1fr;
+  }
+  .gcal-grid.weekly-mode {
+    grid-template-columns: 72px repeat(7, 1fr);
+  }
+
+  .gcal-head-cell {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--header-bg);
+    border-bottom: 2px solid var(--border);
+    border-right: 1px solid var(--border);
+    padding: 8px 4px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 11.5px;
+  }
+  .gcal-head-cell.today-col {
+    background: var(--primary-bg);
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+  }
+
+  .gcal-time-label {
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 6px 5px;
+    font-size: 10.5px;
+    font-weight: 800;
+    color: var(--muted);
+    text-align: right;
+    background: var(--header-bg);
+    height: 54px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+  }
+
+  .gcal-slot-cell {
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    height: 54px;
+    padding: 3px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  .gcal-slot-cell:hover {
+    background: var(--primary-bg);
+  }
+
+  .gcal-event {
+    height: 100%;
+    width: 100%;
+    border-radius: 6px;
+    padding: 3px 6px;
+    font-size: 10.5px;
+    line-height: 1.25;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    border-left: 4px solid transparent;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .gcal-event.subj-s1 { background: var(--primary-bg); color: var(--primary); border-left-color: var(--primary); }
+  .gcal-event.subj-s2 { background: var(--success-bg); color: var(--success); border-left-color: var(--success); }
+  .gcal-event.subj-s3 { background: var(--purple-bg); color: var(--purple); border-left-color: var(--purple); }
+  .gcal-event.subj-common, .gcal-event.subj-other { background: var(--warning-bg); color: var(--warning); border-left-color: var(--warning); }
+  .gcal-event.subj-sleep { background: var(--sleep-bg); color: var(--sleep); border-left-color: var(--sleep); }
+
+  .gcal-event-title {
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .gcal-event-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 9.5px;
+    font-weight: 700;
+    opacity: 0.9;
+  }
+
+  .gcal-now-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--danger);
+    z-index: 15;
+    pointer-events: none;
+  }
+  .gcal-now-line::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--danger);
+  }
+
   /* Schedule Table (Desktop) & Card Transformation (Mobile) */
   .table-wrapper { margin-bottom: 14px; }
   table { width: 100%; border-collapse: collapse; }
@@ -345,7 +588,7 @@
     margin-left: 5px;
   }
 
-  .time-cell { font-weight: 800; width: 160px; white-space: nowrap; font-size: 12px; text-align: left; }
+  .time-cell { font-weight: 800; width: 165px; white-space: nowrap; font-size: 12px; text-align: left; }
   .time-cell-inner { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
   .row-action-btns { display: flex; gap: 3px; }
   .quick-hr-btn { padding: 3px 6px; font-size: 10.5px; border-radius: 5px; background: var(--card); }
@@ -371,7 +614,7 @@
   .waste-btn.has-waste { background: var(--danger-bg); color: var(--danger); border-color: var(--danger); }
   .waste-row-total { font-weight: 800; color: var(--danger); width: 62px; }
 
-  /* MOBILE CARD VIEW FOR 24H SCHEDULE (NO HORIZONTAL SCROLL!) */
+  /* MOBILE CARD VIEW FOR 24H SCHEDULE */
   @media (max-width: 768px) {
     table, tbody, tfoot { display: block; width: 100%; }
     thead { display: none; }
@@ -393,7 +636,6 @@
       border: none;
       padding: 0;
     }
-    /* Row 1: Time & Quick 1h / Sleep / Copy Buttons */
     tbody tr:not(.section-row) td.time-cell {
       grid-column: 1 / -1;
       width: 100%;
@@ -403,7 +645,6 @@
     }
     .quick-hr-btn { padding: 5px 9px; font-size: 11.5px; }
 
-    /* Row 2: Subject, Mode & Task Input */
     tbody tr:not(.section-row) td.task-cell {
       grid-column: 1 / -1;
       width: 100%;
@@ -416,17 +657,8 @@
     .subj-select, .mode-select { width: 100%; }
     .task-cell-inner input { grid-column: 1 / -1; width: 100%; }
 
-    /* Row 3: 4x 15m Study Buttons (1 per grid column) */
-    .slot-btn {
-      height: 38px;
-      font-size: 12.5px;
-    }
-
-    /* Row 4: Sleep, Online, Other & Waste Total */
-    .sleep-btn, .waste-btn {
-      height: 34px;
-      font-size: 11px;
-    }
+    .slot-btn { height: 38px; font-size: 12.5px; }
+    .sleep-btn, .waste-btn { height: 34px; font-size: 11px; }
     .waste-row-total {
       display: flex;
       align-items: center;
@@ -558,6 +790,8 @@
   .flashcard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
   @media (max-width: 850px) { .flashcard-grid { grid-template-columns: 1fr; } }
   .flashcard { background: var(--card); border: 1px solid var(--border); border-top: 4px solid var(--purple); border-radius: 10px; padding: 12px; cursor: pointer; }
+  .flashcard.diff-hard { border-top-color: var(--danger); }
+  .flashcard.diff-easy { border-top-color: var(--success); }
   .flashcard-ans { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); color: var(--success); font-weight: 700; display: none; }
   .flashcard.revealed .flashcard-ans { display: block; }
 
@@ -631,7 +865,7 @@
     transform: translateY(20px);
     pointer-events: none;
     transition: 0.25s;
-    max-width: 400px;
+    max-width: 420px;
     text-align: center;
   }
   .toast-box.show { opacity: 1; transform: translateY(0); }
@@ -652,7 +886,7 @@
     border: 1px solid var(--border);
     border-radius: 14px;
     padding: 16px;
-    max-width: 520px;
+    max-width: 540px;
     width: 100%;
     text-align: center;
     max-height: 90vh;
@@ -681,14 +915,14 @@
     @page { size: A4 portrait; margin: 4mm; }
     body { background: #fff !important; color: #000 !important; padding: 0; font-size: 8.5px; }
     .container { border: none; box-shadow: none; padding: 0; max-width: 100%; }
-    .app-header, .date-bar, .settings-drawer, .live-hero-card, .bottom-dock-wrap, .mini-btn, .quick-hr-btn, .step-chip, .modal-overlay, .zen-overlay, .toast-box { display: none !important; }
+    .app-header, .date-bar, .settings-drawer, .live-hero-card, .view-mode-bar, .gcal-wrapper, .bottom-dock-wrap, .mini-btn, .quick-hr-btn, .step-chip, .modal-overlay, .zen-overlay, .toast-box { display: none !important; }
     .tab-content { display: none !important; }
-    #tab-planner { display: block !important; }
+    #tab-planner, .table-wrapper { display: block !important; }
     table { display: table !important; width: 100% !important; }
     thead { display: table-header-group !important; }
     tbody { display: table-row-group !important; }
     tfoot { display: table-footer-group !important; }
-    tr { display: table-row !important; }
+    tr, tr.collapsed-group-row { display: table-row !important; }
     th, td { display: table-cell !important; border: 1px solid #000 !important; padding: 1px 2px !important; font-size: 8px !important; }
     .task-cell-inner { display: flex !important; }
     .slot-btn, .sleep-btn, .waste-btn { height: 13px !important; font-size: 7.5px !important; border: 1px solid #444 !important; }
@@ -710,13 +944,13 @@
     </div>
     <div style="display:flex; gap:5px; flex-wrap:wrap;">
       <button onclick="toggleSettingsDrawer()" id="settingsToggleBtn" class="mini-btn">⚙️ සැකසුම්</button>
-      <button onclick="openShareCard()" class="mini-btn btn-purple">📸 Report</button>
+      <button onclick="openShareCard()" class="mini-btn btn-purple">📸 Full Report</button>
       <button onclick="openBackupModal()" class="mini-btn">☁️ Backup</button>
       <button onclick="toggleTheme()" id="themeBtn" class="mini-btn">🌙</button>
     </div>
   </div>
 
-  <!-- 2. Collapsible Settings & Setup Drawer (Hidden by default to keep Mobile UI super clean!) -->
+  <!-- 2. Collapsible Settings & Setup Drawer -->
   <div id="settingsDrawer" class="settings-drawer">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
       <strong style="color:var(--primary); font-size:13px;">⚙️ ප්‍රධාන සැකසුම් සහ මෙවලම් (SETTINGS & TOOLS)</strong>
@@ -747,22 +981,22 @@
         </div>
         <div class="field-row">
           <label>ඉලක්කය:</label>
-          <input type="text" id="studentAmbition" placeholder="Medicine / Eng | Z: 2.1+" oninput="saveGlobalSettings()">
+          <input type="text" id="studentAmbition" placeholder="J'pura Accounting / Medicine | Z: 2.0+" oninput="saveGlobalSettings()">
         </div>
       </div>
 
       <div class="panel" style="background:var(--card);">
         <div class="panel-title">📘 ඔබේ විෂයයන් 3 (Subjects)</div>
         <div class="field-row">
-          <input type="text" id="subj1Name" list="allAlSubjects" value="Combined Maths" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus();">
+          <input type="text" id="subj1Name" list="allAlSubjects" value="Accounting" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus();">
           <span id="subj1Hours" class="stat-badge stat-good">0h 00m</span>
         </div>
         <div class="field-row">
-          <input type="text" id="subj2Name" list="allAlSubjects" value="Physics" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus();">
+          <input type="text" id="subj2Name" list="allAlSubjects" value="Economics" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus();">
           <span id="subj2Hours" class="stat-badge stat-good">0h 00m</span>
         </div>
         <div class="field-row">
-          <input type="text" id="subj3Name" list="allAlSubjects" value="Chemistry" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus();">
+          <input type="text" id="subj3Name" list="allAlSubjects" value="ICT" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus();">
           <span id="subj3Hours" class="stat-badge stat-good">0h 00m</span>
         </div>
         <div class="field-row" style="font-size:11.5px; color:var(--muted);">
@@ -773,14 +1007,13 @@
 
       <div class="panel" style="background:var(--card);">
         <div class="panel-title">🛠️ ක්ෂණික මෙවලම් (Quick Tools)</div>
+        <div style="font-size:11.5px; font-weight:700; color:var(--sleep); margin-bottom:4px;">
+          😴 Custom Sleep (උදා: 12-6, 12-7, 1-7, 12.30-6.30):
+        </div>
         <div style="display:flex; gap:5px; margin-bottom:8px;">
-          <select id="sleepPresetSelect" style="flex:1;">
-            <option value="23_5">😴 නින්ද: 11PM - 5AM (6h)</option>
-            <option value="22_4">😴 නින්ද: 10PM - 4AM (6h)</option>
-            <option value="0_6">😴 නින්ද: 12AM - 6AM (6h)</option>
-            <option value="23_6">😴 නින්ද: 11PM - 6AM (7h)</option>
-          </select>
-          <button onclick="autoFillNightSleep()" class="btn-sleep mini-btn">+ ලකුණු කරන්න</button>
+          <input type="text" id="settingsSleepRangeInput" placeholder="12-6 හෝ 12-7" style="flex:1;" oninput="syncCustomSleepText(this.value, 'settings')">
+          <button onclick="autoFillNightSleep()" class="btn-sleep mini-btn">+ යොදන්න</button>
+          <button onclick="clearAllSleepHours()" class="mini-btn btn-danger" title="නින්ද ඉවත් කරන්න">✖</button>
         </div>
         <div style="display:flex; gap:5px; margin-bottom:8px;">
           <select id="templateSlotSelect" style="flex:1;">
@@ -792,7 +1025,7 @@
           <button onclick="loadRoutineTemplate()" class="mini-btn">📂 Load</button>
         </div>
         <div style="display:flex; gap:5px; flex-wrap:wrap; justify-content:space-between;">
-          <button onclick="copyYesterdaySchedule()" class="mini-btn">📋 ඊයේ සැලසුම ගන්න</button>
+          <button onclick="copyYesterdaySchedule()" class="mini-btn">📋 ඊයේ සැලසුම</button>
           <button onclick="window.print()" class="mini-btn btn-primary">🖨️ Print A4</button>
           <button onclick="resetCurrentDay()" class="mini-btn btn-danger">🗑️ අද මකන්න</button>
         </div>
@@ -816,7 +1049,7 @@
   <!-- ================= TAB 1: PLANNER ================= -->
   <div id="tab-planner" class="tab-content active">
 
-    <!-- 4 Clear KPI Summary Cards (Study, Sleep, Waste, Hydration/Goal) -->
+    <!-- 4 Clear KPI Summary Cards -->
     <div class="kpi-grid">
       <div class="kpi-card" style="border-left: 4px solid var(--success);">
         <span class="kpi-title">✅ අද පාඩම් කාලය</span>
@@ -826,7 +1059,7 @@
       </div>
 
       <div class="kpi-card" style="border-left: 4px solid var(--sleep);">
-        <span class="kpi-title">😴 නින්ද / විවේකය</span>
+        <span class="kpi-title">😴 අද නින්ද (උදෑසනම ලකුණු කරන්න)</span>
         <span class="kpi-val" style="color:var(--sleep);" id="sleepTotalDisplay">0h 00m</span>
         <span class="kpi-sub" id="sleepHealthSub" style="color:var(--muted);">Waste ලෙස ගණන් නොගැනේ</span>
       </div>
@@ -838,26 +1071,55 @@
       </div>
 
       <div class="kpi-card" style="border-left: 4px solid var(--primary);">
-        <span class="kpi-title">📊 සතියේ එකතුව / ජලය</span>
+        <span class="kpi-title">📊 සතියේ එකතුව / Execution</span>
         <span class="kpi-val" style="color:var(--primary);" id="weekTotalDisplay">0h 00m</span>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
-          <span class="kpi-sub" style="color:var(--muted);">ඊයේ: <strong id="yesterdayTotalDisplay">0h</strong></span>
+          <span class="kpi-sub" id="plannedVsActualBadge" style="color:var(--purple);">Plan: 0h</span>
           <button type="button" onclick="stepWaterCount()" id="waterBtn" class="mini-btn" style="padding:2px 6px; font-size:10.5px; background:var(--sleep-bg); color:var(--sleep); border:none;">💧 0/8</button>
         </div>
       </div>
     </div>
 
-    <!-- Date Switcher & View Filter Bar -->
+    <!-- 24-Hour Complete Day Breakdown Bar (For End-of-Day Full Review) -->
+    <div class="day-breakdown-card">
+      <div class="day-breakdown-top">
+        <span>🕒 පැය 24 සම්පූර්ණ කාල බෙදීම (12:00 AM සිට 12:00 AM දක්වා):</span>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <span style="color:var(--sleep);">😴 නින්ද: <strong id="bdSleepTxt">0h</strong></span>
+          <span style="color:var(--success);">✅ පාඩම්: <strong id="bdStudyTxt">0h</strong></span>
+          <span style="color:var(--danger);">⚠️ අපතේ: <strong id="bdWasteTxt">0h</strong></span>
+          <span style="color:var(--muted);">⏳ ඉතිරි/සටහන් නොකළ: <strong id="bdUntrackedTxt">24h</strong></span>
+        </div>
+      </div>
+      <div class="stacked-bar-24h">
+        <div id="barSegSleep" class="sb-seg sb-sleep" style="width:0%" title="Sleep"></div>
+        <div id="barSegStudy" class="sb-seg sb-study" style="width:0%" title="Study"></div>
+        <div id="barSegWaste" class="sb-seg sb-waste" style="width:0%" title="Waste"></div>
+      </div>
+    </div>
+
+    <!-- Date Switcher & MORNING WAKE-UP SLEEP BAR -->
     <div class="date-bar">
       <div style="display:flex; align-items:center; gap:5px;">
         <button type="button" class="mini-btn" onclick="stepDate(-1)">◀</button>
-        <input type="date" id="planDate" onchange="changeDate(this.value)" style="width:142px; font-weight:800; padding:5px 8px;">
+        <input type="date" id="planDate" onchange="changeDate(this.value)" style="width:138px; font-weight:800; padding:5px 8px;">
         <button type="button" class="mini-btn" onclick="stepDate(0)">අද</button>
         <button type="button" class="mini-btn" onclick="stepDate(1)">▶</button>
       </div>
-      <div style="display:flex; gap:5px; flex-wrap:wrap;">
-        <button type="button" onclick="autoFillNightSleep()" class="mini-btn btn-sleep" title="රාත්‍රී නින්ද එකවර ලකුණු කරන්න">😴 නින්ද ලකුණු කරන්න</button>
-        <button type="button" onclick="toggleFocusViewSections()" id="focusViewBtn" class="mini-btn">👁️ දැන් කොටස පමණක්</button>
+
+      <!-- Morning Sleep Check-in Widget -->
+      <div class="custom-sleep-widget">
+        <span style="font-weight:800; font-size:11.5px; color:var(--sleep);">🌅 උදෑසන නින්ද:</span>
+        <button type="button" class="sleep-preset-chip" onclick="applyQuickSleepChip('12-6')">12-6</button>
+        <button type="button" class="sleep-preset-chip" onclick="applyQuickSleepChip('12-7')">12-7</button>
+        <button type="button" class="sleep-preset-chip" onclick="applyQuickSleepChip('11-5')">11-5</button>
+        <button type="button" class="sleep-preset-chip" onclick="applyQuickSleepChip('1-7')">1-7</button>
+        <select id="sleepStartHour" onchange="onSleepDropdownChange()" title="නිදාගත් වේලාව"></select>
+        <span style="font-weight:800; color:var(--sleep);">→</span>
+        <select id="sleepEndHour" onchange="onSleepDropdownChange()" title="අවදි වූ වේලාව"></select>
+        <input type="text" id="customSleepRangeInput" class="custom-sleep-input" placeholder="12-6 / 12-7" title="ඕනෑම වේලාවක් ටයිප් කරන්න (උදා: 12-6, 12-7, 1-7, 12.30-6.30)" oninput="syncCustomSleepText(this.value, 'main')" onkeydown="if(event.key==='Enter') autoFillNightSleep()">
+        <button type="button" onclick="autoFillNightSleep()" class="mini-btn btn-sleep">ලකුණු කරන්න</button>
+        <button type="button" onclick="clearAllSleepHours()" class="mini-btn btn-danger" title="සියලුම නින්දේ පැය ඉවත් කරන්න">✖</button>
       </div>
     </div>
 
@@ -865,7 +1127,7 @@
     <div class="live-hero-card">
       <div class="live-hero-top">
         <span class="stat-badge stat-bad" id="liveQuickTimeLabel" style="font-size:12.5px;">⚡ දැන් ගතවන පැය</span>
-        <span style="font-size:11.5px; color:var(--muted); font-weight:700;">පහළට Scroll නොකර මෙතැනින්ම දැන් පැය ලකුණු කරන්න 👇</span>
+        <span id="liveDateWarningBadge" style="font-size:11.5px; color:var(--muted); font-weight:700;">පහළට Scroll නොකර මෙතැනින්ම දැන් පැය ලකුණු කරන්න 👇</span>
       </div>
       <div class="live-hero-inputs">
         <select id="liveQuickSubj" onchange="syncFromLiveQuickCard()" style="font-weight:700;"></select>
@@ -930,12 +1192,48 @@
       </div>
     </div>
 
-    <!-- 24-Hour Schedule (Auto-Converts to Clean Vertical Cards on Mobile!) -->
-    <div class="table-wrapper">
+    <!-- Google Calendar View Switcher & Smart Auto-Plan Bar -->
+    <div class="view-mode-bar">
+      <div class="view-switch-group">
+        <button type="button" class="view-switch-btn active" id="viewBtn_table" onclick="switchScheduleView('table')">📋 පැය 24 වගුව (12AM-12AM)</button>
+        <button type="button" class="view-switch-btn" id="viewBtn_daily" onclick="switchScheduleView('daily')">📅 Daily Calendar</button>
+        <button type="button" class="view-switch-btn" id="viewBtn_weekly" onclick="switchScheduleView('weekly')">🗓️ Weekly Calendar (7-Day)</button>
+      </div>
+      <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+        <button type="button" class="mini-btn btn-primary" onclick="openTimeBlockModal()">➕ Time Block දාන්න</button>
+        <button type="button" class="mini-btn btn-purple" onclick="autoScheduleFromSyllabus()" title="Syllabus එකේ ඉතිරි පාඩම් අද හිස් පැයවලට ස්වයංක්‍රීයව බෙදන්න">🤖 Auto-Plan</button>
+        <button type="button" onclick="toggleFocusViewSections()" id="focusViewBtn" class="mini-btn">👁️ දැන් කොටස පමණක්</button>
+      </div>
+    </div>
+
+    <!-- Google Calendar Style Weekly / Daily Container -->
+    <div id="gcalContainer" class="gcal-wrapper">
+      <div class="gcal-toolbar">
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <button type="button" class="mini-btn" onclick="stepCalendarRange(-1)">◀ පෙර</button>
+          <button type="button" class="mini-btn" onclick="stepCalendarRange(0)">අද</button>
+          <button type="button" class="mini-btn" onclick="stepCalendarRange(1)">ඊළඟ ▶</button>
+          <strong id="gcalRangeTitle" style="font-size:13px; color:var(--primary); margin-left:4px;"></strong>
+        </div>
+        <div style="display:flex; gap:8px; font-size:11px; font-weight:700; flex-wrap:wrap;">
+          <span style="color:var(--primary);">🟦 Subj 1</span>
+          <span style="color:var(--success);">🟩 Subj 2</span>
+          <span style="color:var(--purple);">🟪 Subj 3</span>
+          <span style="color:var(--warning);">🟧 Class/Other</span>
+          <span style="color:var(--sleep);">🩵 Sleep</span>
+        </div>
+      </div>
+      <div class="gcal-scroll-area" id="gcalScrollArea">
+        <div id="gcalGrid" class="gcal-grid weekly-mode"></div>
+      </div>
+    </div>
+
+    <!-- 24-Hour Chronological Schedule (Starts at 12:00 AM Midnight so Morning Sleep is at the Top!) -->
+    <div class="table-wrapper" id="mainScheduleTableWrapper">
       <table>
         <thead>
           <tr>
-            <th rowspan="2" class="time-cell">TIME (24h) &nbsp;[1h | 😴 | ⏬]</th>
+            <th rowspan="2" class="time-cell">TIME (12AM - 12AM) [1h|😴|⏬]</th>
             <th rowspan="2">SUBJECT / MODE / LESSON</th>
             <th colspan="4" style="color:var(--success);">✅ STUDY TIME (15m x 4)</th>
             <th style="color:var(--sleep);">😴 SLEEP</th>
@@ -955,7 +1253,7 @@
         <tbody id="scheduleBody"></tbody>
         <tfoot>
           <tr style="background: var(--header-bg); font-weight: 800;">
-            <td colspan="2">24H TOTALS :</td>
+            <td colspan="2" id="untrackedFooterLabel">24H TOTALS (Untracked: 24h 00m) :</td>
             <td colspan="4" id="tableUsingTotal" style="color:var(--success);">Study: 0h 00m</td>
             <td id="sumSleep" style="color:var(--sleep);">Sleep: 0h 00m</td>
             <td id="sumOnline" style="color:var(--danger);">Onl: 0m</td>
@@ -1082,10 +1380,10 @@
 
       <div id="omrAnswerKeyDrawer" style="display:none; margin-top:8px; background:var(--primary-bg); border:1px solid var(--primary); padding:10px; border-radius:8px;">
         <div style="font-weight:700; font-size:12px; margin-bottom:6px; color:var(--primary);">
-          🔑 1 සිට 50 දක්වා නිවැරදි පිළිතුරු අංක (1-5) පහතින් Paste කරන්න:
+          🔑 1 සිට 50 දක්වා නිවැරදි පිළිතුරු අංක (1-5) පහතින් Paste කරන්න (උදා: 24153... හෝ 1-2, 2-4...):
         </div>
         <div style="display:flex; gap:6px; flex-wrap:wrap;">
-          <input type="text" id="omrAnswerKeyInput" placeholder="උදා: 2415312453..." style="flex:1;">
+          <input type="text" id="omrAnswerKeyInput" placeholder="උදා: 2415312453... හෝ 1)2 2)4 3)1..." style="flex:1;">
           <button type="button" class="btn-success mini-btn" onclick="gradeWithAnswerKey()">✅ පරීක්ෂා කරන්න</button>
         </div>
       </div>
@@ -1099,15 +1397,21 @@
   <div id="tab-vault" class="tab-content">
     <div class="panel">
       <div class="panel-title">
-        <span>🧠 කෙටි සටහන් සහ සූත්‍ර (FLASHCARDS)</span>
-        <div style="display:flex; gap:6px; width:100%; margin-top:4px;">
-          <input type="text" id="vaultSearchInput" placeholder="🔍 සොයන්න..." style="flex:1;" oninput="renderVaultCards()">
-          <select id="vaultFilterSubj" onchange="renderVaultCards()" style="width:130px;">
-            <option value="all">සියල්ල</option>
+        <span>🧠 කෙටි සටහන් සහ සූත්‍ර (ACTIVE RECALL FLASHCARDS)</span>
+        <div style="display:flex; gap:6px; width:100%; margin-top:4px; flex-wrap:wrap;">
+          <input type="text" id="vaultSearchInput" placeholder="🔍 සොයන්න..." style="flex:1; min-width:130px;" oninput="renderVaultCards()">
+          <select id="vaultFilterSubj" onchange="renderVaultCards()" style="width:125px;">
+            <option value="all">සියලු විෂය</option>
             <option value="s1">Subject 1</option>
             <option value="s2">Subject 2</option>
             <option value="s3">Subject 3</option>
             <option value="common">Gen.Eng</option>
+          </select>
+          <select id="vaultFilterDiff" onchange="renderVaultCards()" style="width:125px;">
+            <option value="all">සියලු මට්ටම්</option>
+            <option value="hard">🔴 අමාරු පමණක්</option>
+            <option value="medium">🟡 සාමාන්‍ය</option>
+            <option value="easy">🟢 ලේසි</option>
           </select>
           <button onclick="shuffleVaultCards()" class="mini-btn btn-purple">🔀</button>
         </div>
@@ -1182,14 +1486,70 @@
   </div>
 </div>
 
-<!-- Share Report Modal -->
+<!-- Time Block Creator Modal (Google Calendar Event Popup) -->
+<div class="modal-overlay" id="timeBlockModal">
+  <div class="modal-card" style="max-width:430px; text-align:left;">
+    <h3 style="color:var(--primary); margin-bottom:10px;">🗓️ Time Block එකක් වෙන් කරන්න</h3>
+    <div class="field-row">
+      <label>දිනය:</label>
+      <input type="date" id="tbDateInput">
+    </div>
+    <div class="field-row">
+      <label>ආරම්භක වේලාව:</label>
+      <select id="tbStartHour"></select>
+    </div>
+    <div class="field-row">
+      <label>අවසන් වේලාව:</label>
+      <select id="tbEndHour"></select>
+    </div>
+    <div class="field-row">
+      <label>විෂය / වර්ගය:</label>
+      <select id="tbSubjSelect">
+        <option value="s1">Subject 1</option>
+        <option value="s2">Subject 2</option>
+        <option value="s3">Subject 3</option>
+        <option value="common">Gen.Eng / GIT</option>
+        <option value="other">Tuition Class / Other</option>
+        <option value="sleep">😴 නින්ද / විවේකය</option>
+      </select>
+    </div>
+    <div class="field-row">
+      <label>Mode:</label>
+      <select id="tbModeSelect">
+        <option value="theory">Theory</option>
+        <option value="revision">Revision</option>
+        <option value="paper">Past Paper</option>
+        <option value="tute">Tute / ගැටලු</option>
+        <option value="class">Tuition Class</option>
+        <option value="notes">Short Notes</option>
+      </select>
+    </div>
+    <div style="margin-bottom:8px;">
+      <label style="font-weight:700; font-size:12.5px; display:block; margin-bottom:4px;">පාඩම / වැඩේ නම:</label>
+      <input type="text" id="tbTaskInput" list="smartLessonSuggestions" placeholder="උදා: Accounting සමාගම් ගිණුම් / Econ Class...">
+    </div>
+    <label style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--purple); margin-bottom:12px; cursor:pointer;">
+      <input type="checkbox" id="tbRecurringChk" style="width:16px; height:16px;">
+      🔁 ඉදිරි සති 4 සඳහාම සෑම සතියකම මෙම දිනයට යොදන්න (Recurring)
+    </label>
+    <div style="display:flex; justify-content:space-between; gap:8px;">
+      <button type="button" class="btn-danger" onclick="clearTimeBlockRange()">🗑️ මකන්න</button>
+      <div style="display:flex; gap:6px;">
+        <button type="button" onclick="closeTimeBlockModal()">✖ වසන්න</button>
+        <button type="button" class="btn-primary" onclick="saveTimeBlockModal()">💾 සුරකින්න</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Share Full 24h Report Modal -->
 <div class="modal-overlay" id="shareModal">
   <div class="modal-card">
-    <h3 style="margin-bottom:4px; color:var(--primary);">📸 අද දවසේ පාඩම් සාරාංශ වාර්තාව</h3>
-    <canvas id="shareCanvas" width="600" height="360"></canvas>
+    <h3 style="margin-bottom:4px; color:var(--primary);">📸 දවසේ පැය 24 සම්පූර්ණ වාර්තාව (Full Day Report)</h3>
+    <canvas id="shareCanvas" width="600" height="400"></canvas>
     <div style="display:flex; justify-content:center; gap:8px; margin-top:8px; flex-wrap:wrap;">
       <button onclick="shareOrDownloadCard()" class="btn-success">📲 Share / Download Image</button>
-      <button onclick="copyTextReport()" class="btn-primary">📋 Copy Text (TG/WA)</button>
+      <button onclick="copyTextReport()" class="btn-primary">📋 Copy Full Report (TG/WA)</button>
       <button onclick="closeShareCard()">✖ වසන්න</button>
     </div>
   </div>
@@ -1210,7 +1570,7 @@
     </div>
     <div style="text-align:left; margin-bottom:10px;">
       <label style="font-weight:700; font-size:11.5px; display:block; margin-bottom:4px;">📋 Text Backup Code (Saved Messages සඳහා):</label>
-      <textarea id="backupTextArea" rows="3" placeholder="Generate ඔබා කේතය Copy කරගන්න, හෝ කලින් ගත් කේතය මෙහි Paste කර Restore ඔබන්න..." style="font-size:11.5px;"></textarea>
+      <textarea id="backupTextArea" rows="3" placeholder="Copy Code ඔබා කේතය ලබාගන්න, හෝ කලින් ගත් කේතය මෙහි Paste කර Restore ඔබන්න..." style="font-size:11.5px;"></textarea>
       <div style="display:flex; gap:8px; margin-top:6px; justify-content:center;">
         <button onclick="generateTextBackupCode()" class="mini-btn btn-primary">📋 Copy Code</button>
         <button onclick="restoreFromTextBackupCode()" class="mini-btn btn-success">✅ Restore Code</button>
@@ -1266,7 +1626,7 @@
   const STREAM_PRESETS = {
     maths: { s1: "Combined Maths", s2: "Physics", s3: "Chemistry" },
     bio: { s1: "Biology", s2: "Physics", s3: "Chemistry" },
-    commerce: { s1: "Accounting", s2: "Business Studies", s3: "Economics" },
+    commerce: { s1: "Accounting", s2: "Economics", s3: "ICT" },
     etech: { s1: "Engineering Tech", s2: "Science for Tech (SFT)", s3: "ICT" },
     btech: { s1: "Bio Systems Tech", s2: "Science for Tech (SFT)", s3: "Agricultural Science" },
     arts: { s1: "Sinhala", s2: "Political Science", s3: "Geography" }
@@ -1339,42 +1699,229 @@
     ]
   };
 
+  /* CHRONOLOGICAL 24-HOUR ORDER (12:00 AM Midnight -> 12:00 AM Midnight)
+     So the student marks Night Sleep first thing in the morning and follows the day in order! */
   const timeSlots = [
-    { group: "🌅 අලුයම කාලය - EARLY BIRD (4:00 AM - 7:00 AM)", groupId: "grp_early" },
-    { id: "am_4_5", label: "4:00 - 5:00 AM", hour24: 4, groupId: "grp_early" },
-    { id: "am_5_6", label: "5:00 - 6:00 AM", hour24: 5, groupId: "grp_early" },
-    { id: "am_6_7", label: "6:00 - 7:00 AM", hour24: 6, groupId: "grp_early" },
-    { group: "☀️ උදෑසන කාලය - MORNING (7:00 AM - 12:00 PM)", groupId: "grp_morning" },
+    { group: "😴 රාත්‍රී නින්ද සහ අලුයම අවදි වීම - NIGHT SLEEP & EARLY BIRD (12:00 AM - 6:00 AM)", groupId: "grp_sleep_early" },
+    { id: "am_12_1", label: "12:00 - 1:00 AM", hour24: 0, groupId: "grp_sleep_early" },
+    { id: "am_1_2", label: "1:00 - 2:00 AM", hour24: 1, groupId: "grp_sleep_early" },
+    { id: "am_2_3", label: "2:00 - 3:00 AM", hour24: 2, groupId: "grp_sleep_early" },
+    { id: "am_3_4", label: "3:00 - 4:00 AM", hour24: 3, groupId: "grp_sleep_early" },
+    { id: "am_4_5", label: "4:00 - 5:00 AM", hour24: 4, groupId: "grp_sleep_early" },
+    { id: "am_5_6", label: "5:00 - 6:00 AM", hour24: 5, groupId: "grp_sleep_early" },
+
+    { group: "☀️ උදෑසන කාලය - MORNING SESSION (6:00 AM - 12:00 PM)", groupId: "grp_morning" },
+    { id: "am_6_7", label: "6:00 - 7:00 AM", hour24: 6, groupId: "grp_morning" },
     { id: "am_7_8", label: "7:00 - 8:00 AM", hour24: 7, groupId: "grp_morning" },
     { id: "am_8_9", label: "8:00 - 9:00 AM", hour24: 8, groupId: "grp_morning" },
     { id: "am_9_10", label: "9:00 - 10:00 AM", hour24: 9, groupId: "grp_morning" },
     { id: "am_10_11", label: "10:00 - 11:00 AM", hour24: 10, groupId: "grp_morning" },
     { id: "am_11_12", label: "11:00 - 12:00 PM", hour24: 11, groupId: "grp_morning" },
-    { group: "🌤️ දහවල් සහ සවස - AFTERNOON (12:00 PM - 6:00 PM)", groupId: "grp_afternoon" },
+
+    { group: "🌤️ දහවල් සහ සවස - AFTERNOON SESSION (12:00 PM - 6:00 PM)", groupId: "grp_afternoon" },
     { id: "pm_12_1", label: "12:00 - 1:00 PM", hour24: 12, groupId: "grp_afternoon" },
     { id: "pm_1_2", label: "1:00 - 2:00 PM", hour24: 13, groupId: "grp_afternoon" },
     { id: "pm_2_3", label: "2:00 - 3:00 PM", hour24: 14, groupId: "grp_afternoon" },
     { id: "pm_3_4", label: "3:00 - 4:00 PM", hour24: 15, groupId: "grp_afternoon" },
     { id: "pm_4_5", label: "4:00 - 5:00 PM", hour24: 16, groupId: "grp_afternoon" },
     { id: "pm_5_6", label: "5:00 - 6:00 PM", hour24: 17, groupId: "grp_afternoon" },
-    { group: "🌙 රාත්‍රී කාලය - NIGHT (6:00 PM - 12:00 AM)", groupId: "grp_night" },
+
+    { group: "🌙 රාත්‍රී කාලය - NIGHT SESSION (6:00 PM - 12:00 AM)", groupId: "grp_night" },
     { id: "pm_6_7", label: "6:00 - 7:00 PM", hour24: 18, groupId: "grp_night" },
     { id: "pm_7_8", label: "7:00 - 8:00 PM", hour24: 19, groupId: "grp_night" },
     { id: "pm_8_9", label: "8:00 - 9:00 PM", hour24: 20, groupId: "grp_night" },
     { id: "pm_9_10", label: "9:00 - 10:00 PM", hour24: 21, groupId: "grp_night" },
     { id: "pm_10_11", label: "10:00 - 11:00 PM", hour24: 22, groupId: "grp_night" },
-    { id: "pm_11_12", label: "11:00 - 12:00 AM", hour24: 23, groupId: "grp_night" },
-    { group: "🦉 මැදියම් රාත්‍රී කාලය - NIGHT OWL (12:00 AM - 4:00 AM)", groupId: "grp_owl" },
-    { id: "am_12_1", label: "12:00 - 1:00 AM", hour24: 0, groupId: "grp_owl" },
-    { id: "am_1_2", label: "1:00 - 2:00 AM", hour24: 1, groupId: "grp_owl" },
-    { id: "am_2_3", label: "2:00 - 3:00 AM", hour24: 2, groupId: "grp_owl" },
-    { id: "am_3_4", label: "3:00 - 4:00 AM", hour24: 3, groupId: "grp_owl" }
+    { id: "pm_11_12", label: "11:00 - 12:00 AM", hour24: 23, groupId: "grp_night" }
   ];
 
+  const ALL_GROUP_IDS = ['grp_sleep_early', 'grp_morning', 'grp_afternoon', 'grp_night'];
   const orderedSlotIds = timeSlots.filter(s => !s.group).map(s => s.id);
+  const hour24ToSlotId = {};
+  timeSlots.forEach(s => { if (!s.group) hour24ToSlotId[s.hour24] = s.id; });
+
   let collapsedGroups = {};
   let isFocusSectionView = false;
   let waterGlasses = 0;
+  let currentScheduleView = 'table'; // 'table' | 'daily' | 'weekly'
+
+  function formatHourLabel(h24) {
+    const h = ((h24 % 24) + 24) % 24;
+    if (h === 0) return "12:00 AM (මැදියම් රාත්‍රී 12)";
+    if (h === 12) return "12:00 PM (දහවල් 12)";
+    if (h < 12) return `${h}:00 AM`;
+    return `${h - 12}:00 PM`;
+  }
+
+  function formatShortSleepText(startH, endH) {
+    const s12 = (startH % 12 === 0) ? 12 : (startH % 12);
+    const e12 = (endH % 12 === 0) ? 12 : (endH % 12);
+    return `${s12}-${e12}`;
+  }
+
+  function initCustomSleepControls() {
+    const startSel = document.getElementById('sleepStartHour');
+    const endSel = document.getElementById('sleepEndHour');
+    if (!startSel || !endSel) return;
+
+    const startOrder = [0, 1, 2, 3, 4, 21, 22, 23, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+    startSel.innerHTML = startOrder.map(h => `<option value="${h}">${formatHourLabel(h)}</option>`).join('');
+    endSel.innerHTML = Array.from({ length: 24 }, (_, h) => `<option value="${h}">${formatHourLabel(h)}</option>`).join('');
+
+    startSel.value = "0"; // Default 12:00 AM
+    endSel.value = "6";   // Default 6:00 AM
+    updateSleepTextInputs("12-6");
+  }
+
+  function applyQuickSleepChip(rangeStr) {
+    updateSleepTextInputs(rangeStr);
+    syncCustomSleepText(rangeStr, 'main');
+    autoFillNightSleep();
+  }
+
+  function updateSleepTextInputs(val) {
+    const mainIn = document.getElementById('customSleepRangeInput');
+    const setIn = document.getElementById('settingsSleepRangeInput');
+    if (mainIn && document.activeElement !== mainIn) mainIn.value = val;
+    if (setIn && document.activeElement !== setIn) setIn.value = val;
+  }
+
+  function onSleepDropdownChange() {
+    const s = parseInt(document.getElementById('sleepStartHour').value || '0');
+    const e = parseInt(document.getElementById('sleepEndHour').value || '6');
+    const shortTxt = formatShortSleepText(s, e);
+    updateSleepTextInputs(shortTxt);
+    saveGlobalSettings();
+  }
+
+  function parseCustomSleepRange(rawStr) {
+    const str = String(rawStr || '').trim().toLowerCase();
+    const match = str.match(/^(\d{1,2})(?:[:.](\d{1,2}))?\s*(am|pm)?\s*[-–to]+\s*(\d{1,2})(?:[:.](\d{1,2}))?\s*(am|pm)?$/i);
+    if (!match) return null;
+
+    let h1 = parseInt(match[1], 10);
+    let m1 = match[2] ? parseInt(match[2], 10) : 0;
+    const ampm1 = match[3];
+
+    let h2 = parseInt(match[4], 10);
+    let m2 = match[5] ? parseInt(match[5], 10) : 0;
+    const ampm2 = match[6];
+
+    if (h1 > 23 || h2 > 24 || m1 >= 60 || m2 >= 60) return null;
+
+    const convertHour = (h, ampm, isStart) => {
+      if (ampm === 'am') return h === 12 ? 0 : h;
+      if (ampm === 'pm') return h < 12 ? h + 12 : h;
+      if (h > 12) return h % 24;
+      if (h === 12) return 0;
+      if (isStart && h >= 8 && h <= 11) return h + 12;
+      return h;
+    };
+
+    const startH24 = convertHour(h1, ampm1, true);
+    const endH24 = convertHour(h2, ampm2, false);
+    return { startH24, startMin: m1, endH24, endMin: m2 };
+  }
+
+  function syncCustomSleepText(val, source) {
+    const mainIn = document.getElementById('customSleepRangeInput');
+    const setIn = document.getElementById('settingsSleepRangeInput');
+    if (source === 'main' && setIn) setIn.value = val;
+    if (source === 'settings' && mainIn) mainIn.value = val;
+
+    const parsed = parseCustomSleepRange(val);
+    if (parsed) {
+      const startSel = document.getElementById('sleepStartHour');
+      const endSel = document.getElementById('sleepEndHour');
+      if (startSel) startSel.value = String(parsed.startH24);
+      if (endSel) endSel.value = String(parsed.endH24);
+      saveGlobalSettings();
+    }
+  }
+
+  function autoFillNightSleep() {
+    triggerHaptic('medium');
+    const rawTxt = (document.getElementById('customSleepRangeInput') || {}).value || '';
+    let parsed = parseCustomSleepRange(rawTxt);
+
+    if (!parsed) {
+      const s = parseInt((document.getElementById('sleepStartHour') || {}).value || '0', 10);
+      const e = parseInt((document.getElementById('sleepEndHour') || {}).value || '6', 10);
+      parsed = { startH24: s, startMin: 0, endH24: e, endMin: 0 };
+      updateSleepTextInputs(formatShortSleepText(s, e));
+    }
+
+    timeSlots.forEach(slot => {
+      if (slot.group) return;
+      const rm = getRowMinutes(slot.id);
+      if (rm.using === 0 && rm.s > 0) {
+        setSleepButtonState(document.getElementById(`sleep_${slot.id}`), 0);
+      }
+    });
+
+    const round15 = m => Math.min(60, Math.max(0, Math.round(m / 15) * 15));
+    let curH = parsed.startH24;
+    const endH = parsed.endH24;
+    let safety = 0;
+    let totalMarkedMins = 0;
+
+    while (safety < 24) {
+      safety++;
+      let minsInThisHour = 60;
+      if (curH === parsed.startH24 && parsed.startMin > 0) {
+        minsInThisHour = 60 - round15(parsed.startMin);
+      }
+      const slotId = hour24ToSlotId[curH];
+      if (slotId && minsInThisHour > 0) {
+        const rm = getRowMinutes(slotId);
+        const maxAvailable = 60 - rm.using;
+        const assignMins = Math.min(maxAvailable, minsInThisHour);
+        if (assignMins > 0) {
+          setWasteButtonState(document.getElementById(`online_${slotId}`), 0, '📱');
+          setWasteButtonState(document.getElementById(`other_${slotId}`), 0, '⚠️');
+          setSleepButtonState(document.getElementById(`sleep_${slotId}`), assignMins);
+          totalMarkedMins += assignMins;
+        }
+      }
+
+      curH = (curH + 1) % 24;
+      if (curH === endH) {
+        if (parsed.endMin > 0) {
+          const endSlotId = hour24ToSlotId[endH];
+          const extraMins = round15(parsed.endMin);
+          if (endSlotId && extraMins > 0) {
+            const rm = getRowMinutes(endSlotId);
+            const assignMins = Math.min(60 - rm.using, extraMins);
+            if (assignMins > 0) {
+              setWasteButtonState(document.getElementById(`online_${endSlotId}`), 0, '📱');
+              setWasteButtonState(document.getElementById(`other_${endSlotId}`), 0, '⚠️');
+              setSleepButtonState(document.getElementById(`sleep_${endSlotId}`), assignMins);
+              totalMarkedMins += assignMins;
+            }
+          }
+        }
+        break;
+      }
+    }
+
+    saveGlobalSettings();
+    saveData();
+    renderTotals();
+    if (currentScheduleView !== 'table') renderGoogleCalendarView();
+    showToast(`😴 උදෑසන නින්ද (${formatMinutes(totalMarkedMins)}) සාර්ථකව සටහන් විය!`);
+  }
+
+  function clearAllSleepHours() {
+    triggerHaptic('light');
+    timeSlots.forEach(slot => {
+      if (slot.group) return;
+      setSleepButtonState(document.getElementById(`sleep_${slot.id}`), 0);
+    });
+    saveData();
+    renderTotals();
+    if (currentScheduleView !== 'table') renderGoogleCalendarView();
+    showToast('🗑️ සියලුම නින්දේ පැය ඉවත් කරන ලදී.');
+  }
 
   function getLocalDateString(dateObj = new Date()) {
     const y = dateObj.getFullYear();
@@ -1384,13 +1931,7 @@
   }
 
   function getLogicalStudyDate() {
-    const now = new Date();
-    if (now.getHours() < 4) {
-      const prev = new Date(now);
-      prev.setDate(now.getDate() - 1);
-      return getLocalDateString(prev);
-    }
-    return getLocalDateString(now);
+    return getLocalDateString(new Date());
   }
 
   let currentDate = getLocalDateString();
@@ -1399,7 +1940,6 @@
   let timerDurationSec = 15 * 60;
   let timerRemainingSec = 15 * 60;
   let timerEndTime = null;
-  const BASE_PAGE_TITLE = "A/L Study Pro";
 
   let audioCtx = null;
   let noiseNode = null;
@@ -1426,12 +1966,14 @@
 
   function refreshLiveHourHighlight() {
     const liveSlotId = getCurrentSlotId();
+    const isViewingLogicalToday = (currentDate === getLogicalStudyDate());
+
     timeSlots.forEach(slot => {
       if (slot.group) return;
       const row = document.getElementById(`row_${slot.id}`);
       const badgeBox = document.getElementById(`livebadge_${slot.id}`);
       if (!row || !badgeBox) return;
-      if (slot.id === liveSlotId) {
+      if (isViewingLogicalToday && slot.id === liveSlotId) {
         row.classList.add('current-hour-row');
         badgeBox.innerHTML = '<span class="live-badge">LIVE</span>';
       } else {
@@ -1440,13 +1982,24 @@
       }
     });
     refreshLiveQuickCard();
+    if (currentScheduleView !== 'table') renderGoogleCalendarView();
   }
 
   function refreshLiveQuickCard() {
     const liveId = getCurrentSlotId() || 'am_7_8';
     const slotObj = timeSlots.find(s => s.id === liveId);
     const lbl = document.getElementById('liveQuickTimeLabel');
-    if (lbl && slotObj) lbl.textContent = `⚡ දැන් පැය: ${slotObj.label}`;
+    const warnEl = document.getElementById('liveDateWarningBadge');
+    const isToday = (currentDate === getLogicalStudyDate());
+
+    if (lbl && slotObj) {
+      lbl.textContent = isToday ? `⚡ දැන් පැය: ${slotObj.label}` : `📅 (${currentDate}) පැය: ${slotObj.label}`;
+    }
+    if (warnEl) {
+      warnEl.textContent = isToday
+        ? 'පහළට Scroll නොකර මෙතැනින්ම දැන් පැය ලකුණු කරන්න 👇'
+        : `⚠️ ඔබ දැන් බලන්නේ ${currentDate} දිනයයි ("අද" ඔබා අද දිනයට එන්න)`;
+    }
 
     const subjEl = document.getElementById(`subj_${liveId}`);
     const modeEl = document.getElementById(`mode_${liveId}`);
@@ -1483,6 +2036,7 @@
 
     saveData();
     renderTotals();
+    if (currentScheduleView !== 'table') renderGoogleCalendarView();
   }
 
   function toggleLiveQuickSlot(q) {
@@ -1557,7 +2111,7 @@
     const liveSlotObj = timeSlots.find(s => s.id === liveSlotId);
     const activeGrp = liveSlotObj ? liveSlotObj.groupId : 'grp_morning';
 
-    ['grp_early', 'grp_morning', 'grp_afternoon', 'grp_night', 'grp_owl'].forEach(g => {
+    ALL_GROUP_IDS.forEach(g => {
       collapsedGroups[g] = isFocusSectionView ? (g !== activeGrp) : false;
     });
     applyCollapsedGroupStates();
@@ -1580,8 +2134,8 @@
   function copyRowToNextHour(slotId) {
     triggerHaptic('light');
     const idx = orderedSlotIds.indexOf(slotId);
-    if (idx === -1 || idx >= orderedSlotIds.length - 1) return showToast('⚠️ මෙය අවසාන පැය පේළියයි!');
-    const nextSlotId = orderedSlotIds[idx + 1];
+    if (idx === -1) return;
+    const nextSlotId = orderedSlotIds[(idx + 1) % orderedSlotIds.length];
     document.getElementById(`subj_${nextSlotId}`).value = document.getElementById(`subj_${slotId}`).value;
     document.getElementById(`mode_${nextSlotId}`).value = document.getElementById(`mode_${slotId}`).value;
     document.getElementById(`task_${nextSlotId}`).value = document.getElementById(`task_${slotId}`).value;
@@ -1680,6 +2234,7 @@
 
   function initUI() {
     initTelegramMiniApp();
+    initCustomSleepControls();
     currentDate = getLogicalStudyDate();
     document.getElementById('planDate').value = currentDate;
 
@@ -1687,17 +2242,7 @@
     tbody.innerHTML = '';
     const liveSlotId = getCurrentSlotId();
 
-    // On mobile screens, automatically collapse non-active sections so the page is short & easy to scroll!
-    if (window.innerWidth <= 768) {
-      isFocusSectionView = true;
-      const liveSlotObj = timeSlots.find(s => s.id === liveSlotId);
-      const activeGrp = liveSlotObj ? liveSlotObj.groupId : 'grp_morning';
-      ['grp_early', 'grp_morning', 'grp_afternoon', 'grp_night', 'grp_owl'].forEach(g => {
-        collapsedGroups[g] = (g !== activeGrp);
-      });
-      const fBtn = document.getElementById('focusViewBtn');
-      if (fBtn) fBtn.textContent = '👁️ පැය 24ම පෙන්වන්න';
-    }
+    ALL_GROUP_IDS.forEach(g => { collapsedGroups[g] = false; });
 
     timeSlots.forEach(slot => {
       if (slot.group) {
@@ -1766,7 +2311,7 @@
     initOmrSheet();
     renderVaultCards();
     updateSmartLessonSuggestions();
-    refreshLiveQuickCard();
+    refreshLiveHourHighlight();
 
     setInterval(refreshLiveHourHighlight, 60000);
   }
@@ -1782,6 +2327,7 @@
     document.getElementById('planDate').value = currentDate;
     loadData(currentDate);
     renderAnalytics();
+    refreshLiveHourHighlight();
   }
 
   function toggleFullHourStudy(slotId) {
@@ -1816,29 +2362,6 @@
     renderTotals();
   }
 
-  function autoFillNightSleep() {
-    triggerHaptic('medium');
-    const preset = (document.getElementById('sleepPresetSelect') || {}).value || '23_5';
-    const presetMap = {
-      '23_5': ["pm_11_12", "am_12_1", "am_1_2", "am_2_3", "am_3_4", "am_4_5"],
-      '22_4': ["pm_10_11", "pm_11_12", "am_12_1", "am_1_2", "am_2_3", "am_3_4"],
-      '0_6':  ["am_12_1", "am_1_2", "am_2_3", "am_3_4", "am_4_5", "am_5_6"],
-      '23_6': ["pm_11_12", "am_12_1", "am_1_2", "am_2_3", "am_3_4", "am_4_5", "am_5_6"]
-    };
-    const sleepSlotIds = presetMap[preset] || presetMap['23_5'];
-    sleepSlotIds.forEach(slotId => {
-      const rm = getRowMinutes(slotId);
-      if (rm.using === 0) {
-        setWasteButtonState(document.getElementById(`online_${slotId}`), 0, '📱');
-        setWasteButtonState(document.getElementById(`other_${slotId}`), 0, '⚠️');
-        setSleepButtonState(document.getElementById(`sleep_${slotId}`), 60);
-      }
-    });
-    saveData();
-    renderTotals();
-    showToast('😴 රාත්‍රී නින්ද ලකුණු කරන ලදී! (මෙය Waste එකක් ලෙස ගණනය නොවේ)');
-  }
-
   function saveRoutineTemplate() {
     const slotType = document.getElementById('templateSlotSelect').value || 'study';
     const tpl = {};
@@ -1870,6 +2393,7 @@
       });
       saveData();
       renderTotals();
+      if (currentScheduleView !== 'table') renderGoogleCalendarView();
       showToast('📂 කාලසටහන් ආකෘතිය අද දිනයට යොදන ලදී!');
     } catch (e) {}
   }
@@ -1917,6 +2441,7 @@
       }
       saveData();
       renderTotals();
+      if (currentScheduleView !== 'table') renderGoogleCalendarView();
       showToast('📋 ඊයේ සැලසුම අද දිනයට පිටපත් කරන ලදී!');
     } catch (e) {}
   }
@@ -1985,7 +2510,13 @@
 
   function scrollToLiveHour() {
     triggerHaptic('light');
+    if (currentDate !== getLogicalStudyDate()) {
+      stepDate(0);
+    }
     switchTab('planner', document.getElementById('tabBtn_planner'));
+    if (currentScheduleView !== 'table') {
+      switchScheduleView('table');
+    }
     const liveSlotId = getCurrentSlotId();
     if (!liveSlotId) return;
     const liveSlotObj = timeSlots.find(s => s.id === liveSlotId);
@@ -2231,6 +2762,13 @@
         playBellSound();
         triggerHaptic('heavy');
 
+        const logicalToday = getLogicalStudyDate();
+        if (currentDate !== logicalToday) {
+          currentDate = logicalToday;
+          document.getElementById('planDate').value = currentDate;
+          loadData(currentDate);
+        }
+
         const blocksToTick = Math.floor(timerDurationSec / (15 * 60));
         if (blocksToTick > 0) {
           const tickedCount = autoTickCurrentHourSlots(blocksToTick);
@@ -2257,8 +2795,8 @@
     if (startIdx === -1) return 0;
 
     let ticked = 0;
-    for (let sIdx = startIdx; sIdx < orderedSlotIds.length && ticked < count; sIdx++) {
-      const sId = orderedSlotIds[sIdx];
+    for (let step = 0; step < orderedSlotIds.length && ticked < count; step++) {
+      const sId = orderedSlotIds[(startIdx + step) % orderedSlotIds.length];
       for (let q = 0; q < 4 && ticked < count; q++) {
         const btn = document.getElementById(`slot_${sId}_${q}`);
         if (btn && !btn.classList.contains('active')) {
@@ -2342,11 +2880,6 @@
 
   function calculateHistoricalTotals(dateStr) {
     const cur = new Date(dateStr + 'T00:00:00');
-    const yest = new Date(cur);
-    yest.setDate(cur.getDate() - 1);
-    const yestKey = `al_plan_${getLocalDateString(yest)}`;
-    const yestMins = getSavedDayUsingMinutes(yestKey);
-
     const dayOfWeek = cur.getDay() || 7;
     let weekMins = 0;
     for (let d = 1; d <= dayOfWeek; d++) {
@@ -2355,7 +2888,6 @@
       weekMins += getSavedDayUsingMinutes(`al_plan_${getLocalDateString(temp)}`);
     }
 
-    document.getElementById('yesterdayTotalDisplay').textContent = formatMinutes(yestMins);
     document.getElementById('weekTotalDisplay').textContent = formatMinutes(weekMins);
 
     let streak = 0;
@@ -2407,6 +2939,9 @@
     let totalSleepMins = 0;
     let totalOnlineMins = 0;
     let totalOtherWasteMins = 0;
+    let plannedHoursCount = 0;
+    let executedPlannedMins = 0;
+
     let subjMins = { s1: 0, s2: 0, s3: 0, common: 0, other: 0 };
     let modeMins = { theory: 0, revision: 0, paper: 0, tute: 0, practical: 0, notes: 0, class: 0 };
 
@@ -2419,6 +2954,12 @@
       totalUsingMins += rowUsing;
 
       const subj = document.getElementById(`subj_${slot.id}`).value;
+      const taskTxt = document.getElementById(`task_${slot.id}`).value.trim();
+      if (subj !== 'none' || taskTxt !== '') {
+        plannedHoursCount++;
+        executedPlannedMins += rowUsing;
+      }
+
       if (subj === 's1') subjMins.s1 += rowUsing;
       else if (subj === 's2') subjMins.s2 += rowUsing;
       else if (subj === 's3') subjMins.s3 += rowUsing;
@@ -2442,6 +2983,31 @@
 
     const grandActualWaste = totalOnlineMins + totalOtherWasteMins;
     const totalPaperAndTuteMins = modeMins.paper + modeMins.tute;
+    const untrackedMins = Math.max(0, 1440 - (totalUsingMins + totalSleepMins + grandActualWaste));
+
+    // Update 24h Breakdown Bar
+    document.getElementById('bdSleepTxt').textContent = formatMinutes(totalSleepMins);
+    document.getElementById('bdStudyTxt').textContent = formatMinutes(totalUsingMins);
+    document.getElementById('bdWasteTxt').textContent = formatMinutes(grandActualWaste);
+    document.getElementById('bdUntrackedTxt').textContent = formatMinutes(untrackedMins);
+
+    document.getElementById('barSegSleep').style.width = `${(totalSleepMins / 1440) * 100}%`;
+    document.getElementById('barSegStudy').style.width = `${(totalUsingMins / 1440) * 100}%`;
+    document.getElementById('barSegWaste').style.width = `${(grandActualWaste / 1440) * 100}%`;
+
+    // Planned vs Actual Execution Badge
+    const pvaBadge = document.getElementById('plannedVsActualBadge');
+    if (pvaBadge) {
+      if (plannedHoursCount > 0) {
+        const execPct = Math.min(100, Math.round((executedPlannedMins / (plannedHoursCount * 60)) * 100));
+        pvaBadge.textContent = `Plan: ${plannedHoursCount}h (${execPct}% Done)`;
+      } else {
+        pvaBadge.textContent = `Plan: 0h`;
+      }
+    }
+
+    const untrackedLbl = document.getElementById('untrackedFooterLabel');
+    if (untrackedLbl) untrackedLbl.textContent = `24H TOTALS (සටහන් නොකළ: ${formatMinutes(untrackedMins)}) :`;
 
     document.getElementById('tableUsingTotal').textContent = `Study: ${formatMinutes(totalUsingMins)}`;
     document.getElementById('todayTotalDisplay').textContent = formatMinutes(totalUsingMins);
@@ -2455,7 +3021,7 @@
     document.getElementById('sleepTotalDisplay').textContent = formatMinutes(totalSleepMins);
     const sleepSub = document.getElementById('sleepHealthSub');
     const sleepHrs = totalSleepMins / 60;
-    if (totalSleepMins === 0) sleepSub.textContent = 'නින්ද ලකුණු කර නැත';
+    if (totalSleepMins === 0) sleepSub.textContent = 'උදෑසනම නින්ද ලකුණු කරන්න 👆';
     else if (sleepHrs >= 5.5 && sleepHrs <= 8) sleepSub.textContent = 'සුවදායක නින්දක් ✅';
     else if (sleepHrs < 5.5) sleepSub.textContent = 'නින්ද මදි ⚠️';
     else sleepSub.textContent = 'වැඩිපුර නින්ද ⚠️';
@@ -2483,6 +3049,335 @@
     updateEmptyRowClasses();
     calculateHistoricalTotals(currentDate);
     refreshLiveQuickCard();
+  }
+
+  /* ================= GOOGLE CALENDAR WEEKLY & DAILY LOGIC ================= */
+  function switchScheduleView(mode) {
+    triggerHaptic('light');
+    currentScheduleView = mode;
+    ['table', 'daily', 'weekly'].forEach(m => {
+      const btn = document.getElementById(`viewBtn_${m}`);
+      if (btn) btn.classList.toggle('active', m === mode);
+    });
+
+    const tableWrap = document.getElementById('mainScheduleTableWrapper');
+    const gcalWrap = document.getElementById('gcalContainer');
+
+    if (mode === 'table') {
+      if (tableWrap) tableWrap.style.display = 'block';
+      if (gcalWrap) gcalWrap.classList.remove('active');
+      loadData(currentDate);
+    } else {
+      if (tableWrap) tableWrap.style.display = 'none';
+      if (gcalWrap) gcalWrap.classList.add('active');
+      renderGoogleCalendarView();
+    }
+  }
+
+  function getMondayOfCurrentWeek(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    const day = d.getDay() || 7;
+    d.setDate(d.getDate() - day + 1);
+    return d;
+  }
+
+  function stepCalendarRange(dir) {
+    if (dir === 0) {
+      stepDate(0);
+    } else {
+      const jump = (currentScheduleView === 'weekly') ? (dir * 7) : dir;
+      stepDate(jump);
+    }
+    if (currentScheduleView !== 'table') renderGoogleCalendarView();
+  }
+
+  function getDayPlanObject(dStr) {
+    const raw = localStorage.getItem(`al_plan_${dStr}`);
+    if (!raw) return { priorities: createDefaultPriorities(6), rows: {} };
+    try {
+      const parsed = JSON.parse(raw);
+      if (!parsed.rows) parsed.rows = {};
+      return parsed;
+    } catch (e) {
+      return { priorities: createDefaultPriorities(6), rows: {} };
+    }
+  }
+
+  function renderGoogleCalendarView() {
+    const grid = document.getElementById('gcalGrid');
+    const titleEl = document.getElementById('gcalRangeTitle');
+    if (!grid) return;
+
+    const names = getSubjectNames();
+    const subjLabels = {
+      s1: names.s1,
+      s2: names.s2,
+      s3: names.s3,
+      common: 'Gen.Eng/GIT',
+      other: 'Class/Other'
+    };
+
+    const isWeekly = (currentScheduleView === 'weekly');
+    grid.className = `gcal-grid ${isWeekly ? 'weekly-mode' : 'daily-mode'}`;
+
+    const dayNamesSi = ['සඳුදා', 'අඟහ', 'බදාදා', 'බ්‍රහස්', 'සිකු', 'සෙන', 'ඉරිදා'];
+    let daysList = [];
+
+    if (isWeekly) {
+      const mon = getMondayOfCurrentWeek(currentDate);
+      for (let i = 0; i < 7; i++) {
+        const temp = new Date(mon);
+        temp.setDate(mon.getDate() + i);
+        const dStr = getLocalDateString(temp);
+        daysList.push({ dateStr: dStr, label: `${dayNamesSi[i]} (${dStr.slice(8)})` });
+      }
+      if (titleEl) titleEl.textContent = `${daysList[0].dateStr} සිට ${daysList[6].dateStr}`;
+    } else {
+      const dObj = new Date(currentDate + 'T00:00:00');
+      const dayIdx = (dObj.getDay() || 7) - 1;
+      daysList.push({ dateStr: currentDate, label: `${dayNamesSi[dayIdx]} - ${currentDate}` });
+      if (titleEl) titleEl.textContent = `දෛනික කාලසටහන (12AM - 12AM): ${currentDate}`;
+    }
+
+    const dayDataMap = {};
+    daysList.forEach(d => { dayDataMap[d.dateStr] = getDayPlanObject(d.dateStr); });
+
+    const logicalToday = getLogicalStudyDate();
+    const nowHour = new Date().getHours();
+    const nowMinPct = Math.round((new Date().getMinutes() / 60) * 100);
+
+    let html = `<div class="gcal-head-cell">වේලාව</div>`;
+    daysList.forEach(d => {
+      const isToday = (d.dateStr === logicalToday);
+      html += `<div class="gcal-head-cell ${isToday ? 'today-col' : ''}" onclick="changeDate('${d.dateStr}'); renderGoogleCalendarView();" style="cursor:pointer;">${escHtml(d.label)}</div>`;
+    });
+
+    const studyOrderedSlots = timeSlots.filter(s => !s.group);
+
+    studyOrderedSlots.forEach(slot => {
+      const shortTime = slot.label.split(' - ')[0];
+      html += `<div class="gcal-time-label">${escHtml(shortTime)}</div>`;
+
+      daysList.forEach(d => {
+        const r = (dayDataMap[d.dateStr].rows && dayDataMap[d.dateStr].rows[slot.id]) || {};
+        const subj = r.subj || 'none';
+        const task = (r.task || '').trim();
+        const mode = r.mode || 'theory';
+        const sleepMins = parseInt(r.sleep || 0);
+        const studyMins = (r.slots || []).filter(Boolean).length * 15;
+
+        const isCurrentLiveCell = (d.dateStr === logicalToday && slot.hour24 === nowHour);
+        const nowLineHtml = isCurrentLiveCell ? `<div class="gcal-now-line" style="top:${nowMinPct}%;"></div>` : '';
+
+        let eventHtml = '';
+        if (sleepMins >= 30 && studyMins === 0 && subj === 'none') {
+          eventHtml = `
+            <div class="gcal-event subj-sleep">
+              <div class="gcal-event-title">😴 නින්ද / විවේකය</div>
+              <div class="gcal-event-meta"><span>Sleep</span><span>${sleepMins}m</span></div>
+            </div>
+          `;
+        } else if (subj !== 'none' || task !== '' || studyMins > 0) {
+          const colorCls = ['s1', 's2', 's3', 'common', 'other'].includes(subj) ? `subj-${subj}` : 'subj-other';
+          const titleTxt = task || subjLabels[subj] || 'පාඩම් කාලය';
+          const badgeTxt = studyMins > 0 ? `✅ ${studyMins}m` : mode.toUpperCase();
+          eventHtml = `
+            <div class="gcal-event ${colorCls}">
+              <div class="gcal-event-title">${escHtml(titleTxt)}</div>
+              <div class="gcal-event-meta">
+                <span>${escHtml(subjLabels[subj] || '')}</span>
+                <span>${escHtml(badgeTxt)}</span>
+              </div>
+            </div>
+          `;
+        }
+
+        html += `
+          <div class="gcal-slot-cell" onclick="openTimeBlockModal('${d.dateStr}', ${slot.hour24})">
+            ${nowLineHtml}
+            ${eventHtml}
+          </div>
+        `;
+      });
+    });
+
+    grid.innerHTML = html;
+  }
+
+  function populateTimeBlockHourDropdowns() {
+    const startSel = document.getElementById('tbStartHour');
+    const endSel = document.getElementById('tbEndHour');
+    if (!startSel || !endSel || startSel.options.length > 0) return;
+
+    const chronoHours = Array.from({ length: 24 }, (_, i) => i);
+    startSel.innerHTML = chronoHours.map(h => `<option value="${h}">${formatHourLabel(h)}</option>`).join('');
+    endSel.innerHTML = chronoHours.map(h => {
+      const nextH = (h + 1) % 24;
+      return `<option value="${nextH}">${formatHourLabel(nextH)}</option>`;
+    }).join('');
+  }
+
+  function openTimeBlockModal(dateStr = currentDate, startHour24 = null) {
+    triggerHaptic('light');
+    populateTimeBlockHourDropdowns();
+    const names = getSubjectNames();
+    const subjSel = document.getElementById('tbSubjSelect');
+    if (subjSel) {
+      subjSel.options[0].text = `📘 ${names.s1}`;
+      subjSel.options[1].text = `📗 ${names.s2}`;
+      subjSel.options[2].text = `📙 ${names.s3}`;
+    }
+
+    const h = (startHour24 !== null) ? startHour24 : new Date().getHours();
+    const nextH = (h + 1) % 24;
+
+    document.getElementById('tbDateInput').value = dateStr;
+    document.getElementById('tbStartHour').value = String(h);
+    document.getElementById('tbEndHour').value = String(nextH);
+    document.getElementById('tbRecurringChk').checked = false;
+
+    const slotId = hour24ToSlotId[h];
+    const dayObj = getDayPlanObject(dateStr);
+    const existingRow = (dayObj.rows && dayObj.rows[slotId]) || {};
+
+    if (existingRow.sleep >= 45 && (!existingRow.subj || existingRow.subj === 'none')) {
+      subjSel.value = 'sleep';
+    } else {
+      subjSel.value = (existingRow.subj && existingRow.subj !== 'none') ? existingRow.subj : 's1';
+    }
+    document.getElementById('tbModeSelect').value = existingRow.mode || 'theory';
+    document.getElementById('tbTaskInput').value = existingRow.task || '';
+
+    document.getElementById('timeBlockModal').classList.add('open');
+  }
+
+  function closeTimeBlockModal() {
+    document.getElementById('timeBlockModal').classList.remove('open');
+  }
+
+  function getHoursInRange(startH, endH) {
+    const hours = [];
+    let cur = startH;
+    let safety = 0;
+    while (safety < 24) {
+      hours.push(cur);
+      cur = (cur + 1) % 24;
+      safety++;
+      if (cur === endH) break;
+    }
+    return hours;
+  }
+
+  function saveTimeBlockModal() {
+    triggerHaptic('medium');
+    const baseDateStr = document.getElementById('tbDateInput').value || currentDate;
+    const startH = parseInt(document.getElementById('tbStartHour').value, 10);
+    const endH = parseInt(document.getElementById('tbEndHour').value, 10);
+    const subjVal = document.getElementById('tbSubjSelect').value;
+    const modeVal = document.getElementById('tbModeSelect').value;
+    const taskVal = document.getElementById('tbTaskInput').value.trim();
+    const isRecurring = document.getElementById('tbRecurringChk').checked;
+
+    const hoursToFill = getHoursInRange(startH, endH);
+    const weeksCount = isRecurring ? 4 : 1;
+
+    for (let w = 0; w < weeksCount; w++) {
+      const dObj = new Date(baseDateStr + 'T00:00:00');
+      dObj.setDate(dObj.getDate() + (w * 7));
+      const targetDateStr = getLocalDateString(dObj);
+      const dayData = getDayPlanObject(targetDateStr);
+
+      hoursToFill.forEach(h => {
+        const slotId = hour24ToSlotId[h];
+        if (!slotId) return;
+        const prev = dayData.rows[slotId] || { slots: [false, false, false, false], sleep: 0, online: 0, other: 0 };
+
+        if (subjVal === 'sleep') {
+          dayData.rows[slotId] = {
+            subj: 'none', mode: 'theory', task: '',
+            slots: [false, false, false, false], sleep: 60, online: 0, other: 0
+          };
+        } else {
+          dayData.rows[slotId] = {
+            subj: subjVal, mode: modeVal, task: taskVal,
+            slots: prev.slots || [false, false, false, false],
+            sleep: 0, online: prev.online || 0, other: prev.other || 0
+          };
+        }
+      });
+
+      localStorage.setItem(`al_plan_${targetDateStr}`, JSON.stringify(dayData));
+    }
+
+    loadData(currentDate);
+    if (currentScheduleView !== 'table') renderGoogleCalendarView();
+    closeTimeBlockModal();
+    showToast(`✅ පැය ${hoursToFill.length}ක Time Block එක සාර්ථකව කැලැන්ඩරයට එක් කරන ලදී!`);
+  }
+
+  function clearTimeBlockRange() {
+    const baseDateStr = document.getElementById('tbDateInput').value || currentDate;
+    const startH = parseInt(document.getElementById('tbStartHour').value, 10);
+    const endH = parseInt(document.getElementById('tbEndHour').value, 10);
+    const hoursToClear = getHoursInRange(startH, endH);
+
+    const dayData = getDayPlanObject(baseDateStr);
+    hoursToClear.forEach(h => {
+      const slotId = hour24ToSlotId[h];
+      if (slotId && dayData.rows[slotId]) {
+        dayData.rows[slotId] = {
+          subj: 'none', mode: 'theory', task: '',
+          slots: [false, false, false, false], sleep: 0, online: 0, other: 0
+        };
+      }
+    });
+
+    localStorage.setItem(`al_plan_${baseDateStr}`, JSON.stringify(dayData));
+    loadData(currentDate);
+    if (currentScheduleView !== 'table') renderGoogleCalendarView();
+    closeTimeBlockModal();
+    showToast('🗑️ එම කාල පරාසය ඉවත් කරන ලදී.');
+  }
+
+  /* 🤖 Smart Auto-Scheduler: Pulls incomplete Syllabus units and fills free daytime study blocks */
+  function autoScheduleFromSyllabus() {
+    triggerHaptic('medium');
+    const sylData = getSyllabusData();
+    const pendingBySubj = {
+      s1: (sylData.s1 || []).filter(u => !u.t || !u.r || !u.p),
+      s2: (sylData.s2 || []).filter(u => !u.t || !u.r || !u.p),
+      s3: (sylData.s3 || []).filter(u => !u.t || !u.r || !u.p)
+    };
+
+    const targetHours = [6, 7, 8, 9, 10, 11, 14, 15, 16, 19, 20, 21];
+    const subjCycle = ['s1', 's1', 's2', 's2', 's3', 's3', 's1', 's2', 's3', 's1', 's2', 's3'];
+    let assignedCount = 0;
+
+    targetHours.forEach((h, idx) => {
+      const slotId = hour24ToSlotId[h];
+      if (!slotId) return;
+      const rm = getRowMinutes(slotId);
+      const curSubj = document.getElementById(`subj_${slotId}`).value;
+      const curTask = document.getElementById(`task_${slotId}`).value.trim();
+
+      if (rm.s === 0 && rm.using === 0 && curSubj === 'none' && curTask === '') {
+        const sKey = subjCycle[idx % subjCycle.length];
+        const unitList = pendingBySubj[sKey];
+        const pickedUnit = unitList && unitList.length > 0 ? unitList[idx % unitList.length] : null;
+        document.getElementById(`subj_${slotId}`).value = sKey;
+        document.getElementById(`mode_${slotId}`).value = (pickedUnit && pickedUnit.t) ? 'revision' : 'theory';
+        if (pickedUnit) document.getElementById(`task_${slotId}`).value = pickedUnit.title;
+        assignedCount++;
+      }
+    });
+
+    if (assignedCount === 0) {
+      return showToast('ℹ️ අද දිනයේ හිස් පැය නොමැත හෝ දැනටමත් සැලසුම් කර ඇත!');
+    }
+    saveData();
+    renderTotals();
+    if (currentScheduleView !== 'table') renderGoogleCalendarView();
+    showToast(`🤖 Syllabus එකෙන් පැය ${assignedCount}ක් ස්වයංක්‍රීයව අද කාලසටහනට බෙදා දෙන ලදී!`);
   }
 
   function renderAnalytics() {
@@ -2590,7 +3485,7 @@
       let tips = [];
       const minSubj = [{ name: names.s1, m: sTotals.s1 }, { name: names.s2, m: sTotals.s2 }, { name: names.s3, m: sTotals.s3 }].sort((a, b) => a.m - b.m)[0];
       if (total7Mins === 0) {
-        tips.push('💡 අද පාඩම් කාලයන් සටහන් කිරීම අරඹන්න.');
+        tips.push('💡 උදෑසන අවදි වූ විගස නින්ද ලකුණු කර අද දවසේ පාඩම් කාලයන් සටහන් කිරීම අරඹන්න.');
       } else {
         tips.push(`⚖️ විෂය සමබරතාව: පසුගිය දින 7 තුළ අඩුවෙන්ම පාඩම් කර ඇත්තේ "${escHtml(minSubj.name)}" (${formatMinutes(minSubj.m)}) විෂයයි.`);
         if (sleepDaysLogged > 0) {
@@ -2610,6 +3505,7 @@
     currentDate = dStr;
     document.getElementById('planDate').value = dStr;
     loadData(dStr);
+    refreshLiveHourHighlight();
     switchTab('planner', document.getElementById('tabBtn_planner'));
     showToast(`📅 ${dStr} දිනය විවෘත කරන ලදී!`);
   }
@@ -2870,16 +3766,36 @@
 
   function gradeWithAnswerKey() {
     const input = (document.getElementById('omrAnswerKeyInput').value || '').trim();
-    const digits = input.replace(/[^1-5]/g, '').split('').map(Number);
-    if (digits.length === 0) return showToast('⚠️ වලංගු පිළිතුරු අංක (1-5) ඇතුළත් කරන්න!');
-    digits.forEach((correctAns, idx) => {
-      const qNum = idx + 1;
-      if (qNum <= 50) omrCorrectFlags[qNum] = ((omrAnswers[qNum] || 0) === correctAns);
-    });
+    if (!input) return showToast('⚠️ වලංගු පිළිතුරු අංක (1-5) ඇතුළත් කරන්න!');
+
+    const pairMatches = [...input.matchAll(/(\d{1,2})\s*[\)\.\-\:]\s*([1-5])/g)];
+    let gradedCount = 0;
+
+    if (pairMatches.length >= 3) {
+      pairMatches.forEach(m => {
+        const qNum = parseInt(m[1], 10);
+        const correctAns = parseInt(m[2], 10);
+        if (qNum >= 1 && qNum <= 50) {
+          omrCorrectFlags[qNum] = ((omrAnswers[qNum] || 0) === correctAns);
+          gradedCount++;
+        }
+      });
+    } else {
+      const digits = input.replace(/[^1-5]/g, '').split('').map(Number);
+      if (digits.length === 0) return showToast('⚠️ වලංගු පිළිතුරු අංක (1-5) ඇතුළත් කරන්න!');
+      digits.forEach((correctAns, idx) => {
+        const qNum = idx + 1;
+        if (qNum <= 50) {
+          omrCorrectFlags[qNum] = ((omrAnswers[qNum] || 0) === correctAns);
+          gradedCount++;
+        }
+      });
+    }
+
     saveOmrState();
     initOmrSheet();
     document.getElementById('omrAnswerKeyDrawer').style.display = 'none';
-    showToast(`🔑 ප්‍රශ්න ${Math.min(50, digits.length)}ක් පරීක්ෂා කරන ලදී!`);
+    showToast(`🔑 ප්‍රශ්න ${gradedCount}ක් සාර්ථකව පරීක්ෂා කරන ලදී!`);
   }
 
   function handleOmrRowClick(q) {
@@ -2913,7 +3829,7 @@
 
     if (wrongQs.length > 0) {
       const vaultList = JSON.parse(localStorage.getItem('al_pro_vault') || '[]');
-      vaultList.unshift({ id: Date.now() + 1, date: currentDate, subj, q: `${name} - වැරදුණු MCQ`, a: `ප්‍රශ්න: ${wrongQs.join(', ')} (${correctCount}/50)` });
+      vaultList.unshift({ id: Date.now() + 1, date: currentDate, subj, q: `${name} - වැරදුණු MCQ`, a: `ප්‍රශ්න: ${wrongQs.join(', ')} (${correctCount}/50)`, diff: 'hard' });
       localStorage.setItem('al_pro_vault', JSON.stringify(vaultList));
     }
 
@@ -2957,18 +3873,31 @@
     document.getElementById('omrTimerBtn').textContent = '▶ Start 2h';
   }
 
+  /* Active Recall Flashcards with Easy / Medium / Hard Rating */
   function addVaultCard() {
     const subj = document.getElementById('vaultSubjSelect').value;
     const q = document.getElementById('vaultQuestionInput').value.trim();
     const a = document.getElementById('vaultAnswerInput').value.trim();
     if (!q || !a) return showToast('⚠️ ප්‍රශ්නය සහ පිළිතුර ඇතුළත් කරන්න!');
     const list = JSON.parse(localStorage.getItem('al_pro_vault') || '[]');
-    list.unshift({ id: Date.now(), date: currentDate, subj, q, a });
+    list.unshift({ id: Date.now(), date: currentDate, subj, q, a, diff: 'medium' });
     localStorage.setItem('al_pro_vault', JSON.stringify(list));
     document.getElementById('vaultQuestionInput').value = '';
     document.getElementById('vaultAnswerInput').value = '';
     renderVaultCards();
     showToast('🧠 කාඩ්පත එක් කරන ලදී!');
+  }
+
+  function rateVaultCard(e, id, diffLevel) {
+    e.stopPropagation();
+    triggerHaptic('light');
+    const list = JSON.parse(localStorage.getItem('al_pro_vault') || '[]');
+    const item = list.find(c => c.id === id);
+    if (item) {
+      item.diff = diffLevel;
+      localStorage.setItem('al_pro_vault', JSON.stringify(list));
+      renderVaultCards();
+    }
   }
 
   function shuffleVaultCards() {
@@ -2994,7 +3923,14 @@
     const allList = JSON.parse(localStorage.getItem('al_pro_vault') || '[]');
     const searchQ = ((document.getElementById('vaultSearchInput') || {}).value || '').trim().toLowerCase();
     const filterSubj = ((document.getElementById('vaultFilterSubj') || {}).value || 'all');
-    const list = allList.filter(c => (filterSubj === 'all' || c.subj === filterSubj) && (!searchQ || (c.q || '').toLowerCase().includes(searchQ) || (c.a || '').toLowerCase().includes(searchQ)));
+    const filterDiff = ((document.getElementById('vaultFilterDiff') || {}).value || 'all');
+
+    const list = allList.filter(c => {
+      const matchSubj = (filterSubj === 'all' || c.subj === filterSubj);
+      const matchDiff = (filterDiff === 'all' || (c.diff || 'medium') === filterDiff);
+      const matchQ = (!searchQ || (c.q || '').toLowerCase().includes(searchQ) || (c.a || '').toLowerCase().includes(searchQ));
+      return matchSubj && matchDiff && matchQ;
+    });
 
     const names = getSubjectNames();
     names.common = 'Gen.Eng / GIT';
@@ -3003,46 +3939,73 @@
       container.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--muted); padding:16px;">සටහන් නැත. ඉහතින් එක් කරන්න.</div>`;
       return;
     }
-    container.innerHTML = list.map(card => `
-      <div class="flashcard" onclick="this.classList.toggle('revealed')">
-        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-          <span class="stat-badge stat-warn">${escHtml(names[card.subj] || card.subj)}</span>
-          <button class="mini-btn btn-danger" onclick="deleteVaultCard(event, ${card.id})">✕</button>
+    container.innerHTML = list.map(card => {
+      const diffCls = card.diff === 'hard' ? 'diff-hard' : card.diff === 'easy' ? 'diff-easy' : '';
+      return `
+        <div class="flashcard ${diffCls}" onclick="this.classList.toggle('revealed')">
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px; align-items:center;">
+            <span class="stat-badge stat-warn">${escHtml(names[card.subj] || card.subj)}</span>
+            <button class="mini-btn btn-danger" onclick="deleteVaultCard(event, ${card.id})">✕</button>
+          </div>
+          <div style="font-weight:700;">❓ ${escHtml(card.q)}</div>
+          <div class="flashcard-ans">
+            <div>💡 ${escHtml(card.a)}</div>
+            <div style="display:flex; gap:4px; margin-top:8px; justify-content:flex-end;">
+              <button type="button" class="mini-btn" onclick="rateVaultCard(event, ${card.id}, 'hard')">🔴 අමාරුයි</button>
+              <button type="button" class="mini-btn" onclick="rateVaultCard(event, ${card.id}, 'medium')">🟡 සාමාන්‍ය</button>
+              <button type="button" class="mini-btn" onclick="rateVaultCard(event, ${card.id}, 'easy')">🟢 ලේසියි</button>
+            </div>
+          </div>
         </div>
-        <div style="font-weight:700;">❓ ${escHtml(card.q)}</div>
-        <div class="flashcard-ans">💡 ${escHtml(card.a)}</div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
+  /* Enhanced End-of-Day Full 24h Report Card (Canvas + Text) */
   function openShareCard() {
     document.getElementById('shareModal').classList.add('open');
     const canvas = document.getElementById('shareCanvas');
     const ctx = canvas.getContext('2d');
-    const grad = ctx.createLinearGradient(0, 0, 600, 360);
+    const grad = ctx.createLinearGradient(0, 0, 600, 400);
     grad.addColorStop(0, '#0f172a'); grad.addColorStop(1, '#1e3a8a');
-    ctx.fillStyle = grad; ctx.fillRect(0, 0, 600, 360);
+    ctx.fillStyle = grad; ctx.fillRect(0, 0, 600, 400);
 
-    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 22px Segoe UI, sans-serif';
-    ctx.fillText('🎓 A/L DAILY STUDY REPORT', 30, 42);
-    ctx.fillStyle = '#cbd5e1'; ctx.font = 'bold 14px Segoe UI, sans-serif';
-    ctx.fillText(`📅 Date: ${currentDate}  |  ${document.getElementById('streakBadge').textContent}`, 30, 68);
+    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 21px Segoe UI, sans-serif';
+    ctx.fillText('🎓 A/L COMPLETE 24-HOUR STUDY REPORT', 28, 38);
+    ctx.fillStyle = '#cbd5e1'; ctx.font = 'bold 13.5px Segoe UI, sans-serif';
+    ctx.fillText(`📅 Date: ${currentDate}  |  ${document.getElementById('streakBadge').textContent}  |  ${document.getElementById('plannedVsActualBadge').textContent}`, 28, 64);
 
-    ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fillRect(30, 88, 250, 110);
-    ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 13px Segoe UI, sans-serif';
-    ctx.fillText('TODAY STUDY TIME', 45, 115);
-    ctx.fillStyle = '#4ade80'; ctx.font = 'bold 40px Segoe UI, sans-serif';
-    ctx.fillText(document.getElementById('todayTotalDisplay').textContent, 45, 165);
-    ctx.fillStyle = '#facc15'; ctx.font = 'bold 13px Segoe UI, sans-serif';
-    ctx.fillText(`😴 Sleep: ${document.getElementById('sleepTotalDisplay').textContent}`, 45, 188);
+    // Left Box: Study + Sleep + Waste
+    ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fillRect(28, 82, 255, 195);
+    ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 12px Segoe UI, sans-serif';
+    ctx.fillText('✅ TOTAL STUDY TIME', 44, 108);
+    ctx.fillStyle = '#4ade80'; ctx.font = 'bold 38px Segoe UI, sans-serif';
+    ctx.fillText(document.getElementById('todayTotalDisplay').textContent, 44, 152);
 
-    ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fillRect(300, 88, 270, 185);
+    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 14px Segoe UI, sans-serif';
+    ctx.fillText(`😴 Sleep: ${document.getElementById('sleepTotalDisplay').textContent}`, 44, 190);
+    ctx.fillStyle = '#f87171';
+    ctx.fillText(`⚠️ Wasted: ${document.getElementById('wasteTotalDisplay').textContent}`, 44, 218);
+    ctx.fillStyle = '#facc15';
+    ctx.fillText(`🎯 ${document.getElementById('efficiencyBadge').textContent}`, 44, 246);
+
+    // Right Box: Subject Breakdown
+    ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fillRect(300, 82, 272, 195);
     const names = getSubjectNames();
     ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 14px Segoe UI, sans-serif';
-    ctx.fillText(`• ${names.s1}: ${document.getElementById('subj1Hours').textContent}`, 318, 135);
-    ctx.fillText(`• ${names.s2}: ${document.getElementById('subj2Hours').textContent}`, 318, 170);
-    ctx.fillText(`• ${names.s3}: ${document.getElementById('subj3Hours').textContent}`, 318, 205);
-    ctx.fillText(`• Week: ${document.getElementById('weekTotalDisplay').textContent}`, 318, 240);
+    ctx.fillText(`📘 ${names.s1}: ${document.getElementById('subj1Hours').textContent}`, 316, 120);
+    ctx.fillText(`📗 ${names.s2}: ${document.getElementById('subj2Hours').textContent}`, 316, 155);
+    ctx.fillText(`📙 ${names.s3}: ${document.getElementById('subj3Hours').textContent}`, 316, 190);
+    ctx.fillText(`📝 Papers/Tutes: ${document.getElementById('paperHoursBadge').textContent}`, 316, 225);
+    ctx.fillText(`📊 Week Total: ${document.getElementById('weekTotalDisplay').textContent}`, 316, 258);
+
+    // Bottom 24h Visual Summary Bar on Canvas
+    ctx.fillStyle = 'rgba(255,255,255,0.1)'; ctx.fillRect(28, 295, 544, 78);
+    ctx.fillStyle = '#e2e8f0'; ctx.font = 'bold 13px Segoe UI, sans-serif';
+    ctx.fillText(`🕒 24h Summary: Sleep ${document.getElementById('bdSleepTxt').textContent} | Study ${document.getElementById('bdStudyTxt').textContent} | Waste ${document.getElementById('bdWasteTxt').textContent} | Untracked ${document.getElementById('bdUntrackedTxt').textContent}`, 42, 325);
+    ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 12px Segoe UI, sans-serif';
+    const ambition = document.getElementById('studentAmbition').value.trim() || 'A/L Target Z-Score 2.0+';
+    ctx.fillText(`🚀 Goal: ${ambition}`, 42, 355);
   }
 
   function closeShareCard() { document.getElementById('shareModal').classList.remove('open'); }
@@ -3064,16 +4027,34 @@
 
   function copyTextReport() {
     const names = getSubjectNames();
+    const chronologicalLog = [];
+    timeSlots.forEach(slot => {
+      if (slot.group) return;
+      const rm = getRowMinutes(slot.id);
+      const subj = document.getElementById(`subj_${slot.id}`).value;
+      const task = document.getElementById(`task_${slot.id}`).value.trim();
+      if (rm.using > 0 || rm.s >= 30) {
+        if (rm.using > 0) {
+          const sName = subj === 's1' ? names.s1 : subj === 's2' ? names.s2 : subj === 's3' ? names.s3 : 'Study';
+          chronologicalLog.push(`• ${slot.label}: ✅ ${sName} ${task ? '(' + task + ')' : ''} [${rm.using}m]`);
+        } else if (rm.s >= 30) {
+          chronologicalLog.push(`• ${slot.label}: 😴 නින්ද [${rm.s}m]`);
+        }
+      }
+    });
+
     const report = [
-      `🎓 *A/L STUDY REPORT (${currentDate})*`,
-      `✅ *Study:* ${document.getElementById('todayTotalDisplay').textContent}`,
+      `🎓 *A/L 24H FULL STUDY REPORT (${currentDate})*`,
+      `😴 *උදෑසන/රාත්‍රී නින්ද:* ${document.getElementById('sleepTotalDisplay').textContent}`,
+      `✅ *මුළු පාඩම් කාලය:* ${document.getElementById('todayTotalDisplay').textContent} (${document.getElementById('plannedVsActualBadge').textContent})`,
       `📘 ${names.s1}: ${document.getElementById('subj1Hours').textContent}`,
       `📗 ${names.s2}: ${document.getElementById('subj2Hours').textContent}`,
       `📙 ${names.s3}: ${document.getElementById('subj3Hours').textContent}`,
-      `😴 *Sleep:* ${document.getElementById('sleepTotalDisplay').textContent} | ⚠️ *Waste:* ${document.getElementById('wasteTotalDisplay').textContent}`,
-      `📊 *Week Total:* ${document.getElementById('weekTotalDisplay').textContent}`
+      `⚠️ *අපතේ ගිය කාලය:* ${document.getElementById('wasteTotalDisplay').textContent}`,
+      `📊 *සතියේ එකතුව:* ${document.getElementById('weekTotalDisplay').textContent}`,
+      chronologicalLog.length > 0 ? `\n🕒 *දවසේ පෙළගැස්ම (12AM - 12AM):*\n` + chronologicalLog.slice(0, 14).join('\n') : ''
     ].join('\n');
-    navigator.clipboard.writeText(report).then(() => showToast('📋 වාර්තාව Copy කරන ලදී!'));
+    navigator.clipboard.writeText(report).then(() => showToast('📋 සම්පූර්ණ වාර්තාව Copy කරන ලදී!'));
   }
 
   function updateExamCountdown() {
@@ -3092,7 +4073,10 @@
       dailyGoalHours: document.getElementById('dailyGoalHours').value,
       s1: document.getElementById('subj1Name').value,
       s2: document.getElementById('subj2Name').value,
-      s3: document.getElementById('subj3Name').value
+      s3: document.getElementById('subj3Name').value,
+      sleepStart: (document.getElementById('sleepStartHour') || {}).value || '0',
+      sleepEnd: (document.getElementById('sleepEndHour') || {}).value || '6',
+      sleepCustomText: (document.getElementById('customSleepRangeInput') || {}).value || '12-6'
     }));
   }
 
@@ -3108,6 +4092,15 @@
         if (s.s1) document.getElementById('subj1Name').value = s.s1;
         if (s.s2) document.getElementById('subj2Name').value = s.s2;
         if (s.s3) document.getElementById('subj3Name').value = s.s3;
+        if (s.sleepStart !== undefined && document.getElementById('sleepStartHour')) {
+          document.getElementById('sleepStartHour').value = String(s.sleepStart);
+        }
+        if (s.sleepEnd !== undefined && document.getElementById('sleepEndHour')) {
+          document.getElementById('sleepEndHour').value = String(s.sleepEnd);
+        }
+        if (s.sleepCustomText) {
+          updateSleepTextInputs(s.sleepCustomText);
+        }
       } catch (e) {}
     } else loadDefaultSyllabusForCurrentSubjects(false);
 
@@ -3201,13 +4194,17 @@
 
   function changeDate(newDate) {
     if (!newDate) return;
-    currentDate = newDate; loadData(currentDate); renderAnalytics();
+    currentDate = newDate;
+    loadData(currentDate);
+    renderAnalytics();
+    refreshLiveHourHighlight();
   }
 
   function resetCurrentDay() {
     if (confirm('අද දවසේ දත්ත සියල්ල මකා දමන්නද?')) {
       localStorage.removeItem(`al_plan_${currentDate}`);
       clearFormFields(); renderTotals(); renderAnalytics();
+      if (currentScheduleView !== 'table') renderGoogleCalendarView();
       showToast('🗑️ අද දත්ත මකා දමන ලදී.');
     }
   }
@@ -3234,6 +4231,7 @@
   function applyBackupObject(data) {
     Object.keys(data).forEach(k => { if (k.startsWith('al_')) localStorage.setItem(k, data[k]); });
     loadGlobalSettings(); loadData(currentDate); loadOmrState(); initOmrSheet(); renderSyllabus(); renderAnalytics(); renderVaultCards();
+    if (currentScheduleView !== 'table') renderGoogleCalendarView();
   }
 
   function generateTextBackupCode() {
