@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>A/L Island Ranker Pro - Extreme Auto-Discipline & Exam Mastery Edition</title>
+<title>A/L Island Ranker Pro - Extreme Brutal Discipline Edition</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root {
@@ -158,45 +158,41 @@
 
   /* Brutal Reality Live Ticker Bar */
   .brutal-reality-strip {
-    background: linear-gradient(90deg, #090d16, #450a0a, #090d16);
+    background: linear-gradient(90deg, #090d16, #7f1d1d, #090d16);
     color: #fef08a;
-    border: 1.5px solid #dc2626;
+    border: 2px solid #ef4444;
     border-radius: 10px;
-    padding: 8px 12px;
+    padding: 9px 12px;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    box-shadow: 0 3px 12px rgba(220, 38, 38, 0.25);
+    box-shadow: 0 4px 16px rgba(220, 38, 38, 0.35);
   }
   .brutal-reality-text {
     font-size: 12.5px;
     font-weight: 900;
-    line-height: 1.35;
+    line-height: 1.4;
     color: #ffffff;
   }
 
-  /* Emergency Red Streak Danger Banner */
-  @keyframes dangerPulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); transform: scale(1); }
-    50% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); transform: scale(1.005); }
+  /* Extreme Shake & Blood Pulse Animations */
+  @keyframes brutalShake {
+    0%, 100% { transform: translateX(0); }
+    15% { transform: translateX(-8px) rotate(-0.8deg); }
+    30% { transform: translateX(8px) rotate(0.8deg); }
+    45% { transform: translateX(-6px); }
+    60% { transform: translateX(6px); }
+    75% { transform: translateX(-4px); }
   }
-  .red-danger-banner {
-    display: none;
-    background: linear-gradient(135deg, #450a0a, #991b1b, #dc2626);
-    color: #ffffff;
-    border: 2.5px solid #fde047;
-    border-radius: 12px;
-    padding: 12px 14px;
-    margin-bottom: 10px;
-    animation: dangerPulse 1.2s infinite;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
+  @keyframes bloodPulse {
+    0%, 100% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.8), inset 0 0 15px rgba(220, 38, 38, 0.5); border-color: #ef4444; }
+    50% { box-shadow: 0 0 60px rgba(255, 0, 0, 1), inset 0 0 30px rgba(255, 0, 0, 0.75); border-color: #fde047; }
   }
-  .red-danger-banner.active { display: flex; }
+  .shake-effect {
+    animation: brutalShake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
 
   /* Touch-Friendly Buttons */
   button {
@@ -425,7 +421,7 @@
     background: var(--danger) !important;
     color: #ffffff !important;
     border-color: var(--danger) !important;
-    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.35);
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.45);
   }
 
   @keyframes pulseQuarter {
@@ -1069,12 +1065,13 @@
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.82);
+    background: rgba(0,0,0,0.88);
     display: none;
     justify-content: center;
     align-items: center;
     z-index: 1100;
     padding: 14px;
+    backdrop-filter: blur(4px);
   }
   .modal-overlay.open { display: flex; }
   .modal-card {
@@ -1091,15 +1088,20 @@
   canvas#shareCanvas { width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); margin: 10px 0; }
 
   .motivation-fire-card {
-    background: linear-gradient(145deg, #090d16, #1e1b4b);
+    background: linear-gradient(145deg, #2a0202, #090d16, #450a0a);
     color: #fff;
-    border: 2.5px solid #f59e0b;
-    box-shadow: 0 0 40px rgba(245, 158, 11, 0.5);
+    border: 3.5px solid #ef4444;
+    animation: bloodPulse 1.5s infinite;
   }
-  .motivation-fire-card.red-emergency-mode {
-    background: linear-gradient(145deg, #450a0a, #090d16, #7f1d1d);
-    border: 3px solid #ef4444;
-    box-shadow: 0 0 65px rgba(239, 68, 68, 0.9);
+
+  /* 🩸💀 Extreme Red Slot Scolding Card */
+  .red-scold-card {
+    background: linear-gradient(160deg, #3b0000 0%, #090000 55%, #4a0404 100%);
+    color: #ffffff;
+    border: 4px solid #ff0000;
+    animation: bloodPulse 1.1s infinite, brutalShake 0.6s ease-in-out;
+    padding: 20px 16px;
+    box-shadow: 0 0 80px rgba(255, 0, 0, 0.95);
   }
 
   .zen-overlay {
@@ -1122,7 +1124,7 @@
     @page { size: A4 portrait; margin: 4mm; }
     body { background: #fff !important; color: #000 !important; padding: 0; font-size: 8.5px; }
     .container { border: none; box-shadow: none; padding: 0; max-width: 100%; }
-    .app-header, .brutal-reality-strip, .red-danger-banner, .date-bar, .settings-drawer, .live-hero-card, .view-mode-bar, .gcal-wrapper, .bottom-dock-wrap, .mini-btn, .quick-hr-btn, .step-chip, .modal-overlay, .zen-overlay, .toast-box { display: none !important; }
+    .app-header, .brutal-reality-strip, .date-bar, .settings-drawer, .live-hero-card, .view-mode-bar, .gcal-wrapper, .bottom-dock-wrap, .mini-btn, .quick-hr-btn, .step-chip, .modal-overlay, .zen-overlay, .toast-box { display: none !important; }
     .tab-content { display: none !important; }
     #tab-planner, .table-wrapper { display: block !important; }
     table { display: table !important; width: 100% !important; }
@@ -1148,7 +1150,7 @@
     </div>
     <div style="display:flex; gap:5px; flex-wrap:wrap;">
       <button onclick="pollTelegramTwoWayCallbacks(true)" class="mini-btn btn-success" title="Telegram බොත්තම් ප්‍රතිචාර දැන්ම පරීක්ෂා කරන්න">🔄 TG Sync</button>
-      <button onclick="trigger15MinMotivationAlert(true)" class="mini-btn btn-danger" title="දරුණු Wake-Up පණිවිඩයක් දැන්ම ගන්න">💀 Brutal Shock</button>
+      <button onclick="trigger15MinMotivationAlert(true)" class="mini-btn btn-danger" title="ඇඟ කිලිපොලා යන Wake-Up පණිවිඩයක් දැන්ම ගන්න">💀 Brutal Shock</button>
       <button onclick="toggleSettingsDrawer()" id="settingsToggleBtn" class="mini-btn">⚙️ සැකසුම්</button>
       <button onclick="openShareCard()" class="mini-btn btn-purple">📸 Report</button>
       <button onclick="openBackupModal()" class="mini-btn">☁️ Cloud</button>
@@ -1159,9 +1161,9 @@
   <!-- 💀 Live Rotating Brutal Reality Check Strip -->
   <div class="brutal-reality-strip">
     <div style="display:flex; align-items:center; gap:8px;">
-      <span style="font-size:18px;">💀</span>
+      <span style="font-size:20px;">🩸</span>
       <div class="brutal-reality-text" id="brutalRealityTickerText">
-        ⚠️ මේ තත්පරයේත් ඔයාගේ තරඟකරුවෝ දහස් ගාණක් නිදිමරාගෙන ගණන් හදනවා! ඔයා ෆෝන් එක දිහා බලාගෙන කාලය කෑවොත් Results එන දවසට අඬන්න වෙන්නේ තනියමයි! දැන්ම පොත අතට ගන්න!
+        💀 Results එන රෑට වෙව්ලන අතින් Index Number එක ගහද්දී Screen එකේ "F" හෝ "S" වැටුණොත්, අම්මයි තාත්තයි ඉස්සරහ පොළොව පලාගෙන යන්න හිතෙයි! ඒ නරක හීනයට ඉඩ දෙන්න එපා! දැන්ම පොත අතට ගන්න!
       </div>
     </div>
     <button type="button" class="mini-btn btn-warning" onclick="cycleBrutalRealityTicker(true)" style="flex-shrink:0;">⚡ තව එකක්</button>
@@ -1244,7 +1246,8 @@
           <input type="text" id="tgChatIdInput" placeholder="Auto-detected හෝ ඔබේ Telegram ID" oninput="saveGlobalSettings()">
         </div>
         <div style="display:flex; gap:5px; margin-top:6px; flex-wrap:wrap;">
-          <button type="button" class="mini-btn btn-warning" onclick="trigger15MinMotivationAlert(true)">🚀 Test 30m Buttons</button>
+          <button type="button" class="mini-btn btn-warning" onclick="trigger15MinMotivationAlert(true)">🚀 Test 30m Shock</button>
+          <button type="button" class="mini-btn btn-danger" onclick="triggerRedSlotScold('Test (15m)', true)">🩸 Test Red Scold</button>
           <button type="button" class="mini-btn btn-purple" onclick="sendMidnightSummaryToTelegram(currentDate, true)">🌙 Test 12AM Report</button>
           <button type="button" class="mini-btn btn-primary" onclick="requestBrowserNotificationPerm()">🔔 Browser Alert</button>
         </div>
@@ -1333,7 +1336,7 @@
     </div>
   </div>
 
-  <!-- ================= TAB 1: 📌 අද ප්‍රධාන වැඩ (STRICTLY 1 TASK BY DEFAULT + SUBJECT COLORS) ================= -->
+  <!-- ================= TAB 1: 📌 අද ප්‍රධාන වැඩ ================= -->
   <div id="tab-tasks" class="tab-content active">
     <div class="panel" style="margin-bottom:12px;">
       <div class="panel-title">
@@ -1389,7 +1392,7 @@
     </div>
   </div>
 
-  <!-- ================= TAB 2: 📅 පැය 24 කාලසටහන (3 SUBJECT COLORS & LIVE HOUR CARD) ================= -->
+  <!-- ================= TAB 2: 📅 පැය 24 කාලසටහන ================= -->
   <div id="tab-planner" class="tab-content">
 
     <!-- UPGRADED LIVE ACTIVE HOUR & 15m GREEN/RED HERO CARD -->
@@ -1424,7 +1427,7 @@
       </div>
 
       <div style="font-size:11px; color:var(--muted); margin-bottom:6px; font-weight:800;">
-        👆 <strong>1 වරක් ඔබන්න = 🟢 කොළ (පාඩම් කළා)</strong> | <strong>2 වරක් ඔබන්න = 🔴 රතු (අපතේ ගියා)</strong> | Telegram වෙත එන පණිවිඩයේ බොත්තමෙන්ද කෙලින්ම ලකුණු කළ හැක!
+        👆 <strong>1 වරක් ඔබන්න = 🟢 කොළ (පාඩම් කළා)</strong> | <strong>2 වරක් ඔබන්න = 🔴 රතු (අපතේ ගියා - දරුණු අවවාදය ක්‍රියාත්මක වේ!)</strong>
       </div>
 
       <!-- 4 x 15m Green/Red Slots -->
@@ -1523,8 +1526,8 @@
       </table>
     </div>
   </div>
-<!-- ================= END OF PART 1 (Paste PART 2 immediately below this line) ================= -->
-<!-- ================= TAB 3: 📊 ප්‍රගතිය, MISTAKE TRACKER & 2011-2025 PAPER MATRIX ================= -->
+
+  <!-- ================= TAB 3: 📊 ප්‍රගතිය, MISTAKE TRACKER & 2011-2025 PAPER MATRIX ================= -->
   <div id="tab-analytics" class="tab-content">
     <div class="panel" style="margin-bottom:12px; border:2px solid var(--purple); background:var(--purple-bg);">
       <div class="panel-title">
@@ -1549,7 +1552,7 @@
       </div>
     </div>
 
-    <!-- NEW: ලකුණු අඩුවීමේ හේතු විශ්ලේෂකය (Mistake Root-Cause Tracker) -->
+    <!-- ලකුණු අඩුවීමේ හේතු විශ්ලේෂකය (Mistake Root-Cause Tracker) -->
     <div class="panel" style="margin-bottom:12px; border:1.5px solid var(--danger);">
       <div class="panel-title">
         <span>🔍 ලකුණු අඩුවීමේ හේතු විශ්ලේෂකය (MISTAKE ROOT-CAUSE TRACKER)</span>
@@ -1561,7 +1564,7 @@
       <div class="mistake-grid" id="mistakeTrackerGrid"></div>
     </div>
 
-    <!-- NEW: 2011 - 2025 PAST PAPER YEAR-BY-YEAR MATRIX -->
+    <!-- 2011 - 2025 PAST PAPER YEAR-BY-YEAR MATRIX -->
     <div class="panel" style="margin-bottom:12px; border:1.5px solid var(--primary);">
       <div class="panel-title">
         <span>🗓️ 2011 - 2025 PAST PAPER YEAR-BY-YEAR MATRIX (MCQ | STRUCTURED | ESSAY)</span>
@@ -1612,7 +1615,7 @@
     </div>
   </div>
 
-  <!-- ================= TAB 4: 📚 SYLLABUS TRACKER (WITH LESSON TIME SPENT & 7-DAY DECAY ALERT) ================= -->
+  <!-- ================= TAB 4: 📚 SYLLABUS TRACKER ================= -->
   <div id="tab-syllabus" class="tab-content">
     <div class="panel">
       <div class="panel-title">
@@ -1635,10 +1638,10 @@
     </div>
   </div>
 
-  <!-- ================= TAB 5: 🎯 50-MCQ OMR (WITH ❓ GUESS TAG) & PART II 3-HOUR LAP TIMER ================= -->
+  <!-- ================= TAB 5: 🎯 50-MCQ OMR & PART II 3-HOUR LAP TIMER ================= -->
   <div id="tab-omr" class="tab-content">
 
-    <!-- NEW: PART II (STRUCTURED & ESSAY) 3-HOUR TIMER & QUESTION LAP TRACKER -->
+    <!-- PART II (STRUCTURED & ESSAY) 3-HOUR TIMER & QUESTION LAP TRACKER -->
     <div class="panel" style="margin-bottom:12px; border:2px solid var(--primary);">
       <div class="panel-title">
         <span>✍️ PART II (STRUCTURED & ESSAY) පැය 3 TIMER සහ ප්‍රශ්න කාල බෙදුම</span>
@@ -1795,19 +1798,40 @@
 <!-- Toast -->
 <div id="toastBox" class="toast-box"></div>
 
-<!-- 💀 30-Min Brutal Motivation & Timetable Mark Reminder Modal -->
+<!-- 💀 30-Min Spine-Chilling Brutal Motivation & Timetable Mark Reminder Modal -->
 <div class="modal-overlay" id="motivationModal">
-  <div class="modal-card motivation-fire-card red-emergency-mode" id="motivationModalCard">
-    <div id="motivTopTag" style="font-size:12.5px; font-weight:900; color:#fde047; letter-spacing:0.8px; margin-bottom:8px;">
-      ⏰ පැය භාගයේ දරුණු සිහිකැඳවීම (30-MIN REMINDER) 💀
+  <div class="modal-card motivation-fire-card" id="motivationModalCard">
+    <div id="motivTopTag" style="font-size:13px; font-weight:900; color:#fde047; letter-spacing:0.8px; margin-bottom:8px;">
+      🚨💀 විනාඩි 30න් 30ට ඇඟ කිලිපොලා යන අනතුරු ඇඟවීම! 💀🚨
     </div>
-    <h2 id="motivHeadline" style="font-size:20px; color:#fff; margin-bottom:10px; line-height:1.35;"></h2>
-    <div id="motivQuoteBox" style="background:rgba(0,0,0,0.45); border-left:4px solid #ef4444; padding:12px; border-radius:8px; text-align:left; font-size:13.5px; line-height:1.55; margin-bottom:12px; color:#f8fafc;"></div>
+    <h2 id="motivHeadline" style="font-size:20px; color:#fff; margin-bottom:10px; line-height:1.35; text-shadow: 0 2px 10px rgba(255,0,0,0.8);"></h2>
+    <div id="motivQuoteBox" style="background:rgba(0,0,0,0.65); border-left:5px solid #ff0000; padding:12px; border-radius:8px; text-align:left; font-size:13.5px; line-height:1.6; margin-bottom:12px; color:#f8fafc;"></div>
     <div id="motivCurrentTaskBox" style="background:rgba(34,197,94,0.18); border:1.5px solid #22c55e; padding:10px; border-radius:8px; font-weight:800; font-size:13px; color:#4ade80; margin-bottom:14px;"></div>
     <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
       <button onclick="quickMark30MinsFromModal(1)" class="btn-success" style="padding:11px 14px; font-size:12.5px; font-weight:900;">🟢 30m පාඩම් කළා</button>
       <button onclick="quickMark30MinsFromModal(2)" class="btn-danger" style="padding:11px 14px; font-size:12.5px; font-weight:900;">🔴 30m අපතේ ගියා</button>
       <button onclick="mark15MinFromMotivationModal()" class="btn-primary" style="padding:11px 14px; font-size:12.5px; font-weight:900;">📅 කාලසටහනට</button>
+    </div>
+  </div>
+</div>
+
+<!-- 🩸💀 RED SLOT BRUTAL SCOLDING MODAL (TRIGGERS EVERY TIME A SLOT IS MARKED RED) -->
+<div class="modal-overlay" id="redScoldModal" style="z-index: 1500;">
+  <div class="modal-card red-scold-card" id="redScoldCardBox">
+    <div style="font-size:36px; line-height:1; margin-bottom:6px;">🩸💀🔥</div>
+    <div style="font-size:12.5px; font-weight:900; color:#fde047; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px;">
+      🚨 රතු කොටුවක් ලකුණු වුණා! ජීවිතය විනාශ කරගන්න එපා! 🚨
+    </div>
+    <h2 id="redScoldHeadline" style="font-size:21px; font-weight:900; color:#ffffff; margin-bottom:10px; line-height:1.35; text-shadow: 0 2px 12px #ff0000;"></h2>
+    <div id="redScoldWasteCounter" style="background:#7f1d1d; border:2px solid #fde047; color:#fef08a; font-weight:900; font-size:13.5px; padding:8px 10px; border-radius:8px; margin-bottom:12px;"></div>
+    <div id="redScoldBodyBox" style="background:rgba(0,0,0,0.75); border-left:5px solid #ff1e1e; padding:13px; border-radius:8px; text-align:left; font-size:14px; line-height:1.6; margin-bottom:14px; color:#ffffff; font-weight:700;"></div>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <button type="button" onclick="acknowledgeRedScoldAndWork()" class="btn-danger" style="padding:13px 16px; font-size:13.5px; font-weight:900; background:linear-gradient(90deg, #dc2626, #991b1b); border:2px solid #fde047; width:100%;">
+        😭🔥 සමාවෙන්න! මම දැන්ම ෆෝන් එක පැත්තකට දාලා පොත අතට ගන්නවා!
+      </button>
+      <button type="button" id="undoRedSlotBtn" onclick="undoLastRedSlot()" class="mini-btn" style="background:rgba(255,255,255,0.12); color:#cbd5e1; border:1px solid rgba(255,255,255,0.25); width:100%; padding:8px;">
+        ↩️ වැරදීමකින් එබුණේ (මෙම කොටුව නැවත හිස් කරන්න)
+      </button>
     </div>
   </div>
 </div>
@@ -1919,7 +1943,7 @@
     <button onclick="closeBackupModal()">✖ වසන්න</button>
   </div>
 </div>
-
+<!-- ================= END OF PART 1 (Paste PART 2 immediately below this line) ================= -->
 <script>
   function escHtml(str) {
     return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -1929,7 +1953,15 @@
     try {
       const tg = window.Telegram && window.Telegram.WebApp;
       if (tg && tg.initData && tg.HapticFeedback) {
-        tg.HapticFeedback.impactOccurred(style);
+        if (style === 'error' && tg.HapticFeedback.notificationOccurred) {
+          tg.HapticFeedback.notificationOccurred('error');
+        } else {
+          tg.HapticFeedback.impactOccurred(style);
+        }
+      }
+      if (navigator.vibrate) {
+        if (style === 'error') navigator.vibrate([300, 100, 300, 100, 400]);
+        else if (style === 'heavy') navigator.vibrate([200, 80, 200]);
       }
     } catch (e) {}
   }
@@ -2166,39 +2198,73 @@
     toastTimeout = setTimeout(() => box.classList.remove('show'), 3800);
   }
 
-  /* ================= 💀 TWO-WAY TELEGRAM BOT (INLINE BUTTONS + 12 AM NIGHTLY SUMMARY) ================= */
+  /* ================= 💀🩸 SPINE-CHILLING 30-MIN NOTIFICATIONS & RED SLOT SCOLDING ENGINE ================= */
   const BRUTAL_TICKER_MESSAGES = [
-    "💀 මේ තත්පරයේත් ලංකාවේ දහස් ගාණක් ළමයි නිදිමරාගෙන Past Papers හදනවා! ඔයා තාම ෆෝන් එක අතේ තියාගෙන කාලය කනවද?!",
-    "🩸 Results එන දවසට යාළුවෝ ඔක්කොම A3 දාලා Campus යද්දී, කාමරේ දොර වහගෙන තනියම අඬන්නද ඔයාට ඕනි?! දැන්ම පොත අතට ගන්න!",
-    "🔥 අම්මයි තාත්තයි ඔයා වෙනුවෙන් විඳින දුකට, හෙළන දහඩියට ඔයා දෙන උත්තරේ මේකද?! දැන්ම වැඩ කරලා කාලසටහන Mark කරන්න!",
-    "⚡ ගෙවෙන හැම පැය භාගයක්ම ඔයාගේ ජීවිතේ ඉරණම තීරණය කරනවා! වහාම මේසයට වාඩි වෙලා පාඩම් කරන්න!",
-    "🚨 විභාග ශාලාවේදී Paper එක අතට ගත්තම උත්තර මතක් වෙන්නේ නැති වුණාම දැනෙන භීතිය මතක් කරගන්න! ඒ නරක හීනය සැබෑ කරගන්න එපා!",
-    "💣 නිදහසට කරුණු කියන අයට ඉතිරි වෙන්නේ පසුතැවීම විතරයි! ගෙවුණු පැය භාගය අවංකවම කාලසටහනේ Mark කරන්න!",
-    "👁️ ඔයා අසමත් වෙනකන් බලාගෙන හිනාවෙන්න ඉන්න මිනිස්සු ඉස්සරහ පරාජිතයෙක් වෙන්න එපා! දැන්ම වැඩ පටන් ගන්න!",
-    "⏳ A/L වලට තව දවස් කීයද තියෙන්නේ?! ගෙවෙන එක තත්පරයක්වත් ආයේ සල්ලි දීලාවත් ගන්න බෑ! දැන්ම පොත පෙරළන්න!"
+    "💀 Results එන රෑට වෙව්ලන අතින් Index Number එක ගහද්දී Screen එකේ 'F' වැටුණොත්, අම්මයි තාත්තයි ඉස්සරහ පොළොව පලාගෙන යන්න හිතෙයි! දැන්ම පොත අතට ගන්න!",
+    "🩸 ඔයාගේ වයසේ ළමයි මේ තත්පරයේත් නිදිමත පරද්දලා Past Papers හදනවා! ඔයා ෆෝන් එක අතේ තියාගෙන තමන්ගේම අනාගතේ වළදාගන්නවද?!",
+    "🔥 අව්වේ වැස්සේ නැහිලා අම්මයි තාත්තයි හම්බ කරන සල්ලි වලට ඔයා දෙන උත්තරේ මේ කම්මැලිකමද?! ලැජ්ජා වෙන්න! දැන්ම වැඩ කරන්න!",
+    "⚡ විභාග ශාලාවේ Paper එක දිහා බලාගෙන කිසිම දෙයක් මතක් වෙන්නේ නැතුව දාඩිය දාගෙන අසරණ වෙන ඒ භයානක මොහොතට ලෑස්තිද?! නැත්නම් දැන්ම පාඩම් කරනවද?!",
+    "🚨 යාළුවෝ ඔක්කොම ඉහළින්ම Pass වෙලා Campus යද්දී, නෑදෑයෝයි අහල පහළ මිනිස්සුයි 'ප්‍රතිඵල කොහොමද?' කියලා අහද්දී මූණ හංගගෙන අඬන්නද ඕනි?!",
+    "💣 ඔයා මේ නාස්ති කරන හැම විනාඩි 15කින්ම ඔයාගේ Campus හීනය අඟලෙන් අඟල ඔයාගෙන් ඈත් වෙනවා! වහාම මේසයට වාඩි වෙන්න!",
+    "👁️ තමන්ටම බොරු කරගන්න එක නවත්තන්න! අද දවසේ කම්මැලිකමට ගෙවන වන්දිය තමයි ජීවිත කාලෙම විඳවන පසුතැවීම!",
+    "⏳ A/L වලට ඉතිරි වෙලා තියෙන දවස් ගාණ දිහා බලන්න! තවත් කල් දාන්න කාලයක් නෑ, මේ දැන්ම පොත පෙරළලා වැඩ පටන් ගන්න!"
   ];
 
+  // Spine-chilling 30-Minute Wake-Up Quotes
   const BRUTAL_30MIN_QUOTES = [
     {
-      headline: "💀 Results එන රෑට ඔයාගේ Index Number එක ගහද්දී අත වෙව්ලන හැටි මවාගන්න!",
-      body: "එදාට Screen එකේ වැටෙන Result එක දැකලා අම්මයි තාත්තයි ආඩම්බරයෙන් අඬනවද, නැත්නම් ඔළුවෙ අත ගහගෙන සුසුම් හෙළනවද කියන එක තීරණය වෙන්නේ දැන් ඔයා ගත කරන කාලයෙන්! ගෙවුණු පැය භාගය පහත බොත්තමෙන් Mark කරන්න!"
+      headline: "💀 Results නිකුත් වෙන මධ්‍යම රාත්‍රියේ ඔයාගේ පපුව ගැහෙන සද්දේ දැන්ම ඇහෙනවද?!",
+      body: "මුළු ගෙදරම ඔයාගේ ෆෝන් එක වටේට වෙලා බලාගෙන ඉද්දී, Index Number එක ගහලා ලැබෙන ප්‍රතිඵලය දැකලා අම්මගේ ඇස් වලින් වැටෙන්නේ සතුටු කඳුළුද? නැත්නම් දරාගන්න බැරි දුකක කඳුළුද? ඒ තීරණය තියෙන්නේ මේ ගෙවෙන විනාඩි 30 ඇතුළේ! තත්පරයක්වත් කාලය කන්න එපා, ගෙවුණු පැය භාගය අවංකවම පහතින් Mark කරන්න!"
     },
     {
-      headline: "🩸 අම්මගේ තාත්තගේ මූණ දිහා කෙලින් බලලා 'මම Fail' කියන්න පුළුවන්ද?!",
-      body: "ඔයාට පන්ති ගාස්තු ගෙවන්න, පොත් අරන් දෙන්න ඒ මිනිස්සු තමන්ගේ ආසාවන් කීයක් නම් යටපත් කරගෙන ඇතිද? ඒ දහඩිය මහන්සියට ද්‍රෝහී වෙන්න එපා! පපුවට අත තියලා අවංකවම පහුගිය පැය භාගයේ කරපු දේ ලකුණු කරන්න!"
+      headline: "🩸 අම්මගේ තාත්තගේ කැඩුණු සෙරෙප්පු දෙක, පරණ ඇඳුම් දිහා බලලා තවත් කම්මැලි වෙන්න පුළුවන්ද?!",
+      body: "ඒ මිනිස්සු තමන්ගේ ආසාවන් ඔක්කොම මරාගෙන, අව්වේ වැස්සේ දුක් විඳලා ඔයාට උගන්නන්නේ කවදාහරි ඔයා තැනකට එනවා දකින්නයි! ඔයා ෆෝන් එක ඔබ ඔබා කාලය කන හැම තත්පරයක්ම ඒ අහිංසක දෙමව්පියන්ගේ දහඩියට කරන ද්‍රෝහිකමක්! පපුවට අත තියලා ගෙවුණු විනාඩි 30 කරපු දේ දැන්ම ලකුණු කරන්න!"
     },
     {
-      headline: "🔥 ඔයා නිකන් ඉන්න හැම තත්පරයකම තව කෙනෙක් ඔයාගේ Campus Seat එක උදුරගන්නවා!",
-      body: "මේක අනුකම්පාවක් නැති තරඟයක්! ඔයා කම්මැලිකමට ඇඳට වෙලා ඉද්දී, තව ළමයෙක් නිදිමත පරද්දලා ගණන් 50ක් හදලා ඉවරයි! දැන්ම කාලසටහන Mark කරලා වැඩට බහින්න!"
+      headline: "🔥 ඔයාගේ පන්තියේ එකට හිටපු යාළුවෝ Campus යද්දී, ඔයා කාමරේ දොර වහගෙන තනියම අඬන්නද හදන්නේ?!",
+      body: "Results ආවම හැමෝම Status දාද්දී, නෑදෑයෝ කෝල් කරලා ලකුණු අහද්දී, කාටවත් මූණ දෙන්න බැරුව කාමරේට වෙලා කොට්ටේ බදාගෙන අඬන ඒ භයානක දවස මවාගන්න! ඒ නරක හීනය සැබෑවක් වෙන්න දෙන්න එපා! මේ තත්පරයේම හිතට ගින්දර අරන් වැඩට බහින්න!"
     },
     {
-      headline: "⚡ විභාග ශාලාවේ පැය 3 ඇතුළත දැනෙන අසරණකම මතක් කරගන්න!",
-      body: "අද පාඩම් නොකර ලිස්සලා ගියොත්, විභාග දවසට Paper එක දිහා බලාගෙන හූල්ලන්න වෙනවා. එදාට කඳුළු හෙළුවට ලකුණු ලැබෙන්නේ නෑ! ගෙවුණු විනාඩි 30ට අවංක වෙලා දැන්ම Mark කරන්න!"
+      headline: "⚡ විභාග ශාලාවේ පැය 3 ඇතුළත Paper එක ඉස්සරහ දාඩිය දාලා අත වෙව්ලන හැටි මතක් කරගන්න!",
+      body: "'අනේ මම එදා පාඩම් කළා නම් මේ ගාණ හදාගන්න තිබුණා' කියලා විභාග ශාලාවේදී හූල්ලන්න වුණොත්, එදාට කඳුළු හෙළුවට එක ලකුණක්වත් ලැබෙන්නේ නෑ! ඔයාගේ තරඟකරුවෝ මේ දැන් පවා ගණන් හදනවා! වහාම ගෙවුණු විනාඩි 30 Mark කරලා පොත අතට ගන්න!"
+    },
+    {
+      headline: "🚨 ඔයා අසමත් වෙනකන් බලාගෙන හිනාවෙන්න ඉන්න මිනිස්සු ඉස්සරහ පරාජිතයෙක් වෙනවද?!",
+      body: "'ඕකට කොහොමත් පාස් වෙන්න බෑ' කියලා හිත යටින් හිනාවෙන මිනිස්සුන්ට ඔයා ක්‍රියාවෙන්ම උත්තර දෙන්නේ කවදද?! කම්මැලිකමටයි නිදිමතටයි යට වෙලා තමන්ගේ ජීවිතේම විනාශ කරගන්න එපා! දැන්ම කාලසටහන Mark කරලා යක්ෂයෙක් වගේ වැඩ පටන් ගන්න!"
+    },
+    {
+      headline: "💣 ජීවිතේ ආයේ කවදාවත් මේ තත්පරය ආපස්සට ගන්න බෑ! ඔයා ඔය විනාශ කරන්නේ ඔයාගේම අනාගතයයි!",
+      body: "තව මාස කීපයකින් විභාගේ ඉවරයි. ඊට පස්සේ කොච්චර පසුතැවුණත් ගෙවුණු කාලය ආපහු ගන්න බෑ! අද දවසේ එක විනාඩියක්වත් අපතේ යවන්න එපා. ගෙවුණු විනාඩි 30 ඇත්තම තත්ත්වය පහත බොත්තමෙන් දැන්ම සටහන් කරන්න!"
+    }
+  ];
+
+  // Brutal Scolding Messages triggered EVERY TIME the user marks a slot RED (Wasted Time)
+  const RED_SLOT_SCOLD_MESSAGES = [
+    {
+      headline: "😡 ලැජ්ජා නැද්ද තවත් කොටුවක් රතු පාටින් පාට කරන්න?! ඔයාට ඔයාගේ අනාගතේ ගැන කිසිම ගාණක් නැද්ද?!",
+      body: "ඔයා ඔය රතු පාටින් පාට කළේ නිකන්ම කොටුවක් නෙවෙයි, ඔයාගේ අම්මයි තාත්තයි ඔයා වෙනුවෙන් හෙළපු දහඩියයි! ඔයාගේ යාළුවෝ මේ වෙලාවේ පණ දාගෙන පාඩම් කරද්දී, ඔයා කිසිම ලැජ්ජාවක් නැතුව කාලය කාලා ඒක රතු පාටින් ලකුණුත් කරනවා! මේ විදියට ගියොත් Results එන දවසට ඔයාට වෙන්නේ කාමරේ දොර වහගෙන ලේ කඳුළු අඬන්න විතරයි! මේ දැන්ම ෆෝන් එක පැත්තකට විසි කරලා පොත අතට ගන්නවා!"
+    },
+    {
+      headline: "🩸💀 තමන්ගේම අතින් තමන්ගේම Campus හීනය මරාගන්න එක දැන්වත් නවත්තනවා!",
+      body: "විනාඩි 15න් 15ට මේ විදියට කාලය විනාශ කරලා කොහොමද ඔයා විභාගේ පාස් වෙන්නේ?! විභාග ශාලාවේදී Paper එක දිහා බලාගෙන උත්තර නැතුව ගොළු වෙලා ඉන්නකොට අද මේ නාස්ති කරපු රතු කොටු එකින් එක ඔයාට මතක් වෙයි! එදාට පසුතැවිලා වැඩක් නෑ! තව එකම එක රතු කොටුවක්වත් වැටෙන්න දෙන්න එපා! දැන්ම මේසයට වාඩි වෙලා වැඩ පටන් ගන්නවා!"
+    },
+    {
+      headline: "🔥🚨 අම්මගේ තාත්තගේ මූණ දිහා බලලා 'මම අදත් කාලය කෑවා' කියන්න තරම් ඔයාගේ හිත ගල් වෙලාද?!",
+      body: "ඔයාට පන්ති ගාස්තු ගෙවන්න, පොත් අරන් දෙන්න ඒ අහිංසක දෙමව්පියෝ කොච්චර දුක් විඳිනවද කියලා තත්පරයකට හිතුවද?! ඒ මිනිස්සුන්ගේ බලාපොරොත්තු මේ විදියට රතු කොටු වලින් පුරවලා විනාශ කරන්න එපා! ඔයාට ඇත්තටම දිනන්න ඕනි නම්, මේ තත්පරයේම ඔය කම්මැලිකම පුච්චලා දාලා ඊළඟ කොටුව අනිවාර්යයෙන්ම කොළ පාට කරනවා!"
+    },
+    {
+      headline: "⚡💣 තවත් නිදහසට කරුණු කියන්න එපා! ඔයා මේ කරන්නේ ඔයාගේ ජීවිතේටම කරගන්න ලොකුම ද්‍රෝහිකමයි!",
+      body: "ෆෝන් එක ඔබන්න, නිදාගන්න, කල්පනා කර කර ඉන්න ගියාම පැය ගණන් ගෙවෙනවා දැනෙන්නේවත් නෑ නේද? හැබැයි පොතක් අතට ගත්තම විතරක් දහසක් ප්‍රශ්න! මතක තියාගන්න, කම්මැලියන්ට කවදාවත් ජයග්‍රහණයක් ලැබෙන්නේ නෑ! ඔයා අසමත් වෙනකන් බලාගෙන ඉන්න මිනිස්සුන්ට හිනාවෙන්න ඉඩ තියන්න එපා! දැන්ම නැගිටලා පොත පෙරළනවා!"
+    },
+    {
+      headline: "💀🩸 මේ රතු කොටුව දිහා හොඳට ඇස් ඇරලා බලන්න! මේ ගෙවුණු කාලය ආයේ මැරෙනකන්වත් ගන්න බෑ!",
+      body: "ලංකාවේ දහස් ගාණක් ළමයි මේ තත්පරයේත් එක ලකුණක් වෙනුවෙන් යුද්ධයක් කරනවා. ඔයා මෙහෙම කාලය කද්දී තව කෙනෙක් ඔයාට හිමිවෙන්න තියෙන Campus Seat එක උදුරගෙන ඉවරයි! තමන් ගැනම ලැජ්ජාවක්, කේන්තියක් ඇති කරගන්න! මේ දැන්ම පොත අතට අරන් ඊළඟ විනාඩි 15 පණ දාගෙන පාඩම් කරනවා!"
     }
   ];
 
   let tickerIdx = 0;
   let lastNotifiedHalfHourKey = "";
+  let lastRedUndoState = null;
 
   function cycleBrutalRealityTicker(isManual = false) {
     if (isManual) triggerHaptic('medium');
@@ -2212,21 +2278,155 @@
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const now = audioCtx.currentTime;
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 4; i++) {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(620, now + i * 0.22);
-        osc.frequency.linearRampToValueAtTime(920, now + i * 0.22 + 0.11);
-        osc.frequency.linearRampToValueAtTime(580, now + i * 0.22 + 0.21);
-        gain.gain.setValueAtTime(0.22, now + i * 0.22);
-        gain.gain.exponentialRampToValueAtTime(0.005, now + i * 0.22 + 0.21);
+        osc.frequency.setValueAtTime(580, now + i * 0.24);
+        osc.frequency.linearRampToValueAtTime(980, now + i * 0.24 + 0.12);
+        osc.frequency.linearRampToValueAtTime(520, now + i * 0.24 + 0.23);
+        gain.gain.setValueAtTime(0.28, now + i * 0.24);
+        gain.gain.exponentialRampToValueAtTime(0.008, now + i * 0.24 + 0.23);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-        osc.start(now + i * 0.22);
-        osc.stop(now + i * 0.22 + 0.22);
+        osc.start(now + i * 0.24);
+        osc.stop(now + i * 0.24 + 0.24);
       }
     } catch (e) {}
+  }
+
+  function playBrutalRedScoldAlarm() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const now = audioCtx.currentTime;
+      for (let i = 0; i < 6; i++) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(i % 2 === 0 ? 880 : 440, now + i * 0.16);
+        gain.gain.setValueAtTime(0.32, now + i * 0.16);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.16 + 0.15);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now + i * 0.16);
+        osc.stop(now + i * 0.16 + 0.15);
+      }
+    } catch (e) {}
+  }
+
+  // Triggered EVERY TIME a slot or hour is marked RED (Waste)
+  function triggerRedSlotScold(wastedSlotLabel = '', isTest = false, undoInfo = null) {
+    lastRedUndoState = undoInfo;
+    triggerHaptic('error');
+    playBrutalRedScoldAlarm();
+
+    const scold = RED_SLOT_SCOLD_MESSAGES[Math.floor(Math.random() * RED_SLOT_SCOLD_MESSAGES.length)];
+    const ambition = (document.getElementById('studentAmbition').value || '').trim() || 'ඉහළම Island Rank එකක් සහ Campus සිහිනය';
+    const parentPromise = (document.getElementById('parentPromiseInput').value || '').trim() || 'අම්මා තාත්තාගේ දහඩිය මහන්සියට ජයග්‍රහණයකින්ම උත්තර දෙනවා!';
+
+    // Calculate total wasted minutes today so far
+    let totalWastedToday = 0;
+    let totalStudyToday = 0;
+    timeSlots.forEach(s => {
+      if (s.group) return;
+      const rm = getRowMinutes(s.id);
+      totalWastedToday += rm.actualWaste;
+      totalStudyToday += rm.using;
+    });
+
+    const headlineEl = document.getElementById('redScoldHeadline');
+    const counterEl = document.getElementById('redScoldWasteCounter');
+    const bodyEl = document.getElementById('redScoldBodyBox');
+    const undoBtn = document.getElementById('undoRedSlotBtn');
+
+    if (headlineEl) headlineEl.textContent = scold.headline;
+    if (counterEl) {
+      counterEl.innerHTML = `🔴 අද දවසේ ඔබ විනාශ කර දැමූ මුළු කාලය: <span style="font-size:16px; color:#ffffff; text-decoration:underline;">${formatMinutes(totalWastedToday)}</span> (පාඩම් කළේ: ${formatMinutes(totalStudyToday)})`;
+    }
+    if (bodyEl) {
+      bodyEl.innerHTML = `
+        <div style="margin-bottom:10px; color:#fecaca; font-size:14px;">${escHtml(scold.body)}</div>
+        <div style="background:rgba(220,38,38,0.25); border:1px solid #ef4444; padding:8px 10px; border-radius:6px; margin-top:8px;">
+          <div style="color:#fde047; font-weight:900;">🎯 ඔබේ ඉලක්කය මතකද?: ${escHtml(ambition)}</div>
+          <div style="color:#38bdf8; font-weight:900; margin-top:4px;">❤️ දෙමාපිය පොරොන්දුව: ${escHtml(parentPromise)}</div>
+          ${wastedSlotLabel ? `<div style="color:#fca5a5; font-weight:900; margin-top:4px;">⏰ දැන් අපතේ යැවූ කාලය: ${escHtml(wastedSlotLabel)}</div>` : ''}
+        </div>
+      `;
+    }
+    if (undoBtn) {
+      undoBtn.style.display = undoInfo ? 'inline-flex' : 'none';
+    }
+
+    const modal = document.getElementById('redScoldModal');
+    const card = document.getElementById('redScoldCardBox');
+    if (modal) modal.classList.add('open');
+    if (card) {
+      card.classList.remove('shake-effect');
+      void card.offsetWidth;
+      card.classList.add('shake-effect');
+    }
+
+    // Also send brutal scolding message to Telegram if configured
+    sendTelegramRedScoldMessage(scold, wastedSlotLabel, totalWastedToday, ambition, isTest);
+  }
+
+  function sendTelegramRedScoldMessage(scold, wastedSlotLabel, totalWastedToday, ambition, isTest = false) {
+    const notifyEnabled = (document.getElementById('botNotifyEnabled') || {}).value || 'on';
+    if (!isTest && notifyEnabled === 'off') return;
+
+    const token = ((document.getElementById('tgBotTokenInput') || {}).value || '').trim();
+    let chatId = ((document.getElementById('tgChatIdInput') || {}).value || '').trim();
+    if (!token || !chatId) return;
+
+    const msg = [
+      `🩸💀 *රතු කොටුවක් ලකුණු වුණා! දරුණු අනතුරු ඇඟවීමයි!* 💀🩸`,
+      ``,
+      `*${scold.headline}*`,
+      `_${scold.body}_`,
+      ``,
+      `⏰ *අපතේ යැවූ කාලය:* ${wastedSlotLabel || '15m'}`,
+      `🔴 *අද දවසේ මුළු නාස්තිය:* *${formatMinutes(totalWastedToday)}*`,
+      `🎯 *ඔබේ ඉලක්කය:* ${ambition}`,
+      ``,
+      `🔥 *මේ දැන්ම ෆෝන් එක පැත්තකට දාලා පොත අතට ගන්නවා! ඊළඟ කොටුව අනිවාර්යයෙන්ම කොළ පාට විය යුතුයි!*`
+    ].join('\n');
+
+    fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: msg,
+        parse_mode: 'Markdown'
+      })
+    }).catch(() => {});
+  }
+
+  function acknowledgeRedScoldAndWork() {
+    triggerHaptic('medium');
+    document.getElementById('redScoldModal').classList.remove('open');
+    showToast('🔥 දැන්ම වැඩ පටන් ගන්න! ඊළඟ විනාඩි 15 අනිවාර්යයෙන්ම කොළ පාට කරමු!');
+  }
+
+  function undoLastRedSlot() {
+    triggerHaptic('light');
+    if (lastRedUndoState) {
+      if (lastRedUndoState.type === 'single') {
+        setSlotState(lastRedUndoState.slotId, lastRedUndoState.q, 0);
+      } else if (lastRedUndoState.type === 'hour') {
+        [0, 1, 2, 3].forEach(q => setSlotState(lastRedUndoState.slotId, q, 0));
+      } else if (lastRedUndoState.type === 'half') {
+        setSlotState(lastRedUndoState.slotId, lastRedUndoState.q1, 0);
+        setSlotState(lastRedUndoState.slotId, lastRedUndoState.q2, 0);
+      }
+      saveData();
+      renderTotals();
+      refreshLiveQuickCard();
+    }
+    lastRedUndoState = null;
+    document.getElementById('redScoldModal').classList.remove('open');
+    showToast('↩️ රතු ලකුණු කිරීම ඉවත් කරන ලදී.');
   }
 
   // Get the target 30-minute window (2 quarters) that just finished or is currently active
@@ -2235,12 +2435,11 @@
     let dStr = getLogicalStudyDate();
     let h = now.getHours();
     const m = now.getMinutes();
-    let qPair = [0, 1]; // Default 00-30m
+    let qPair = [0, 1];
 
     if (m >= 15 && m < 45) {
-      qPair = [0, 1]; // Marks 00-15m and 15-30m of current hour
+      qPair = [0, 1];
     } else if (m < 15) {
-      // Marks 30-45m and 45-60m of the previous hour
       if (h === 0) {
         const yest = new Date(now);
         yest.setDate(now.getDate() - 1);
@@ -2294,9 +2493,11 @@
     const win = getTarget30MinWindowInfo();
     apply30MinMarkToStorage(win.dateStr, win.slotId, win.q1, win.q2, stateVal);
     closeMotivationModal();
-    showToast(stateVal === 1
-      ? `🟢 විශිෂ්ටයි! ${win.label} පාඩම් කළ කාලයක් ලෙස ලකුණු විය!`
-      : `🔴 ${win.label} අපතේ ගිය කාලයක් ලෙස ලකුණු විය. දැන්ම වැඩට බහිමු!`);
+    if (stateVal === 2) {
+      triggerRedSlotScold(win.label, false, { type: 'half', slotId: win.slotId, q1: win.q1, q2: win.q2 });
+    } else {
+      showToast(`🟢 විශිෂ්ටයි! ${win.label} පාඩම් කළ කාලයක් ලෙස ලකුණු විය!`);
+    }
   }
 
   function getMotivationContextData() {
@@ -2315,8 +2516,8 @@
       .map(p => p.txt.trim());
 
     const activeLessonText = taskVal
-      ? `${subjName} -${taskVal}`
-      : (unfinishedTasks.length > 0 ? unfinishedTasks[0] : `${names.s1} / ${names.s2} /${names.s3}`);
+      ? `${subjName} - ${taskVal}`
+      : (unfinishedTasks.length > 0 ? unfinishedTasks[0] : `${names.s1} / ${names.s2} / ${names.s3}`);
 
     const quote = BRUTAL_30MIN_QUOTES[Math.floor(Math.random() * BRUTAL_30MIN_QUOTES.length)];
     const win = getTarget30MinWindowInfo();
@@ -2386,20 +2587,21 @@
     }
 
     const w = ctx.winInfo;
-    const cbStudy = `M30|${w.dateStr}\vert{}${w.slotId}|${w.q1}_${w.q2}|1`;
-    const cbWaste = `M30|${w.dateStr}\vert{}${w.slotId}|${w.q1}_${w.q2}|2`;
+    const cbStudy = `M30|${w.dateStr}|${w.slotId}|${w.q1}_${w.q2}|1`;
+    const cbWaste = `M30|${w.dateStr}|${w.slotId}|${w.q1}_${w.q2}|2`;
 
     const tgMessage = [
-      `⏰💀 *පැය භාගයේ දරුණු සිහිකැඳවීම (30-MIN REMINDER)* 💀⏰`,
+      `🚨💀 *විනාඩි 30න් 30ට ඇඟ කිලිපොලා යන අනතුරු ඇඟවීම!* 💀🚨`,
       ``,
       `*${ctx.quote.headline}*`,
       `_${ctx.quote.body}_`,
       ``,
       `🎯 *ඔබේ ඉලක්කය:* ${ctx.ambition}`,
+      `❤️ *දෙමාපිය පොරොන්දුව:* ${ctx.parentPromise}`,
       `📖 *දැන් පාඩම:* ${ctx.activeLessonText}`,
       `🕒 *ලකුණු කළ යුතු කාලය:* *${w.label}*`,
       ``,
-      `👇 *ඇප් එක විවෘත නොකර පහත බොත්තම ඔබා දැන්ම කාලසටහන ලකුණු කරන්න:*`
+      `👇 *බොරු නොකර ගෙවුණු විනාඩි 30ට අදාළ බොත්තම දැන්ම ඔබන්න:*`
     ].join('\n');
 
     fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -2422,7 +2624,7 @@
     .then(r => r.json())
     .then(res => {
       if (isManualTest) {
-        if (res && res.ok) showToast('🚀 Inline Buttons සහිත 30m Telegram පණිවිඩය සාර්ථකව යවන ලදී!');
+        if (res && res.ok) showToast('🚀 ඇඟ කිලිපොලා යන 30m Telegram පණිවිඩය සාර්ථකව යවන ලදී!');
         else showToast('⚠️ Bot Token හෝ Chat ID පරීක්ෂා කරන්න.');
       }
     })
@@ -2431,7 +2633,7 @@
     });
   }
 
-  // Polls Telegram getUpdates to read button clicks ([🟢 30m පාඩම් කළා] / [🔴 30m අපතේ ගියා]) and auto-marks timetable!
+  // Polls Telegram getUpdates to read button clicks and auto-marks timetable (and scolds if Red!)
   let isPollingTgUpdates = false;
   function pollTelegramTwoWayCallbacks(showManualToast = false) {
     const token = ((document.getElementById('tgBotTokenInput') || {}).value || '').trim();
@@ -2456,7 +2658,6 @@
         res.result.forEach(upd => {
           if (upd.update_id > maxUpdateId) maxUpdateId = upd.update_id;
 
-          // Auto-save Chat ID if not set
           const msgChat = (upd.message && upd.message.chat) || (upd.callback_query && upd.callback_query.message && upd.callback_query.message.chat);
           if (msgChat && msgChat.id && document.getElementById('tgChatIdInput') && !document.getElementById('tgChatIdInput').value) {
             document.getElementById('tgChatIdInput').value = String(msgChat.id);
@@ -2476,8 +2677,7 @@
               apply30MinMarkToStorage(dStr, slotId, q1, q2, stVal);
               appliedCount++;
 
-              // Acknowledge callback query & update message in Telegram
-              const statusTxt = stVal === 1 ? '🟢 පාඩම් කළ 30m කාලසටහනේ සටහන් විය!' : '🔴 අපතේ ගිය 30m කාලසටහනේ සටහන් විය!';
+              const statusTxt = stVal === 1 ? '🟢 පාඩම් කළ 30m කාලසටහනේ සටහන් විය!' : '🔴 අපතේ ගිය 30m සටහන් විය! දැන්ම පොත අතට ගන්න!';
               fetch(`https://api.telegram.org/bot${token}/answerCallbackQuery`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -2496,6 +2696,11 @@
                     }
                   })
                 }).catch(() => {});
+              }
+
+              if (stVal === 2) {
+                const slotObj = timeSlots.find(s => s.id === slotId);
+                triggerRedSlotScold(slotObj ? `${slotObj.label} (30m)` : '30m', false, { type: 'half', slotId, q1, q2 });
               }
             }
           }
@@ -2551,7 +2756,7 @@
 
     const unfinished = (dayData.priorities || [])
       .filter(p => p.txt && p.txt.trim() !== '' && !p.chk)
-      .map((p, idx) => `   ${idx + 1}.${p.txt.trim()}`);
+      .map((p, idx) => `   ${idx + 1}. ${p.txt.trim()}`);
 
     const msg = [
       `🌙📊 *රාත්‍රී 12:00 ස්වයංක්‍රීය දෛනික වාර්තාව (${dateStrToReport})* 📊🌙`,
@@ -2568,7 +2773,7 @@
       `📌 *හෙට දවසට ඉතිරි වූ ප්‍රධාන වැඩ:*`,
       unfinished.length > 0 ? unfinished.join('\n') : `   ✅ සියලුම ප්‍රධාන වැඩ අවසන් කර ඇත!`,
       ``,
-      `🔥 *අද දවසේ අඩුපාඩු හදාගෙන හෙට උදෑසනම 100%ක් ජවයෙන් වැඩ පටන් ගමු!*`
+      `🔥 *අද දවසේ රතු කොටු දිහා බලලා හෙට දවසේ එක තත්පරයක්වත් අපතේ නොයවන්න අධිෂ්ඨාන කරගන්න!*`
     ].join('\n');
 
     fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -2639,8 +2844,8 @@
       }
     }
   }
-// ================= END OF PART 2 (Paste PART 3 immediately below this line) =================
-/* ================= STREAM & SYLLABUS PRESETS (3 MAIN SUBJECTS ONLY) ================= */
+
+  /* ================= STREAM & SYLLABUS PRESETS (3 MAIN SUBJECTS ONLY) ================= */
   const STREAM_PRESETS = {
     maths: { s1: "Combined Maths", s2: "Physics", s3: "Chemistry" },
     bio: { s1: "Biology", s2: "Physics", s3: "Chemistry" },
@@ -3002,7 +3207,6 @@
     btn.classList.toggle('slot-study', st === 1);
     btn.classList.toggle('slot-waste', st === 2);
 
-    // If marked Green (1), touch the matching Syllabus unit's lastStudied date
     if (st === 1) {
       const subjVal = (document.getElementById(`subj_${slotId}`) || {}).value || 'none';
       const taskTxt = ((document.getElementById(`task_${slotId}`) || {}).value || '').trim();
@@ -3048,6 +3252,13 @@
     saveData();
     renderTotals();
     renderSyllabus();
+
+    // 🩸💀 If marked RED (2), immediately launch the Brutal Scolding Modal!
+    if (nextState === 2) {
+      const slotObj = timeSlots.find(s => s.id === slotId);
+      const labelTxt = `${slotObj ? slotObj.label : ''} (${QUARTER_LABELS[q]})`;
+      triggerRedSlotScold(labelTxt, false, { type: 'single', slotId, q });
+    }
   }
 
   function getRowMinutes(slotId) {
@@ -3737,6 +3948,12 @@
     [0, 1, 2, 3].forEach(q => setSlotState(slotId, q, allWaste ? 0 : 2));
     saveData();
     renderTotals();
+
+    // 🩸💀 If marked full hour RED, launch Brutal Scolding Modal!
+    if (!allWaste) {
+      const slotObj = timeSlots.find(s => s.id === slotId);
+      triggerRedSlotScold(slotObj ? `${slotObj.label} (පැය 1ක්ම!)` : 'පැය 1ක්ම', false, { type: 'hour', slotId });
+    }
   }
 
   function toggleFullHourSleep(slotId) {
@@ -3748,8 +3965,8 @@
     saveData();
     renderTotals();
   }
-
-  function saveRoutineTemplate() {
+// ================= END OF PART 2 (Paste PART 3 immediately below this line) =================
+function saveRoutineTemplate() {
     const slotType = document.getElementById('templateSlotSelect').value || 'study';
     const tpl = {};
     timeSlots.forEach(slot => {
@@ -4326,8 +4543,8 @@
     calculateHistoricalTotals(currentDate);
     refreshLiveQuickCard();
   }
-// ================= END OF PART 3 (Paste PART 4 immediately below this line) =================
-/* ================= GOOGLE CALENDAR WEEKLY & DAILY VIEW ================= */
+
+  /* ================= GOOGLE CALENDAR WEEKLY & DAILY VIEW ================= */
   function switchScheduleView(mode) {
     triggerHaptic('light');
     currentScheduleView = mode;
@@ -4670,7 +4887,6 @@
       { key: 'misread', label: '👁️ ප්‍රශ්නය කියෙව්වේ නෑ', count: stats.misread, color: 'var(--purple)' }
     ];
 
-    const maxCount = Math.max(1, ...items.map(i => i.count));
     const sorted = [...items].sort((a, b) => b.count - a.count);
 
     if (badge) {
@@ -4717,7 +4933,7 @@
     const years = [];
     for (let y = 2025; y >= 2011; y--) years.push(y);
 
-    let totalCells = 15 * 3 * 3; // 15 years * 3 subjects * 3 parts (mcq, struct, essay) = 135
+    let totalCells = 15 * 3 * 3;
     let doneCells = 0;
 
     const subjs = ['s1', 's2', 's3'];
@@ -4791,7 +5007,6 @@
     const s = String(sec % 60).padStart(2, '0');
     document.getElementById('essayTimerDisplay').textContent = `${h}:${m}:${s}`;
 
-    // Update current lap elapsed badge
     const elapsedSec = Math.floor((Date.now() - essayLapStartTime) / 1000);
     const lm = String(Math.floor(elapsedSec / 60)).padStart(2, '0');
     const ls = String(elapsedSec % 60).padStart(2, '0');
@@ -5134,7 +5349,6 @@
     queueAutoCloudSync();
   }
 
-  // Calculate total green study minutes spent on a specific lesson across all saved days in localStorage
   function calculateTotalMinutesSpentOnLesson(subjKey, lessonTitle) {
     if (!lessonTitle) return 0;
     const cleanLesson = lessonTitle.trim().toLowerCase();
@@ -5245,7 +5459,6 @@
         const matchesSearch = !searchQ || (u.title || '').toLowerCase().includes(searchQ);
         const isFullyDone = (u.t && u.r && u.p);
 
-        // Calculate 7-day decay
         let isDecayed = false;
         if (u.lastStudied) {
           const lastDate = new Date(u.lastStudied + 'T00:00:00');
@@ -5902,5 +6115,3 @@
 </script>
 </body>
 </html>
-
-
