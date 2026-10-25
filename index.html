@@ -516,7 +516,7 @@
   }
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--primary), var(--success));
+    background: linear-gradient(90deg, #16a34a, #22c55e);
     width: 0%;
     transition: width 0.3s ease;
   }
@@ -689,12 +689,12 @@
   .unit-item {
     display: flex;
     flex-direction: column;
-    padding: 8px 10px;
+    padding: 9px 10px;
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 9px;
-    margin-bottom: 6px;
-    gap: 5px;
+    border-radius: 10px;
+    margin-bottom: 7px;
+    gap: 6px;
   }
   .unit-item.unit-lvl-red { border-left: 5px solid var(--danger); }
   .unit-item.unit-lvl-yellow { border-left: 5px solid var(--warning); }
@@ -708,7 +708,7 @@
   }
   .unit-level-btn {
     padding: 4px 8px;
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 900;
     border-radius: 6px;
     flex-shrink: 0;
@@ -718,40 +718,78 @@
   .unit-level-btn.lvl-yellow { background: var(--warning-bg); color: var(--warning); border-color: var(--warning); }
   .unit-level-btn.lvl-green { background: var(--success-bg); color: var(--success); border-color: var(--success); }
 
-  .matrix-grid-3 {
+  /* Unit 3 Ticks (Theory, Past Paper MCQ, Past Paper Essay) */
+  .unit-ticks-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 8px;
-  }
-  @media (max-width: 900px) { .matrix-grid-3 { grid-template-columns: 1fr; } }
-  .matrix-subj-box {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 8px;
-  }
-  .matrix-year-row {
-    display: grid;
-    grid-template-columns: 52px repeat(3, 1fr);
     gap: 5px;
+    margin-top: 2px;
+  }
+  .unit-tick-btn {
+    padding: 5px 4px;
+    font-size: 10.5px;
+    font-weight: 800;
+    border-radius: 7px;
+    background: var(--header-bg);
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+    transition: all 0.15s ease;
+    text-align: center;
+  }
+  .unit-tick-btn.done {
+    background: var(--success) !important;
+    color: #ffffff !important;
+    border-color: var(--success) !important;
+    box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
+  }
+
+  /* 2011 - 2026 Full Papers in Syllabus */
+  .full-paper-box {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px dashed var(--border);
+  }
+  .full-paper-header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 4px 0;
-    border-bottom: 1px dashed var(--border);
+    font-size: 11.5px;
+    font-weight: 900;
+    color: var(--primary);
+    margin-bottom: 6px;
+  }
+  .fp-year-row {
+    display: grid;
+    grid-template-columns: 54px 1fr 1fr;
+    gap: 6px;
+    align-items: center;
+    padding: 4px 6px;
+    background: var(--header-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 5px;
     font-size: 11.5px;
     font-weight: 800;
   }
-  .matrix-year-row:last-child { border-bottom: none; }
-  .matrix-part-btn {
-    padding: 4px 6px;
-    font-size: 10.5px;
+  .fp-year-row.fp-row-complete {
+    border-color: var(--success);
+    background: var(--success-bg);
+  }
+  .fp-part-btn {
+    padding: 5px 8px;
+    font-size: 11px;
     border-radius: 6px;
     font-weight: 800;
-    background: var(--header-bg);
+    background: var(--card);
     color: var(--muted);
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--border);
   }
-  .matrix-part-btn.done { background: var(--success); color: #fff; border-color: var(--success); }
+  .fp-part-btn.done {
+    background: var(--success) !important;
+    color: #ffffff !important;
+    border-color: var(--success) !important;
+    box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
+  }
 
   .mistake-grid {
     display: grid;
@@ -1013,15 +1051,15 @@
       <div class="panel" style="background:var(--card);">
         <div class="panel-title">🎨 ප්‍රධාන විෂයයන් 3</div>
         <div class="field-row">
-          <input type="text" id="subj1Name" class="subj-theme-s1" list="allAlSubjects" value="Combined Maths" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus(); renderPriorityList(); renderLongTermPlan(); renderPaperMatrix();">
+          <input type="text" id="subj1Name" class="subj-theme-s1" list="allAlSubjects" value="Combined Maths" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus(); renderPriorityList(); renderLongTermPlan();">
           <span id="subj1Hours" class="stat-badge subj-theme-s1">0h 00m</span>
         </div>
         <div class="field-row">
-          <input type="text" id="subj2Name" class="subj-theme-s2" list="allAlSubjects" value="Physics" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus(); renderPriorityList(); renderLongTermPlan(); renderPaperMatrix();">
+          <input type="text" id="subj2Name" class="subj-theme-s2" list="allAlSubjects" value="Physics" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus(); renderPriorityList(); renderLongTermPlan();">
           <span id="subj2Hours" class="stat-badge subj-theme-s2">0h 00m</span>
         </div>
         <div class="field-row">
-          <input type="text" id="subj3Name" class="subj-theme-s3" list="allAlSubjects" value="Chemistry" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus(); renderPriorityList(); renderLongTermPlan(); renderPaperMatrix();">
+          <input type="text" id="subj3Name" class="subj-theme-s3" list="allAlSubjects" value="Chemistry" oninput="saveGlobalSettings(); renderTotals(); renderSyllabus(); renderPriorityList(); renderLongTermPlan();">
           <span id="subj3Hours" class="stat-badge subj-theme-s3">0h 00m</span>
         </div>
       </div>
@@ -1287,14 +1325,6 @@
       <div class="mistake-grid" id="mistakeTrackerGrid"></div>
     </div>
 
-    <div class="panel" style="margin-bottom:12px; border:1.5px solid var(--primary);">
-      <div class="panel-title">
-        <span>🗓️ 2011 - 2025 PAST PAPER MATRIX</span>
-        <span id="matrixProgressBadge" class="stat-badge stat-good">0 / 135 Done (0%)</span>
-      </div>
-      <div class="matrix-grid-3" id="paperMatrixContainer"></div>
-    </div>
-
     <div class="panel" style="margin-bottom:12px;">
       <div class="panel-title">
         <span>🔥 පසුගිය දින 30 (HEATMAP)</span>
@@ -1333,11 +1363,19 @@
     </div>
   </div>
 
-  <!-- TAB 5: SYLLABUS TRACKER -->
+  <!-- TAB 5: SYLLABUS TRACKER & 2011-2026 FULL PAPERS -->
   <div id="tab-syllabus" class="tab-content">
     <div class="panel">
       <div class="panel-title">
-        <span>📚 SYLLABUS TRACKER</span>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span>📚 SYLLABUS & 2011-2026 PAST PAPER TRACKER</span>
+          <span id="overallSyllabusBadge" class="stat-badge stat-good">0% Completed</span>
+        </div>
+        <div style="width:100%; margin:4px 0 6px 0;">
+          <div class="progress-wrap" style="height:12px;">
+            <div class="progress-fill" id="overallSyllabusBar" style="width:0%;"></div>
+          </div>
+        </div>
         <div style="display:flex; gap:6px; flex-wrap:wrap; width:100%; margin-top:4px;">
           <input type="text" id="syllabusSearchInput" placeholder="🔍 පාඩම සොයන්න..." style="flex:1; min-width:140px;" oninput="renderSyllabus()">
           <select id="syllabusFilterMode" onchange="renderSyllabus()" style="width:185px;">
@@ -3519,11 +3557,18 @@ function saveRoutineTemplate() {
 
     ['s1', 's2', 's3'].forEach((sKey, idx) => {
       const units = getPresetUnitsForSubjectName(names[sKey]);
-      data[sKey] = units.map((uTitle, uIdx) => ({
-        id: Date.now() + idx * 1000 + uIdx,
-        title: uTitle,
-        level: 'red'
-      }));
+      const existingUnits = Array.isArray(data[sKey]) ? data[sKey] : [];
+      data[sKey] = units.map((uTitle, uIdx) => {
+        const prev = existingUnits.find(eu => eu.title === uTitle);
+        return {
+          id: Date.now() + idx * 1000 + uIdx,
+          title: uTitle,
+          level: prev ? (prev.level || 'red') : 'red',
+          theory: prev ? !!prev.theory : false,
+          mcq: prev ? !!prev.mcq : false,
+          essay: prev ? !!prev.essay : false
+        };
+      });
     });
 
     saveSyllabusData(data);
@@ -4039,7 +4084,7 @@ function saveRoutineTemplate() {
     showToast(`🤖 පැය ${assignedCount}ක් ස්වයංක්‍රීයව බෙදා දෙන ලදී!`);
   }
 
-  /* ================= MISTAKE TRACKER & PAPER MATRIX ================= */
+  /* ================= MISTAKE TRACKER ================= */
   function getMistakeStats() {
     const raw = localStorage.getItem('al_pro_mistakes');
     return raw ? JSON.parse(raw) : { theory: 0, careless: 0, time: 0, misread: 0 };
@@ -4084,6 +4129,10 @@ function saveRoutineTemplate() {
     `).join('');
   }
 
+  /* ================= 2011 - 2026 FULL PAPER STATE (INSIDE SYLLABUS) ================= */
+  const FULL_PAPER_YEARS = [];
+  for (let y = 2026; y >= 2011; y--) FULL_PAPER_YEARS.push(y);
+
   function getPaperMatrixState() {
     const raw = localStorage.getItem('al_pro_paper_matrix');
     return raw ? JSON.parse(raw) : {};
@@ -4098,65 +4147,17 @@ function saveRoutineTemplate() {
     triggerHaptic('light');
     const st = getPaperMatrixState();
     if (!st[subjKey]) st[subjKey] = {};
-    if (!st[subjKey][year]) st[subjKey][year] = { mcq: false, struct: false, essay: false };
+    if (!st[subjKey][year]) st[subjKey][year] = { mcq: false, essay: false };
     st[subjKey][year][partKey] = !st[subjKey][year][partKey];
     savePaperMatrixState(st);
-    renderPaperMatrix();
+    renderSyllabus();
   }
 
   function renderPaperMatrix() {
-    const container = document.getElementById('paperMatrixContainer');
-    const badge = document.getElementById('matrixProgressBadge');
-    if (!container) return;
-
-    const names = getSubjectNames();
-    const st = getPaperMatrixState();
-    const years = [];
-    for (let y = 2025; y >= 2011; y--) years.push(y);
-
-    let totalCells = 15 * 3 * 3;
-    let doneCells = 0;
-
-    const subjs = ['s1', 's2', 's3'];
-    container.innerHTML = subjs.map(sKey => {
-      const subjName = names[sKey];
-      let subjDone = 0;
-
-      const rowsHtml = years.map(y => {
-        const cellData = (st[sKey] && st[sKey][y]) || { mcq: false, struct: false, essay: false };
-        if (cellData.mcq) subjDone++;
-        if (cellData.struct) subjDone++;
-        if (cellData.essay) subjDone++;
-
-        return `
-          <div class="matrix-year-row">
-            <span style="font-weight:900;">${y}</span>
-            <button type="button" class="matrix-part-btn ${cellData.mcq ? 'done' : ''}" onclick="togglePaperMatrixCell('${sKey}', ${y}, 'mcq')">${cellData.mcq ? '✅ MCQ' : 'MCQ'}</button>
-            <button type="button" class="matrix-part-btn ${cellData.struct ? 'done' : ''}" onclick="togglePaperMatrixCell('${sKey}', ${y}, 'struct')">${cellData.struct ? '✅ Str' : 'Struct'}</button>
-            <button type="button" class="matrix-part-btn ${cellData.essay ? 'done' : ''}" onclick="togglePaperMatrixCell('${sKey}', ${y}, 'essay')">${cellData.essay ? '✅ Ess' : 'Essay'}</button>
-          </div>
-        `;
-      }).join('');
-
-      doneCells += subjDone;
-
-      return `
-        <div class="matrix-subj-box">
-          <div style="font-weight:900; font-size:12.5px; color:var(--primary); margin-bottom:6px; border-bottom:1px solid var(--border); padding-bottom:4px;">
-            📘 ${escHtml(subjName)}
-          </div>
-          <div style="max-height:290px; overflow-y:auto; padding-right:2px;">
-            ${rowsHtml}
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    const pct = Math.round((doneCells / totalCells) * 100);
-    if (badge) badge.textContent = `${doneCells} / ${totalCells} Done (${pct}%)`;
+    renderSyllabus();
   }
 
-  /* ================= PART II 3-HOUR LAP TIMER (BUG FIXED) ================= */
+  /* ================= PART II 3-HOUR LAP TIMER ================= */
   let essayTimerInterval = null;
   let essayRemainingSec = 3 * 60 * 60;
   let essayCurrentLapSec = 0;
@@ -4424,7 +4425,6 @@ function saveRoutineTemplate() {
     }
 
     renderMistakeTrackerBox();
-    renderPaperMatrix();
     renderPaperScores();
   }
 
@@ -4528,7 +4528,7 @@ function saveRoutineTemplate() {
     `).join('');
   }
 
-  /* ================= SYLLABUS TRACKER ================= */
+  /* ================= SYLLABUS & 2011-2026 FULL PAPER TRACKER ================= */
   function getSyllabusData() {
     const raw = localStorage.getItem('al_pro_syllabus');
     return raw ? JSON.parse(raw) : { s1: [], s2: [], s3: [] };
@@ -4544,7 +4544,15 @@ function saveRoutineTemplate() {
     const title = input.value.trim();
     if (!title) return;
     const data = getSyllabusData();
-    data[subjKey].push({ id: Date.now(), title, level: 'red' });
+    if (!Array.isArray(data[subjKey])) data[subjKey] = [];
+    data[subjKey].push({
+      id: Date.now(),
+      title,
+      level: 'red',
+      theory: false,
+      mcq: false,
+      essay: false
+    });
     saveSyllabusData(data);
     input.value = '';
     renderSyllabus();
@@ -4571,7 +4579,7 @@ function saveRoutineTemplate() {
   }
 
   function cycleSyllabusLevel(subjKey, unitId) {
-    triggerHaptic('medium');
+    triggerHaptic('light');
     const data = getSyllabusData();
     const unit = (data[subjKey] || []).find(u => u.id === unitId);
     if (!unit) return;
@@ -4585,11 +4593,28 @@ function saveRoutineTemplate() {
     renderSyllabus();
   }
 
-  function deleteSyllabusUnit(subjKey, unitId) {
+  function toggleSyllabusUnitTick(subjKey, unitId, fieldKey) {
+    triggerHaptic('medium');
     const data = getSyllabusData();
-    data[subjKey] = data[subjKey].filter(u => u.id !== unitId);
+    const unit = (data[subjKey] || []).find(u => u.id === unitId);
+    if (!unit) return;
+
+    unit[fieldKey] = !unit[fieldKey];
     saveSyllabusData(data);
     renderSyllabus();
+  }
+
+  function deleteSyllabusUnit(subjKey, unitId) {
+    const data = getSyllabusData();
+    data[subjKey] = (data[subjKey] || []).filter(u => u.id !== unitId);
+    saveSyllabusData(data);
+    renderSyllabus();
+  }
+
+  function calculateTickPercentage(doneCount, totalCount) {
+    if (totalCount <= 0) return 0;
+    if (doneCount >= totalCount) return 100;
+    return Math.min(99, Math.floor((doneCount / totalCount) * 100));
   }
 
   function renderSyllabus() {
@@ -4597,13 +4622,41 @@ function saveRoutineTemplate() {
     if (!container) return;
     const names = getSubjectNames();
     const data = getSyllabusData();
+    const paperState = getPaperMatrixState();
     const searchQ = ((document.getElementById('syllabusSearchInput') || {}).value || '').trim().toLowerCase();
     const filterMode = ((document.getElementById('syllabusFilterMode') || {}).value || 'all');
 
+    let grandTotalTicks = 0;
+    let grandDoneTicks = 0;
+
     container.innerHTML = ['s1', 's2', 's3'].map(sKey => {
       const allUnits = data[sKey] || [];
-      const greenCount = allUnits.filter(u => u.level === 'green').length;
-      const pct = allUnits.length > 0 ? Math.round((greenCount / allUnits.length) * 100) : 0;
+      const subjPapers = paperState[sKey] || {};
+
+      // 1. Unit Ticks (Theory + Past Paper MCQ + Past Paper Essay = 3 ticks per unit)
+      let unitDoneTicks = 0;
+      const unitTotalTicks = allUnits.length * 3;
+      allUnits.forEach(u => {
+        if (u.theory) unitDoneTicks++;
+        if (u.mcq) unitDoneTicks++;
+        if (u.essay) unitDoneTicks++;
+      });
+
+      // 2. 2011 - 2026 Full Paper Ticks (MCQ + Essay = 2 ticks per year)
+      let paperDoneTicks = 0;
+      const paperTotalTicks = FULL_PAPER_YEARS.length * 2;
+      FULL_PAPER_YEARS.forEach(y => {
+        const yData = subjPapers[y] || {};
+        if (yData.mcq) paperDoneTicks++;
+        if (yData.essay) paperDoneTicks++;
+      });
+
+      const subjTotalTicks = unitTotalTicks + paperTotalTicks;
+      const subjDoneTicks = unitDoneTicks + paperDoneTicks;
+      const pct = calculateTickPercentage(subjDoneTicks, subjTotalTicks);
+
+      grandTotalTicks += subjTotalTicks;
+      grandDoneTicks += subjDoneTicks;
 
       const units = allUnits.filter(u => {
         const matchesSearch = !searchQ || (u.title || '').toLowerCase().includes(searchQ);
@@ -4612,18 +4665,42 @@ function saveRoutineTemplate() {
         return matchesSearch && matchesFilter;
       });
 
+      const fullPapersHtml = FULL_PAPER_YEARS.map(y => {
+        const cellData = subjPapers[y] || { mcq: false, essay: false };
+        const bothDone = cellData.mcq && cellData.essay;
+        return `
+          <div class="fp-year-row ${bothDone ? 'fp-row-complete' : ''}">
+            <span>🗓️ ${y}</span>
+            <button type="button" class="fp-part-btn ${cellData.mcq ? 'done' : ''}" onclick="togglePaperMatrixCell('${sKey}', ${y}, 'mcq')">
+              ${cellData.mcq ? '✅ MCQ' : '⬜ MCQ'}
+            </button>
+            <button type="button" class="fp-part-btn ${cellData.essay ? 'done' : ''}" onclick="togglePaperMatrixCell('${sKey}', ${y}, 'essay')">
+              ${cellData.essay ? '✅ Essay' : '⬜ Essay'}
+            </button>
+          </div>
+        `;
+      }).join('');
+
       return `
         <div class="panel" style="background:var(--card);">
           <div class="panel-title">
             <span>📘 ${escHtml(names[sKey])}</span>
-            <span class="stat-badge stat-good">${pct}%</span>
+            <span class="stat-badge stat-good">${pct}% (${subjDoneTicks}/${subjTotalTicks})</span>
           </div>
-          <div class="progress-wrap" style="margin-bottom:8px;"><div class="progress-fill" style="width:${pct}%;"></div></div>
+          <div class="progress-wrap" style="margin-bottom:8px; height:11px;">
+            <div class="progress-fill" style="width:${pct}%;"></div>
+          </div>
           <div style="display:flex; gap:5px; margin-bottom:8px;">
-            <input type="text" id="new_unit_${sKey}" placeholder="නව ඒකකයක්..." onkeydown="if(event.key==='Enter') addSyllabusUnit('${sKey}')">
+            <input type="text" id="new_unit_${sKey}" placeholder="නව පාඩමක් එක් කරන්න..." onkeydown="if(event.key==='Enter') addSyllabusUnit('${sKey}')">
             <button class="btn-primary mini-btn" onclick="addSyllabusUnit('${sKey}')">+</button>
           </div>
-          <div style="max-height:285px; overflow-y:auto;">
+
+          <div style="font-size:11px; font-weight:800; color:var(--muted); margin-bottom:5px; display:flex; justify-content:space-between;">
+            <span>📖 පාඩම් ඒකක (Theory / PP MCQ / PP Essay)</span>
+            <span>${unitDoneTicks}/${unitTotalTicks}</span>
+          </div>
+
+          <div style="max-height:340px; overflow-y:auto; padding-right:2px;">
             ${units.map(u => {
               const lvl = u.level || 'red';
               const lvlText = lvl === 'green' ? '🟢 පුළුවන්' : lvl === 'yellow' ? '🟡 සාමාන්‍යයි' : '🔴 අමාරුයි';
@@ -4633,8 +4710,19 @@ function saveRoutineTemplate() {
                 <div class="unit-item unit-lvl-${lvl}">
                   <div class="unit-top-row">
                     <span style="font-weight:800; font-size:12px; flex:1; padding-right:6px;">${escHtml(u.title)}</span>
-                    <button type="button" class="unit-level-btn ${lvlCls}" onclick="cycleSyllabusLevel('${sKey}',${u.id})">
+                    <button type="button" class="unit-level-btn ${lvlCls}" onclick="cycleSyllabusLevel('${sKey}',${u.id})" title="මෙය Progress Bar එකට බලපාන්නේ නැත">
                       ${lvlText}
+                    </button>
+                  </div>
+                  <div class="unit-ticks-row">
+                    <button type="button" class="unit-tick-btn ${u.theory ? 'done' : ''}" onclick="toggleSyllabusUnitTick('${sKey}', ${u.id}, 'theory')">
+                      ${u.theory ? '✅ Theory' : '⬜ Theory'}
+                    </button>
+                    <button type="button" class="unit-tick-btn ${u.mcq ? 'done' : ''}" onclick="toggleSyllabusUnitTick('${sKey}', ${u.id}, 'mcq')">
+                      ${u.mcq ? '✅ PP MCQ' : '⬜ PP MCQ'}
+                    </button>
+                    <button type="button" class="unit-tick-btn ${u.essay ? 'done' : ''}" onclick="toggleSyllabusUnitTick('${sKey}', ${u.id}, 'essay')">
+                      ${u.essay ? '✅ PP Essay' : '⬜ PP Essay'}
                     </button>
                   </div>
                   <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:2px;">
@@ -4645,9 +4733,26 @@ function saveRoutineTemplate() {
               `;
             }).join('')}
           </div>
+
+          <!-- 2011 - 2026 FULL PAPERS SECTION -->
+          <div class="full-paper-box">
+            <div class="full-paper-header">
+              <span>📄 2011 - 2026 FULL PAPERS (MCQ & ESSAY)</span>
+              <span class="stat-badge stat-good">${paperDoneTicks}/${paperTotalTicks}</span>
+            </div>
+            <div style="max-height:260px; overflow-y:auto; padding-right:2px;">
+              ${fullPapersHtml}
+            </div>
+          </div>
         </div>
       `;
     }).join('');
+
+    const overallPct = calculateTickPercentage(grandDoneTicks, grandTotalTicks);
+    const overallBar = document.getElementById('overallSyllabusBar');
+    const overallBadge = document.getElementById('overallSyllabusBadge');
+    if (overallBar) overallBar.style.width = `${overallPct}%`;
+    if (overallBadge) overallBadge.textContent = `${overallPct}% Completed (${grandDoneTicks}/${grandTotalTicks})`;
   }
 
   /* ================= 50-MCQ OMR SIMULATOR ================= */
