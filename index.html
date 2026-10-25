@@ -67,7 +67,7 @@
 
     --s2-color: #c084fc;
     --s2-bg: #2e1065;
-    --s2-border: #a855f7;
+    --s2-border: #a85557;
 
     --s3-color: #2dd4bf;
     --s3-bg: #042f2e;
@@ -718,7 +718,6 @@
   .unit-level-btn.lvl-yellow { background: var(--warning-bg); color: var(--warning); border-color: var(--warning); }
   .unit-level-btn.lvl-green { background: var(--success-bg); color: var(--success); border-color: var(--success); }
 
-  /* Unit 3 Ticks (Theory, Past Paper MCQ, Past Paper Essay) */
   .unit-ticks-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -743,7 +742,6 @@
     box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
   }
 
-  /* 2011 - 2026 Full Papers in Syllabus */
   .full-paper-box {
     margin-top: 10px;
     padding-top: 10px;
@@ -806,43 +804,48 @@
     text-align: center;
   }
 
-  .omr-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 10px; }
-  @media (max-width: 950px) { .omr-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 550px) { .omr-grid { grid-template-columns: 1fr; } }
+  .omr-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
+  @media (max-width: 1080px) { .omr-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .omr-grid { grid-template-columns: 1fr; } }
   .omr-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: var(--card);
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--border);
     padding: 6px 8px;
-    border-radius: 8px;
+    border-radius: 9px;
     margin-bottom: 6px;
     gap: 4px;
   }
-  .omr-bubbles { display: flex; gap: 4px; align-items: center; }
+  .omr-bubbles { display: flex; gap: 3px; align-items: center; flex-wrap: nowrap; }
   .omr-bubble {
-    width: 29px;
-    height: 29px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     border: 1px solid var(--border);
     background: var(--header-bg);
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 800;
     padding: 0;
+    flex-shrink: 0;
   }
   .omr-bubble.selected { background: var(--primary); color: #fff; border-color: var(--primary); }
-  .omr-guess-btn {
-    width: 27px;
-    height: 27px;
+  .omr-guess-btn, .omr-mark-btn {
+    width: 26px;
+    height: 26px;
     border-radius: 6px;
     font-size: 11px;
     padding: 0;
     background: var(--header-bg);
     color: var(--muted);
-    border: 1px dashed var(--border);
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    font-weight: 900;
   }
   .omr-guess-btn.guessed { background: var(--warning); color: #fff; border-color: var(--warning); }
+  .omr-mark-btn.mark-ok { background: var(--success); color: #fff; border-color: var(--success); }
+  .omr-mark-btn.mark-no { background: var(--danger); color: #fff; border-color: var(--danger); }
   .omr-row.correct { border-color: var(--success); background: var(--success-bg); }
   .omr-row.wrong { border-color: var(--danger); background: var(--danger-bg); }
 
@@ -914,7 +917,7 @@
     font-weight: 700;
     font-size: 12.5px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-    z-index: 2000;
+    z-index: 2500;
     opacity: 0;
     transform: translateY(20px);
     pointer-events: none;
@@ -931,7 +934,7 @@
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 1100;
+    z-index: 1500;
     padding: 14px;
     backdrop-filter: blur(4px);
   }
@@ -965,7 +968,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 1200;
+    z-index: 1600;
     padding: 20px;
     text-align: center;
   }
@@ -1346,8 +1349,12 @@
         </div>
       </div>
       <div id="paperChartBox" style="background:var(--card); border:1px solid var(--border); border-radius:8px; padding:10px; margin-bottom:10px;"></div>
-      <div style="display:grid; grid-template-columns: 1fr 1.4fr 85px 1.2fr auto; gap:6px; margin-bottom:10px;">
-        <select id="paperSubjInput"></select>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap:6px; margin-bottom:10px;">
+        <select id="paperSubjInput">
+          <option value="s1">📘 Combined Maths</option>
+          <option value="s2">📗 Physics</option>
+          <option value="s3">📙 Chemistry</option>
+        </select>
         <input type="text" id="paperNameInput" placeholder="Paper නම (උදා: 2023 Full)">
         <input type="number" id="paperMarksInput" placeholder="ලකුණු %" min="0" max="100" style="width:100%;">
         <select id="paperMistakeReasonInput">
@@ -1384,7 +1391,7 @@
             <option value="yellow">🟡 සාමාන්‍යයි</option>
             <option value="green">🟢 පුළුවන්</option>
           </select>
-          <button onclick="loadDefaultSyllabusForCurrentSubjects(true)" class="mini-btn btn-primary">📥 නිල ඒකක Load කරන්න</button>
+          <button type="button" onclick="loadDefaultSyllabusForCurrentSubjects(true)" class="mini-btn btn-primary">📥 නිල ඒකක Load කරන්න</button>
         </div>
       </div>
       <div class="syllabus-grid" id="syllabusContainer"></div>
@@ -1402,13 +1409,13 @@
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
           <span style="font-weight:900; font-size:20px; color:var(--primary); font-variant-numeric:tabular-nums;" id="essayTimerDisplay">03:00:00</span>
           <span class="stat-badge stat-good" id="currentLapElapsedBadge">දැන් ප්‍රශ්නයට: 00m 00s</span>
-          <button onclick="startPauseEssayTimer()" id="essayTimerBtn" class="mini-btn btn-success">▶ Start 3h</button>
-          <button onclick="resetEssayTimer()" class="mini-btn">↺ Reset</button>
+          <button type="button" onclick="startPauseEssayTimer()" id="essayTimerBtn" class="mini-btn btn-success">▶ Start 3h</button>
+          <button type="button" onclick="resetEssayTimer()" class="mini-btn">↺ Reset</button>
         </div>
         <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; flex:1; justify-content:flex-end;">
           <input type="text" id="essayLapLabelInput" placeholder="ප්‍රශ්නය (උදා: Essay Q1)" style="max-width:230px; padding:5px 8px; font-size:12px;">
-          <button onclick="recordEssayQuestionLap()" class="mini-btn btn-primary">⏱️ Lap</button>
-          <button onclick="clearEssayLaps()" class="mini-btn btn-danger-soft">🗑️</button>
+          <button type="button" onclick="recordEssayQuestionLap()" class="mini-btn btn-primary">⏱️ Lap</button>
+          <button type="button" onclick="clearEssayLaps()" class="mini-btn btn-danger-soft">🗑️</button>
         </div>
       </div>
       <div id="essayLapsContainer" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(185px, 1fr)); gap:6px;"></div>
@@ -1421,21 +1428,25 @@
       </div>
 
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
-        <select id="omrSubjectSelect" onchange="saveOmrState()"></select>
+        <select id="omrSubjectSelect" onchange="saveOmrState()">
+          <option value="s1">📘 Combined Maths</option>
+          <option value="s2">📗 Physics</option>
+          <option value="s3">📙 Chemistry</option>
+        </select>
         <input type="text" id="omrPaperTitle" placeholder="Paper නම (2024 MCQ)" oninput="saveOmrState()">
       </div>
 
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; background:var(--card); padding:10px; border-radius:10px; border:1px solid var(--border);">
         <div style="display:flex; gap:6px; align-items:center;">
           <span style="font-weight:900; font-size:16px; color:var(--primary);" id="omrTimerDisplay">02:00:00</span>
-          <button onclick="startPauseOmrTimer()" id="omrTimerBtn" class="mini-btn btn-success">▶ Start 2h</button>
-          <button onclick="resetOmrTimer()" class="mini-btn">↺</button>
+          <button type="button" onclick="startPauseOmrTimer()" id="omrTimerBtn" class="mini-btn btn-success">▶ Start 2h</button>
+          <button type="button" onclick="resetOmrTimer()" class="mini-btn">↺</button>
         </div>
         <div style="display:flex; gap:5px; flex-wrap:wrap;">
-          <button onclick="toggleOmrGradingMode()" id="omrGradeModeBtn" class="mini-btn btn-purple">✔️ හරි/වැරදි</button>
-          <button onclick="toggleAnswerKeyBox()" class="mini-btn">🔑 Answer Key</button>
-          <button onclick="saveOmrToScores()" class="mini-btn btn-primary">💾 Save</button>
-          <button onclick="clearOmrSheet()" class="mini-btn btn-danger-soft">🗑️</button>
+          <button type="button" onclick="toggleOmrGradingMode()" id="omrGradeModeBtn" class="mini-btn btn-purple">✔️ හරි/වැරදි Mode</button>
+          <button type="button" onclick="toggleAnswerKeyBox()" class="mini-btn">🔑 Answer Key</button>
+          <button type="button" onclick="saveOmrToScores()" class="mini-btn btn-primary">💾 ලකුණු Save කරන්න</button>
+          <button type="button" onclick="clearOmrSheet()" class="mini-btn btn-danger-soft">🗑️</button>
         </div>
       </div>
 
@@ -1481,15 +1492,19 @@
             <option value="medium">🟡 සාමාන්‍ය</option>
             <option value="easy">🟢 ලේසි</option>
           </select>
-          <button onclick="shuffleVaultCards()" class="mini-btn btn-purple">🔀</button>
+          <button type="button" onclick="shuffleVaultCards()" class="mini-btn btn-purple">🔀</button>
         </div>
       </div>
 
       <div style="display:grid; grid-template-columns: 1fr; gap:6px; margin-bottom:10px;">
-        <select id="vaultSubjSelect"></select>
+        <select id="vaultSubjSelect">
+          <option value="s1">📘 Combined Maths</option>
+          <option value="s2">📗 Physics</option>
+          <option value="s3">📙 Chemistry</option>
+        </select>
         <input type="text" id="vaultQuestionInput" placeholder="❓ ප්‍රශ්නය / සූත්‍රයේ නම...">
         <input type="text" id="vaultAnswerInput" placeholder="💡 පිළිතුර / කෙටි සටහන..." onkeydown="if(event.key==='Enter') addVaultCard()">
-        <button onclick="addVaultCard()" class="btn-primary">+ එක් කරන්න</button>
+        <button type="button" onclick="addVaultCard()" class="btn-primary">+ එක් කරන්න</button>
       </div>
 
       <div id="vaultCardsContainer" class="flashcard-grid"></div>
@@ -1511,34 +1526,34 @@
       <span style="font-weight:900; font-size:16px; color:var(--primary); font-variant-numeric:tabular-nums;" id="timerDisplay">15:00</span>
     </div>
     <div style="display:flex; gap:5px; align-items:center;">
-      <button onclick="startPauseTimer()" class="mini-btn btn-success" id="timerStartBtn">▶ Start</button>
-      <button onclick="resetTimer()" class="mini-btn">↺</button>
-      <button onclick="toggleFocusSound()" class="mini-btn" id="noiseBtn">🎧</button>
-      <button onclick="openZenMode()" class="mini-btn btn-purple">🧘 Zen</button>
-      <button onclick="scrollToLiveHour()" class="mini-btn btn-primary" title="දැන් පැයට යන්න">⚡</button>
+      <button type="button" onclick="startPauseTimer()" class="mini-btn btn-success" id="timerStartBtn">▶ Start</button>
+      <button type="button" onclick="resetTimer()" class="mini-btn">↺</button>
+      <button type="button" onclick="toggleFocusSound()" class="mini-btn" id="noiseBtn">🎧</button>
+      <button type="button" onclick="openZenMode()" class="mini-btn btn-purple">🧘 Zen</button>
+      <button type="button" onclick="scrollToLiveHour()" class="mini-btn btn-primary" title="දැන් පැයට යන්න">⚡</button>
     </div>
   </div>
 
   <div class="bottom-nav-tabs">
-    <button class="nav-tab-item active" id="tabBtn_longterm" onclick="switchTab('longterm', this)">
+    <button type="button" class="nav-tab-item active" id="tabBtn_longterm" onclick="switchTab('longterm', this)">
       <span class="nav-ico">🗓️</span><span>දිගුකාලීන</span>
     </button>
-    <button class="nav-tab-item" id="tabBtn_tasks" onclick="switchTab('tasks', this)">
+    <button type="button" class="nav-tab-item" id="tabBtn_tasks" onclick="switchTab('tasks', this)">
       <span class="nav-ico">📌</span><span>අද වැඩ</span>
     </button>
-    <button class="nav-tab-item" id="tabBtn_planner" onclick="switchTab('planner', this)">
+    <button type="button" class="nav-tab-item" id="tabBtn_planner" onclick="switchTab('planner', this)">
       <span class="nav-ico">📅</span><span>කාලසටහන</span>
     </button>
-    <button class="nav-tab-item" id="tabBtn_analytics" onclick="switchTab('analytics', this)">
+    <button type="button" class="nav-tab-item" id="tabBtn_analytics" onclick="switchTab('analytics', this)">
       <span class="nav-ico">📊</span><span>ප්‍රගතිය</span>
     </button>
-    <button class="nav-tab-item" id="tabBtn_syllabus" onclick="switchTab('syllabus', this)">
+    <button type="button" class="nav-tab-item" id="tabBtn_syllabus" onclick="switchTab('syllabus', this)">
       <span class="nav-ico">📚</span><span>Syllabus</span>
     </button>
-    <button class="nav-tab-item" id="tabBtn_omr" onclick="switchTab('omr', this)">
+    <button type="button" class="nav-tab-item" id="tabBtn_omr" onclick="switchTab('omr', this)">
       <span class="nav-ico">🎯</span><span>OMR / II</span>
     </button>
-    <button class="nav-tab-item" id="tabBtn_vault" onclick="switchTab('vault', this)">
+    <button type="button" class="nav-tab-item" id="tabBtn_vault" onclick="switchTab('vault', this)">
       <span class="nav-ico">🧠</span><span>සටහන්</span>
     </button>
   </div>
@@ -1546,6 +1561,18 @@
 
 <!-- Toast -->
 <div id="toastBox" class="toast-box"></div>
+
+<!-- Custom Confirm Modal (Telegram Safe) -->
+<div class="modal-overlay" id="customConfirmModal">
+  <div class="modal-card" style="max-width:380px;">
+    <h3 style="color:var(--primary); margin-bottom:8px;">⚠️ තහවුරු කරන්න</h3>
+    <p id="customConfirmText" style="font-size:13.5px; font-weight:700; margin-bottom:14px; line-height:1.5;"></p>
+    <div style="display:flex; justify-content:center; gap:10px;">
+      <button type="button" class="btn-danger" id="customConfirmYesBtn">✅ ඔව්</button>
+      <button type="button" onclick="closeCustomConfirm()" class="mini-btn">✖ නැත</button>
+    </div>
+  </div>
+</div>
 
 <!-- 30-Min Reminder Modal -->
 <div class="modal-overlay" id="motivationModal">
@@ -1557,9 +1584,9 @@
     <div id="motivQuoteBox" style="background:rgba(0,0,0,0.65); border-left:5px solid #ff0000; padding:12px; border-radius:8px; text-align:left; font-size:13.5px; line-height:1.6; margin-bottom:12px; color:#f8fafc;"></div>
     <div id="motivCurrentTaskBox" style="background:rgba(34,197,94,0.18); border:1.5px solid #22c55e; padding:10px; border-radius:8px; font-weight:800; font-size:13px; color:#4ade80; margin-bottom:14px;"></div>
     <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
-      <button onclick="quickMark30MinsFromModal(1)" class="btn-success" style="padding:11px 14px; font-size:12.5px; font-weight:900;">🟢 30m පාඩම් කළා</button>
-      <button onclick="quickMark30MinsFromModal(2)" class="btn-danger" style="padding:11px 14px; font-size:12.5px; font-weight:900;">🔴 30m අපතේ ගියා</button>
-      <button onclick="mark15MinFromMotivationModal()" class="btn-primary" style="padding:11px 14px; font-size:12.5px; font-weight:900;">📅 කාලසටහනට</button>
+      <button type="button" onclick="quickMark30MinsFromModal(1)" class="btn-success" style="padding:11px 14px; font-size:12.5px; font-weight:900;">🟢 30m පාඩම් කළා</button>
+      <button type="button" onclick="quickMark30MinsFromModal(2)" class="btn-danger" style="padding:11px 14px; font-size:12.5px; font-weight:900;">🔴 30m අපතේ ගියා</button>
+      <button type="button" onclick="mark15MinFromMotivationModal()" class="btn-primary" style="padding:11px 14px; font-size:12.5px; font-weight:900;">📅 කාලසටහනට</button>
     </div>
   </div>
 </div>
@@ -1571,9 +1598,9 @@
   <div class="zen-timer" id="zenTimerDisplay">15:00</div>
   <div id="zenCurrentTaskText" style="font-size:18px; font-weight:700; color:#e2e8f0; max-width:500px; margin-bottom:24px;"></div>
   <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-    <button onclick="startPauseTimer()" class="btn-success" style="padding:10px 18px;">▶ Start / Pause</button>
-    <button onclick="toggleFocusSound()" class="btn-primary" style="padding:10px 18px;">🎧 Brown Noise</button>
-    <button onclick="closeZenMode()" class="btn-danger" style="padding:10px 18px;">✖ Exit</button>
+    <button type="button" onclick="startPauseTimer()" class="btn-success" style="padding:10px 18px;">▶ Start / Pause</button>
+    <button type="button" onclick="toggleFocusSound()" class="btn-primary" style="padding:10px 18px;">🎧 Brown Noise</button>
+    <button type="button" onclick="closeZenMode()" class="btn-danger" style="padding:10px 18px;">✖ Exit</button>
   </div>
 </div>
 
@@ -1626,9 +1653,9 @@
     <h3 style="margin-bottom:4px; color:var(--primary);">📸 දෛනික වාර්තාව</h3>
     <canvas id="shareCanvas" width="600" height="400"></canvas>
     <div style="display:flex; justify-content:center; gap:8px; margin-top:8px; flex-wrap:wrap;">
-      <button onclick="shareOrDownloadCard()" class="btn-success">📲 Share / Download</button>
-      <button onclick="copyTextReport()" class="btn-primary">📋 Copy Text</button>
-      <button onclick="closeShareCard()">✖ වසන්න</button>
+      <button type="button" onclick="shareOrDownloadCard()" class="btn-success">📲 Share / Download</button>
+      <button type="button" onclick="copyTextReport()" class="btn-primary">📋 Copy Text</button>
+      <button type="button" onclick="closeShareCard()">✖ වසන්න</button>
     </div>
   </div>
 </div>
@@ -1638,29 +1665,65 @@
   <div class="modal-card">
     <h3 style="margin-bottom:10px; color:var(--primary);">☁️ Cloud Sync & Backup</h3>
     <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
-      <button onclick="syncToTelegramCloud(true)" class="btn-purple">☁️ Sync to TG Cloud</button>
-      <button onclick="restoreFromTelegramCloud(true)" class="btn-primary">📥 Restore from TG Cloud</button>
+      <button type="button" onclick="syncToTelegramCloud(true)" class="btn-purple">☁️ Sync to TG Cloud</button>
+      <button type="button" onclick="restoreFromTelegramCloud(true)" class="btn-primary">📥 Restore from TG Cloud</button>
     </div>
     <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid var(--border);">
-      <button onclick="exportBackup()" class="btn-success">💾 Download .JSON</button>
-      <button onclick="document.getElementById('importFile').click()">📂 Upload .JSON</button>
+      <button type="button" onclick="exportBackup()" class="btn-success">💾 Download .JSON</button>
+      <button type="button" onclick="document.getElementById('importFile').click()">📂 Upload .JSON</button>
       <input type="file" id="importFile" style="display:none" accept=".json" onchange="importBackup(event)">
     </div>
     <div style="text-align:left; margin-bottom:10px;">
       <label style="font-weight:700; font-size:11.5px; display:block; margin-bottom:4px;">📋 Backup Code:</label>
       <textarea id="backupTextArea" rows="3" placeholder="Backup කේතය..." style="font-size:11.5px;"></textarea>
       <div style="display:flex; gap:8px; margin-top:6px; justify-content:center;">
-        <button onclick="generateTextBackupCode()" class="mini-btn btn-primary">📋 Copy Code</button>
-        <button onclick="restoreFromTextBackupCode()" class="mini-btn btn-success">✅ Restore Code</button>
+        <button type="button" onclick="generateTextBackupCode()" class="mini-btn btn-primary">📋 Copy Code</button>
+        <button type="button" onclick="restoreFromTextBackupCode()" class="mini-btn btn-success">✅ Restore Code</button>
       </div>
     </div>
-    <button onclick="closeBackupModal()">✖ වසන්න</button>
+    <button type="button" onclick="closeBackupModal()">✖ වසන්න</button>
   </div>
 </div>
 <!-- ================= END OF PART 1 (Paste PART 2 immediately below this line) ================= -->
 <script>
   function escHtml(str) {
     return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function safeJsonParse(rawStr, fallbackVal) {
+    if (!rawStr || typeof rawStr !== 'string') return fallbackVal;
+    try {
+      const parsed = JSON.parse(rawStr);
+      return (parsed !== null && parsed !== undefined) ? parsed : fallbackVal;
+    } catch (e) {
+      return fallbackVal;
+    }
+  }
+
+  let pendingConfirmCallback = null;
+  function askCustomConfirm(msg, onYes) {
+    triggerHaptic('medium');
+    const modal = document.getElementById('customConfirmModal');
+    const txt = document.getElementById('customConfirmText');
+    const yesBtn = document.getElementById('customConfirmYesBtn');
+    if (!modal || !txt || !yesBtn) {
+      if (window.confirm(msg)) onYes();
+      return;
+    }
+    txt.textContent = msg;
+    pendingConfirmCallback = onYes;
+    yesBtn.onclick = () => {
+      const cb = pendingConfirmCallback;
+      closeCustomConfirm();
+      if (typeof cb === 'function') cb();
+    };
+    modal.classList.add('open');
+  }
+
+  function closeCustomConfirm() {
+    const modal = document.getElementById('customConfirmModal');
+    if (modal) modal.classList.remove('open');
+    pendingConfirmCallback = null;
   }
 
   function triggerHaptic(style = 'light') {
@@ -1680,7 +1743,7 @@
     } catch (e) {}
   }
 
-  /* ================= TELEGRAM CLOUD SYNC ENGINE ================= */
+  /* ================= TELEGRAM CLOUD SYNC ENGINE (SAFE JSON VALIDATED) ================= */
   let cloudSyncTimer = null;
   let isCloudSyncing = false;
 
@@ -1729,7 +1792,7 @@
     badge.style.color = isGood ? 'var(--success)' : 'var(--warning)';
   }
 
-  function splitStringByUtf8Bytes(str, maxBytes = 1000) {
+  function splitStringByUtf8Bytes(str, maxBytes = 900) {
     const chunks = [];
     let current = '';
     let currentBytes = 0;
@@ -1792,7 +1855,7 @@
       keysToSync.forEach(k => {
         const val = localStorage.getItem(k);
         if (!val) return;
-        const chunks = splitStringByUtf8Bytes(val, 1000);
+        const chunks = splitStringByUtf8Bytes(val, 900);
         if (chunks.length === 1) {
           writeQueue.push({ key: k, val: chunks[0] });
           writeQueue.push({ key: `${k}__chunks`, val: '0' });
@@ -1835,6 +1898,23 @@
     }
   }
 
+  function isValidRestoredJson(key, strVal) {
+    if (!strVal || typeof strVal !== 'string') return false;
+    try {
+      const parsed = JSON.parse(strVal);
+      if (!parsed || typeof parsed !== 'object') return false;
+      if (key === 'al_pro_syllabus') {
+        const hasUnits = (Array.isArray(parsed.s1) && parsed.s1.length > 0) ||
+                         (Array.isArray(parsed.s2) && parsed.s2.length > 0) ||
+                         (Array.isArray(parsed.s3) && parsed.s3.length > 0);
+        return hasUnits;
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   function restoreFromTelegramCloud(showManualToast = false) {
     if (!isRealTelegramCloudAvailable()) {
       if (showManualToast) {
@@ -1857,8 +1937,10 @@
             if (k.startsWith('al_') && !k.includes('__') && values[k]) {
               const chunkCount = parseInt(values[`${k}__chunks`] || '0', 10);
               if (!chunkCount || chunkCount <= 1) {
-                localStorage.setItem(k, values[k]);
-                restoredAny = true;
+                if (isValidRestoredJson(k, values[k])) {
+                  localStorage.setItem(k, values[k]);
+                  restoredAny = true;
+                }
               }
             }
           });
@@ -1869,10 +1951,16 @@
               const count = parseInt(values[k] || '0', 10);
               if (count > 1) {
                 let combined = '';
+                let missingChunk = false;
                 for (let c = 0; c < count; c++) {
-                  combined += (values[`${baseKey}__c${c}`] || '');
+                  const part = values[`${baseKey}__c${c}`];
+                  if (part === undefined) {
+                    missingChunk = true;
+                    break;
+                  }
+                  combined += part;
                 }
-                if (combined) {
+                if (!missingChunk && combined && isValidRestoredJson(baseKey, combined)) {
                   localStorage.setItem(baseKey, combined);
                   restoredAny = true;
                 }
@@ -1882,6 +1970,7 @@
 
           if (restoredAny) {
             loadGlobalSettings();
+            ensureSyllabusHasDefaultUnits();
             loadData(currentDate);
             renderLongTermPlan();
             loadOmrState();
@@ -2426,6 +2515,35 @@
       "ඒකකය 06: ජාලකරණය (Networking)", "ඒකකය 07: පද්ධති විශ්ලේෂණය (SDLC)",
       "ඒකකය 08: දත්ත සමුදා (DBMS & SQL)", "ඒකකය 09: Python Programming",
       "ඒකකය 10: වෙබ් අඩවි සංවර්ධනය", "ඒකකය 11: IoT", "ඒකකය 12: නව ප්‍රවණතා"
+    ],
+    "engineering tech": [
+      "ඒකකය 01: ඉංජිනේරු තාක්ෂණවේදය හැඳින්වීම", "ඒකකය 02: මූලික නිෂ්පාදන තාක්ෂණය",
+      "ඒකකය 03: යාන්ත්‍රික තාක්ෂණය හා එන්ජින්", "ඒකකය 04: විදුලි හා ඉලෙක්ට්‍රොනික තාක්ෂණය",
+      "ඒකකය 05: සිවිල් ඉංජිනේරු හා ගොඩනැගිලි තාක්ෂණය", "ඒකකය 06: ඉංජිනේරු ඇඳීම (Engineering Drawing)",
+      "ඒකකය 07: තරල යාන්ත්‍ර විද්‍යාව හා Pneumatics", "ඒකකය 08: ප්‍රමාණ සමීක්ෂණය (QS)",
+      "ඒකකය 09: බලශක්ති හා ආරක්ෂණ කළමනාකරණය", "ඒකකය 10: ව්‍යවසායකත්වය හා කළමනාකරණය"
+    ],
+    "science for tech (sft)": [
+      "ඒකකය 01: ක්ෂුද්‍ර ජීව විද්‍යාව හා ජෛව තාක්ෂණය", "ඒකකය 02: මූලික ගණිත සංකල්ප හා ත්‍රිකෝණමිතිය",
+      "ඒකකය 03: මිනුම් හා යාන්ත්‍ර විද්‍යාව", "ඒකකය 04: පදාර්ථයේ ගුණ හා තරල",
+      "ඒකකය 05: තාපය හා තාප ගති විද්‍යාව", "ඒකකය 06: තරංග, ආලෝකය හා ධ්වනිය",
+      "ඒකකය 07: විද්‍යුතය හා චුම්බකත්වය", "ඒකකය 08: පරමාණුක ව්‍යුහය හා රසායනික බන්ධන",
+      "ඒකකය 09: රසායනික ගණනය හා ද්‍රාවණ", "ඒකකය 10: කාබනික රසායනය හා බහුඅවයවක (Polymers)",
+      "ඒකකය 11: ස්වභාවික සම්පත් හා පරිසරය"
+    ],
+    "bio systems tech": [
+      "ඒකකය 01: ජෛව පද්ධති තාක්ෂණවේදය හැඳින්වීම", "ඒකකය 02: කෘෂි කාලගුණ විද්‍යාව හා පස",
+      "ඒකකය 03: ජල විද්‍යාව හා වාරිමාර්ග තාක්ෂණය", "ඒකකය 04: පැළෑටි ප්‍රචාරණය හා හරිතාගාර තාක්ෂණය",
+      "ඒකකය 05: පසු අස්වනු තාක්ෂණය හා ආහාර කල්තබා ගැනීම", "ඒකකය 06: ආහාර නිෂ්පාදන හා ඇසුරුම්කරණය",
+      "ඒකකය 07: සත්ත්ව පාලන තාක්ෂණය හා ජලජීවී වගාව", "ඒකකය 08: කෘෂි යන්ත්‍රෝපකරණ හා බලශක්තිය",
+      "ඒකකය 09: ඉලෙක්ට්‍රොනික පාලන හා ස්වයංක්‍රීයකරණය", "ඒකකය 10: ජෛව තාක්ෂණය හා අපද්‍රව්‍ය කළමනාකරණය"
+    ],
+    "agricultural science": [
+      "ඒකකය 01: ශ්‍රී ලංකාවේ කෘෂිකර්මය හා ආහාර සුරක්ෂිතතාව", "ඒකකය 02: කෘෂි කාලගුණික සාධක",
+      "ඒකකය 03: පාංශු විද්‍යාව හා ශාක පෝෂණය", "ඒකකය 04: ඉඩම් සැකසීම හා ජල සම්පාදනය",
+      "ඒකකය 05: ශාක ප්‍රචාරණය හා අභිජනනය", "ඒකකය 06: ශාක කායික විද්‍යාව (Photosynthesis & Growth)",
+      "ඒකකය 07: පළිබෝධ, රෝග හා වල්පැළෑටි පාලනය", "ඒකකය 08: පසු අස්වනු තාක්ෂණය හා ආහාර විද්‍යාව",
+      "ඒකකය 09: සත්ත්ව පාලනය හා පෝෂණය", "ඒකකය 10: කෘෂි ආර්ථික විද්‍යාව හා ව්‍යවසායකත්වය"
     ]
   };
 
@@ -2919,14 +3037,8 @@
   }
 
   function getLongTermPlanData() {
-    const raw = localStorage.getItem('al_pro_longterm_plan');
-    if (!raw) return createDefaultLongTermPlan();
-    try {
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) && parsed.length > 0 ? parsed : createDefaultLongTermPlan();
-    } catch (e) {
-      return createDefaultLongTermPlan();
-    }
+    const parsed = safeJsonParse(localStorage.getItem('al_pro_longterm_plan'), null);
+    return (Array.isArray(parsed) && parsed.length > 0) ? parsed : createDefaultLongTermPlan();
   }
 
   function saveLongTermPlanData(data) {
@@ -3006,11 +3118,11 @@
   function deleteLongTermDay(dIdx) {
     const days = getLongTermPlanData();
     if (days.length <= 1) return;
-    if (!confirm(`${days[dIdx].title || `Day ${dIdx + 1}`} මකා දමන්නද?`)) return;
-    triggerHaptic('light');
-    days.splice(dIdx, 1);
-    saveLongTermPlanData(days);
-    renderLongTermPlan();
+    askCustomConfirm(`${days[dIdx].title || `Day ${dIdx + 1}`} මකා දමන්නද?`, () => {
+      days.splice(dIdx, 1);
+      saveLongTermPlanData(days);
+      renderLongTermPlan();
+    });
   }
 
   function toggleLongTermDayDone(dIdx, isDone) {
@@ -3279,8 +3391,7 @@
     const tmrwStr = getLocalDateString(tmrw);
     const key = `al_plan_${tmrwStr}`;
 
-    const existingRaw = localStorage.getItem(key);
-    const data = existingRaw ? JSON.parse(existingRaw) : { priorities: createDefaultPriorities(), rows: {} };
+    const data = safeJsonParse(localStorage.getItem(key), { priorities: createDefaultPriorities(), rows: {} });
     data.priorities = sanitizeSavedPriorities(data.priorities);
 
     let addedCount = 0;
@@ -3367,6 +3478,8 @@
 
     applyCollapsedGroupStates();
     loadGlobalSettings();
+    ensureSyllabusHasDefaultUnits();
+    updateSubjectDropdownLabels();
     loadData(currentDate);
     renderLongTermPlan();
     loadOmrState();
@@ -3458,21 +3571,20 @@ function saveRoutineTemplate() {
     const slotType = document.getElementById('templateSlotSelect').value || 'study';
     const raw = localStorage.getItem(`al_pro_routine_template_${slotType}`) || localStorage.getItem('al_pro_routine_template');
     if (!raw) return showToast('⚠️ පළමුව "💾 Save" ඔබා ආකෘතියක් සුරකින්න.');
-    try {
-      const tpl = JSON.parse(raw);
-      timeSlots.forEach(slot => {
-        if (slot.group) return;
-        if (tpl[slot.id]) {
-          const validSubj = ['s1', 's2', 's3'].includes(tpl[slot.id].subj) ? tpl[slot.id].subj : 'none';
-          document.getElementById(`subj_${slot.id}`).value = validSubj;
-          document.getElementById(`task_${slot.id}`).value = tpl[slot.id].task || '';
-        }
-      });
-      applySubjectColorClasses();
-      saveData();
-      renderTotals();
-      showToast('📂 ආකෘතිය යොදන ලදී!');
-    } catch (e) {}
+    const tpl = safeJsonParse(raw, null);
+    if (!tpl) return;
+    timeSlots.forEach(slot => {
+      if (slot.group) return;
+      if (tpl[slot.id]) {
+        const validSubj = ['s1', 's2', 's3'].includes(tpl[slot.id].subj) ? tpl[slot.id].subj : 'none';
+        document.getElementById(`subj_${slot.id}`).value = validSubj;
+        document.getElementById(`task_${slot.id}`).value = tpl[slot.id].task || '';
+      }
+    });
+    applySubjectColorClasses();
+    saveData();
+    renderTotals();
+    showToast('📂 ආකෘතිය යොදන ලදී!');
   }
 
   function updateEmptyRowClasses() {
@@ -3493,27 +3605,22 @@ function saveRoutineTemplate() {
     const yest = new Date(cur);
     yest.setDate(cur.getDate() - 1);
     const yestKey = `al_plan_${getLocalDateString(yest)}`;
-    const raw = localStorage.getItem(yestKey);
-    if (!raw) return showToast('⚠️ ඊයේ දිනයට අදාළ සැලසුමක් හමු නොවීය!');
+    const yData = safeJsonParse(localStorage.getItem(yestKey), null);
+    if (!yData || !yData.rows) return showToast('⚠️ ඊයේ දිනයට අදාළ සැලසුමක් හමු නොවීය!');
 
-    try {
-      const yData = JSON.parse(raw);
-      if (yData.rows) {
-        timeSlots.forEach(slot => {
-          if (slot.group) return;
-          const r = yData.rows[slot.id];
-          if (r) {
-            const validSubj = ['s1', 's2', 's3'].includes(r.subj) ? r.subj : 'none';
-            document.getElementById(`subj_${slot.id}`).value = validSubj;
-            document.getElementById(`task_${slot.id}`).value = r.task || '';
-          }
-        });
+    timeSlots.forEach(slot => {
+      if (slot.group) return;
+      const r = yData.rows[slot.id];
+      if (r) {
+        const validSubj = ['s1', 's2', 's3'].includes(r.subj) ? r.subj : 'none';
+        document.getElementById(`subj_${slot.id}`).value = validSubj;
+        document.getElementById(`task_${slot.id}`).value = r.task || '';
       }
-      applySubjectColorClasses();
-      saveData();
-      renderTotals();
-      showToast('📋 ඊයේ සැලසුම පිටපත් කරන ලදී!');
-    } catch (e) {}
+    });
+    applySubjectColorClasses();
+    saveData();
+    renderTotals();
+    showToast('📋 ඊයේ සැලසුම පිටපත් කරන ලදී!');
   }
 
   function applyStreamPreset(streamKey) {
@@ -3539,27 +3646,45 @@ function saveRoutineTemplate() {
     const clean = (subjName || '').trim().toLowerCase();
     if (SYLLABUS_PRESETS[clean]) return SYLLABUS_PRESETS[clean];
     for (const key of Object.keys(SYLLABUS_PRESETS)) {
-      if (clean.includes(key) || key.includes(clean)) return SYLLABUS_PRESETS[key];
+      if (clean && (clean.includes(key) || key.includes(clean))) return SYLLABUS_PRESETS[key];
     }
-    return ["ඒකකය 01", "ඒකකය 02", "ඒකකය 03", "ඒකකය 04", "ඒකකය 05", "ඒකකය 06", "ඒකකය 07", "ඒකකය 08", "ඒකකය 09", "ඒකකය 10"];
+    return [
+      "ඒකකය 01", "ඒකකය 02", "ඒකකය 03", "ඒකකය 04", "ඒකකය 05",
+      "ඒකකය 06", "ඒකකය 07", "ඒකකය 08", "ඒකකය 09", "ඒකකය 10"
+    ];
   }
 
-  function loadDefaultSyllabusForCurrentSubjects(askConfirm = true, forceOverwrite = false) {
+  function ensureSyllabusHasDefaultUnits() {
     const names = getSubjectNames();
     const data = getSyllabusData();
-    const hasExisting = (data.s1 && data.s1.length > 0) || (data.s2 && data.s2.length > 0) || (data.s3 && data.s3.length > 0);
+    let changed = false;
 
-    if (askConfirm && hasExisting) {
-      if (!confirm(`${names.s1}, ${names.s2}, ${names.s3} සඳහා නව විෂය නිර්දේශ ඒකක පූරණය කරන්නද?`)) return;
-    } else if (!askConfirm && hasExisting && !forceOverwrite) {
-      return;
+    ['s1', 's2', 's3'].forEach((sKey, idx) => {
+      if (!Array.isArray(data[sKey]) || data[sKey].length === 0) {
+        const units = getPresetUnitsForSubjectName(names[sKey]);
+        data[sKey] = units.map((uTitle, uIdx) => ({
+          id: Date.now() + idx * 1000 + uIdx,
+          title: uTitle,
+          level: 'red',
+          theory: false,
+          mcq: false,
+          essay: false
+        }));
+        changed = true;
+      }
+    });
+
+    if (changed) {
+      saveSyllabusData(data);
     }
+  }
 
+  function buildDefaultSyllabusUnitsNow(data, names) {
     ['s1', 's2', 's3'].forEach((sKey, idx) => {
       const units = getPresetUnitsForSubjectName(names[sKey]);
       const existingUnits = Array.isArray(data[sKey]) ? data[sKey] : [];
       data[sKey] = units.map((uTitle, uIdx) => {
-        const prev = existingUnits.find(eu => eu.title === uTitle);
+        const prev = existingUnits.find(eu => eu && eu.title === uTitle);
         return {
           id: Date.now() + idx * 1000 + uIdx,
           title: uTitle,
@@ -3570,11 +3695,32 @@ function saveRoutineTemplate() {
         };
       });
     });
-
     saveSyllabusData(data);
     renderSyllabus();
     updateSmartLessonSuggestions();
-    if (askConfirm) showToast('✅ විෂය ඒකක පූරණය කරන ලදී!');
+  }
+
+  function loadDefaultSyllabusForCurrentSubjects(askConfirm = true, forceOverwrite = false) {
+    const names = getSubjectNames();
+    const data = getSyllabusData();
+    const hasExisting = (Array.isArray(data.s1) && data.s1.length > 0) ||
+                        (Array.isArray(data.s2) && data.s2.length > 0) ||
+                        (Array.isArray(data.s3) && data.s3.length > 0);
+
+    if (askConfirm && hasExisting) {
+      askCustomConfirm(`${names.s1}, ${names.s2}, ${names.s3} සඳහා නිල විෂය නිර්දේශ ඒකක නැවත Load කරන්නද?`, () => {
+        buildDefaultSyllabusUnitsNow(data, names);
+        showToast('✅ නිල විෂය ඒකක සාර්ථකව Load කරන ලදී!');
+      });
+      return;
+    }
+
+    if (!askConfirm && hasExisting && !forceOverwrite) {
+      return;
+    }
+
+    buildDefaultSyllabusUnitsNow(data, names);
+    if (askConfirm) showToast('✅ නිල විෂය ඒකක සාර්ථකව Load කරන ලදී!');
   }
 
   function switchTab(tabName, btnEl) {
@@ -3588,7 +3734,14 @@ function saveRoutineTemplate() {
     if (tabName === 'tasks') renderPriorityList();
     if (tabName === 'planner') refreshLiveHourHighlight();
     if (tabName === 'analytics') renderAnalytics();
-    if (tabName === 'syllabus') renderSyllabus();
+    if (tabName === 'syllabus') {
+      ensureSyllabusHasDefaultUnits();
+      renderSyllabus();
+    }
+    if (tabName === 'omr') {
+      updateSubjectDropdownLabels();
+      initOmrSheet();
+    }
     if (tabName === 'vault') renderVaultCards();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -3731,10 +3884,13 @@ function saveRoutineTemplate() {
 
   /* ================= 3 MAIN SUBJECTS DROPDOWN SYNC ================= */
   function getSubjectNames() {
+    const s1El = document.getElementById('subj1Name');
+    const s2El = document.getElementById('subj2Name');
+    const s3El = document.getElementById('subj3Name');
     return {
-      s1: document.getElementById('subj1Name').value || 'Subject 1',
-      s2: document.getElementById('subj2Name').value || 'Subject 2',
-      s3: document.getElementById('subj3Name').value || 'Subject 3'
+      s1: (s1El && s1El.value.trim()) ? s1El.value.trim() : 'Combined Maths',
+      s2: (s2El && s2El.value.trim()) ? s2El.value.trim() : 'Physics',
+      s3: (s3El && s3El.value.trim()) ? s3El.value.trim() : 'Chemistry'
     };
   }
 
@@ -3751,14 +3907,30 @@ function saveRoutineTemplate() {
       }
     });
 
-    ['paperSubjInput', 'omrSubjectSelect', 'vaultSubjSelect', 'tbSubjSelect'].forEach(id => {
+    ['paperSubjInput', 'omrSubjectSelect', 'vaultSubjSelect'].forEach(id => {
       const sel = document.getElementById(id);
-      if (sel && sel.options.length >= 3) {
+      if (!sel) return;
+      const curVal = sel.value || 's1';
+      if (sel.options.length < 3) {
+        sel.innerHTML = `
+          <option value="s1">📘 ${escHtml(names.s1)}</option>
+          <option value="s2">📗 ${escHtml(names.s2)}</option>
+          <option value="s3">📙 ${escHtml(names.s3)}</option>
+        `;
+      } else {
         sel.options[0].text = `📘 ${names.s1}`;
         sel.options[1].text = `📗 ${names.s2}`;
         sel.options[2].text = `📙 ${names.s3}`;
       }
+      sel.value = ['s1', 's2', 's3'].includes(curVal) ? curVal : 's1';
     });
+
+    const tbSel = document.getElementById('tbSubjSelect');
+    if (tbSel && tbSel.options.length >= 3) {
+      tbSel.options[0].text = `📘 ${names.s1}`;
+      tbSel.options[1].text = `📗 ${names.s2}`;
+      tbSel.options[2].text = `📙 ${names.s3}`;
+    }
 
     ['paperChartFilter', 'vaultFilterSubj'].forEach(id => {
       const sel = document.getElementById(id);
@@ -3787,7 +3959,9 @@ function saveRoutineTemplate() {
     if (getSavedDayUsingMinutes(`al_plan_${getLocalDateString(checkDate)}`) < 30) {
       checkDate.setDate(checkDate.getDate() - 1);
     }
-    while (true) {
+    let safety = 0;
+    while (safety < 366) {
+      safety++;
       if (getSavedDayUsingMinutes(`al_plan_${getLocalDateString(checkDate)}`) >= 30) {
         streak++;
         checkDate.setDate(checkDate.getDate() - 1);
@@ -3811,22 +3985,17 @@ function saveRoutineTemplate() {
   }
 
   function getSavedDayUsingMinutes(storageKey) {
-    const raw = localStorage.getItem(storageKey);
-    if (!raw) return 0;
-    try {
-      const data = JSON.parse(raw);
-      let mins = 0;
-      if (data.rows) {
-        Object.values(data.rows).forEach(r => {
-          if (r.slots) {
-            r.slots.forEach(st => {
-              if (st === 1 || st === true) mins += 15;
-            });
-          }
+    const data = safeJsonParse(localStorage.getItem(storageKey), null);
+    if (!data || !data.rows) return 0;
+    let mins = 0;
+    Object.values(data.rows).forEach(r => {
+      if (r && Array.isArray(r.slots)) {
+        r.slots.forEach(st => {
+          if (st === 1 || st === true) mins += 15;
         });
       }
-      return mins;
-    } catch (e) { return 0; }
+    });
+    return mins;
   }
 
   function renderTotals() {
@@ -3938,6 +4107,7 @@ function saveRoutineTemplate() {
   function openTimeBlockModal() {
     triggerHaptic('light');
     populateTimeBlockHourDropdowns();
+    updateSubjectDropdownLabels();
     const h = new Date().getHours();
     const nextH = (h + 1) % 24;
 
@@ -4039,20 +4209,18 @@ function saveRoutineTemplate() {
   }
 
   function getDayPlanObject(dStr) {
-    const raw = localStorage.getItem(`al_plan_${dStr}`);
-    if (!raw) return { priorities: createDefaultPriorities(), rows: {} };
-    try {
-      const parsed = JSON.parse(raw);
-      if (!parsed.rows) parsed.rows = {};
-      parsed.priorities = sanitizeSavedPriorities(parsed.priorities);
-      return parsed;
-    } catch (e) {
+    const parsed = safeJsonParse(localStorage.getItem(`al_plan_${dStr}`), null);
+    if (!parsed || typeof parsed !== 'object') {
       return { priorities: createDefaultPriorities(), rows: {} };
     }
+    if (!parsed.rows) parsed.rows = {};
+    parsed.priorities = sanitizeSavedPriorities(parsed.priorities);
+    return parsed;
   }
 
   function autoScheduleFromSyllabus() {
     triggerHaptic('medium');
+    ensureSyllabusHasDefaultUnits();
     const sylData = getSyllabusData();
     const targetHours = [6, 7, 8, 9, 10, 11, 14, 15, 16, 19, 20, 21];
     const subjCycle = ['s1', 's1', 's2', 's2', 's3', 's3', 's1', 's2', 's3', 's1', 's2', 's3'];
@@ -4086,8 +4254,16 @@ function saveRoutineTemplate() {
 
   /* ================= MISTAKE TRACKER ================= */
   function getMistakeStats() {
-    const raw = localStorage.getItem('al_pro_mistakes');
-    return raw ? JSON.parse(raw) : { theory: 0, careless: 0, time: 0, misread: 0 };
+    const parsed = safeJsonParse(localStorage.getItem('al_pro_mistakes'), null);
+    if (!parsed || typeof parsed !== 'object') {
+      return { theory: 0, careless: 0, time: 0, misread: 0 };
+    }
+    return {
+      theory: Number(parsed.theory || 0),
+      careless: Number(parsed.careless || 0),
+      time: Number(parsed.time || 0),
+      misread: Number(parsed.misread || 0)
+    };
   }
 
   function logMistakeReason(type, count = 1) {
@@ -4134,8 +4310,7 @@ function saveRoutineTemplate() {
   for (let y = 2026; y >= 2011; y--) FULL_PAPER_YEARS.push(y);
 
   function getPaperMatrixState() {
-    const raw = localStorage.getItem('al_pro_paper_matrix');
-    return raw ? JSON.parse(raw) : {};
+    return safeJsonParse(localStorage.getItem('al_pro_paper_matrix'), {});
   }
 
   function savePaperMatrixState(st) {
@@ -4173,16 +4348,13 @@ function saveRoutineTemplate() {
   }
 
   function loadEssayLapsState() {
-    const raw = localStorage.getItem('al_pro_essay_laps');
-    if (!raw) return;
-    try {
-      const data = JSON.parse(raw);
-      essayRemainingSec = data.remaining !== undefined ? data.remaining : (3 * 60 * 60);
-      essayCurrentLapSec = data.currentLapSec || 0;
-      essayLapsList = Array.isArray(data.laps) ? data.laps : [];
-      updateEssayTimerDisplay(essayRemainingSec);
-      renderEssayLapsList();
-    } catch (e) {}
+    const data = safeJsonParse(localStorage.getItem('al_pro_essay_laps'), null);
+    if (!data) return;
+    essayRemainingSec = data.remaining !== undefined ? data.remaining : (3 * 60 * 60);
+    essayCurrentLapSec = data.currentLapSec || 0;
+    essayLapsList = Array.isArray(data.laps) ? data.laps : [];
+    updateEssayTimerDisplay(essayRemainingSec);
+    renderEssayLapsList();
   }
 
   function updateEssayTimerDisplay(sec) {
@@ -4265,12 +4437,14 @@ function saveRoutineTemplate() {
   }
 
   function clearEssayLaps() {
-    if (!confirm('සියලුම Lap වාර්තා මකා දමන්නද?')) return;
-    essayLapsList = [];
-    essayCurrentLapSec = 0;
-    updateEssayTimerDisplay(essayRemainingSec);
-    saveEssayLapsState();
-    renderEssayLapsList();
+    askCustomConfirm('සියලුම Lap වාර්තා මකා දමන්නද?', () => {
+      essayLapsList = [];
+      essayCurrentLapSec = 0;
+      updateEssayTimerDisplay(essayRemainingSec);
+      saveEssayLapsState();
+      renderEssayLapsList();
+      showToast('🗑️ Lap වාර්තා මකා දමන ලදී.');
+    });
   }
 
   function renderEssayLapsList() {
@@ -4320,29 +4494,24 @@ function saveRoutineTemplate() {
       const d = new Date(cur);
       d.setDate(cur.getDate() - i);
       const dStr = getLocalDateString(d);
-      const raw = localStorage.getItem(`al_plan_${dStr}`);
+      const parsed = safeJsonParse(localStorage.getItem(`al_plan_${dStr}`), null);
       let dayMins = 0;
-      if (raw) {
-        try {
-          const parsed = JSON.parse(raw);
-          if (parsed.rows) {
-            Object.values(parsed.rows).forEach(r => {
-              let rMins = 0;
-              let rWaste = 0;
-              if (r.slots) {
-                r.slots.forEach(st => {
-                  if (st === 1 || st === true) rMins += 15;
-                  else if (st === 2) rWaste += 15;
-                });
-              }
-              dayMins += rMins;
-              actualWaste7 += rWaste;
-              if (r.subj === 's1') sTotals.s1 += rMins;
-              else if (r.subj === 's2') sTotals.s2 += rMins;
-              else if (r.subj === 's3') sTotals.s3 += rMins;
+      if (parsed && parsed.rows) {
+        Object.values(parsed.rows).forEach(r => {
+          let rMins = 0;
+          let rWaste = 0;
+          if (r && Array.isArray(r.slots)) {
+            r.slots.forEach(st => {
+              if (st === 1 || st === true) rMins += 15;
+              else if (st === 2) rWaste += 15;
             });
           }
-        } catch (e) {}
+          dayMins += rMins;
+          actualWaste7 += rWaste;
+          if (r.subj === 's1') sTotals.s1 += rMins;
+          else if (r.subj === 's2') sTotals.s2 += rMins;
+          else if (r.subj === 's3') sTotals.s3 += rMins;
+        });
       }
       total7Mins += dayMins;
       daysData.push({ label: dStr.slice(5), mins: dayMins });
@@ -4398,7 +4567,7 @@ function saveRoutineTemplate() {
       heatEl.innerHTML = heatHtml;
     }
 
-    const papers = JSON.parse(localStorage.getItem('al_pro_papers') || '[]');
+    const papers = safeJsonParse(localStorage.getItem('al_pro_papers'), []);
     const avgMarks = papers.length > 0
       ? (papers.reduce((a, b) => a + Number(b.marks || 0), 0) / papers.length)
       : 65;
@@ -4447,7 +4616,7 @@ function saveRoutineTemplate() {
   }
 
   function addPaperScore() {
-    const subj = document.getElementById('paperSubjInput').value;
+    const subj = document.getElementById('paperSubjInput').value || 's1';
     const name = document.getElementById('paperNameInput').value.trim();
     const marks = parseFloat(document.getElementById('paperMarksInput').value);
     const mistakeReason = document.getElementById('paperMistakeReasonInput').value;
@@ -4457,7 +4626,7 @@ function saveRoutineTemplate() {
       logMistakeReason(mistakeReason, 1);
     }
 
-    const list = JSON.parse(localStorage.getItem('al_pro_papers') || '[]');
+    const list = safeJsonParse(localStorage.getItem('al_pro_papers'), []);
     list.unshift({ id: Date.now(), date: currentDate, subj, name, marks: Math.min(100, Math.max(0, marks)), mistake: mistakeReason });
     localStorage.setItem('al_pro_papers', JSON.stringify(list));
     queueAutoCloudSync();
@@ -4469,7 +4638,7 @@ function saveRoutineTemplate() {
   }
 
   function deletePaperScore(id) {
-    let list = JSON.parse(localStorage.getItem('al_pro_papers') || '[]');
+    let list = safeJsonParse(localStorage.getItem('al_pro_papers'), []);
     list = list.filter(item => item.id !== id);
     localStorage.setItem('al_pro_papers', JSON.stringify(list));
     queueAutoCloudSync();
@@ -4481,7 +4650,7 @@ function saveRoutineTemplate() {
     const chartBox = document.getElementById('paperChartBox');
     const avgBadge = document.getElementById('paperAvgGradeBadge');
     if (!container) return;
-    const allList = JSON.parse(localStorage.getItem('al_pro_papers') || '[]').filter(i => ['s1', 's2', 's3'].includes(i.subj));
+    const allList = safeJsonParse(localStorage.getItem('al_pro_papers'), []).filter(i => i && ['s1', 's2', 's3'].includes(i.subj));
     const filterSubj = (document.getElementById('paperChartFilter') || {}).value || 'all';
     const filtered = filterSubj === 'all' ? allList : allList.filter(i => i.subj === filterSubj);
 
@@ -4522,7 +4691,7 @@ function saveRoutineTemplate() {
         <div><strong style="color:var(--primary);">[${escHtml(names[item.subj] || item.subj)}]</strong> ${escHtml(item.name)} ${item.mistake && item.mistake !== 'none' ? `<span style="font-size:10px; color:var(--danger); font-weight:700;">(${item.mistake})</span>` : ''}</div>
         <div style="display:flex; align-items:center; gap:6px;">
           <span class="stat-badge ${item.marks >= 75 ? 'stat-good' : item.marks >= 50 ? 'stat-warn' : 'stat-bad'}">${item.marks}% [${getAlGradeLetter(item.marks)}]</span>
-          <button class="mini-btn btn-danger-soft" onclick="deletePaperScore(${item.id})">✕</button>
+          <button type="button" class="mini-btn btn-danger-soft" onclick="deletePaperScore(${item.id})">✕</button>
         </div>
       </div>
     `).join('');
@@ -4530,8 +4699,15 @@ function saveRoutineTemplate() {
 
   /* ================= SYLLABUS & 2011-2026 FULL PAPER TRACKER ================= */
   function getSyllabusData() {
-    const raw = localStorage.getItem('al_pro_syllabus');
-    return raw ? JSON.parse(raw) : { s1: [], s2: [], s3: [] };
+    const parsed = safeJsonParse(localStorage.getItem('al_pro_syllabus'), null);
+    if (!parsed || typeof parsed !== 'object') {
+      return { s1: [], s2: [], s3: [] };
+    }
+    return {
+      s1: Array.isArray(parsed.s1) ? parsed.s1 : [],
+      s2: Array.isArray(parsed.s2) ? parsed.s2 : [],
+      s3: Array.isArray(parsed.s3) ? parsed.s3 : []
+    };
   }
 
   function saveSyllabusData(data) {
@@ -4541,8 +4717,8 @@ function saveRoutineTemplate() {
 
   function addSyllabusUnit(subjKey) {
     const input = document.getElementById(`new_unit_${subjKey}`);
-    const title = input.value.trim();
-    if (!title) return;
+    const title = (input ? input.value : '').trim();
+    if (!title) return showToast('⚠️ පාඩමේ නම ඇතුළත් කරන්න!');
     const data = getSyllabusData();
     if (!Array.isArray(data[subjKey])) data[subjKey] = [];
     data[subjKey].push({
@@ -4554,9 +4730,10 @@ function saveRoutineTemplate() {
       essay: false
     });
     saveSyllabusData(data);
-    input.value = '';
+    if (input) input.value = '';
     renderSyllabus();
     updateSmartLessonSuggestions();
+    showToast('✅ නව ඒකකය එක් කරන ලදී!');
   }
 
   function sendSyllabusUnitToTodayTasks(subjKey, unitId) {
@@ -4620,6 +4797,8 @@ function saveRoutineTemplate() {
   function renderSyllabus() {
     const container = document.getElementById('syllabusContainer');
     if (!container) return;
+
+    ensureSyllabusHasDefaultUnits();
     const names = getSubjectNames();
     const data = getSyllabusData();
     const paperState = getPaperMatrixState();
@@ -4630,10 +4809,9 @@ function saveRoutineTemplate() {
     let grandDoneTicks = 0;
 
     container.innerHTML = ['s1', 's2', 's3'].map(sKey => {
-      const allUnits = data[sKey] || [];
+      const allUnits = Array.isArray(data[sKey]) ? data[sKey] : [];
       const subjPapers = paperState[sKey] || {};
 
-      // 1. Unit Ticks (Theory + Past Paper MCQ + Past Paper Essay = 3 ticks per unit)
       let unitDoneTicks = 0;
       const unitTotalTicks = allUnits.length * 3;
       allUnits.forEach(u => {
@@ -4642,7 +4820,6 @@ function saveRoutineTemplate() {
         if (u.essay) unitDoneTicks++;
       });
 
-      // 2. 2011 - 2026 Full Paper Ticks (MCQ + Essay = 2 ticks per year)
       let paperDoneTicks = 0;
       const paperTotalTicks = FULL_PAPER_YEARS.length * 2;
       FULL_PAPER_YEARS.forEach(y => {
@@ -4692,16 +4869,16 @@ function saveRoutineTemplate() {
           </div>
           <div style="display:flex; gap:5px; margin-bottom:8px;">
             <input type="text" id="new_unit_${sKey}" placeholder="නව පාඩමක් එක් කරන්න..." onkeydown="if(event.key==='Enter') addSyllabusUnit('${sKey}')">
-            <button class="btn-primary mini-btn" onclick="addSyllabusUnit('${sKey}')">+</button>
+            <button type="button" class="btn-primary mini-btn" onclick="addSyllabusUnit('${sKey}')">+</button>
           </div>
 
           <div style="font-size:11px; font-weight:800; color:var(--muted); margin-bottom:5px; display:flex; justify-content:space-between;">
-            <span>📖 පාඩම් ඒකක (Theory / PP MCQ / PP Essay)</span>
-            <span>${unitDoneTicks}/${unitTotalTicks}</span>
+            <span>📖 පාඩම් ඒකක (${allUnits.length})</span>
+            <span>Ticks: ${unitDoneTicks}/${unitTotalTicks}</span>
           </div>
 
-          <div style="max-height:340px; overflow-y:auto; padding-right:2px;">
-            ${units.map(u => {
+          <div style="max-height:360px; overflow-y:auto; padding-right:2px;">
+            ${units.length === 0 ? `<div style="text-align:center; padding:12px; color:var(--muted); font-size:12px;">පාඩම් හමු නොවීය.</div>` : units.map(u => {
               const lvl = u.level || 'red';
               const lvlText = lvl === 'green' ? '🟢 පුළුවන්' : lvl === 'yellow' ? '🟡 සාමාන්‍යයි' : '🔴 අමාරුයි';
               const lvlCls = lvl === 'green' ? 'lvl-green' : lvl === 'yellow' ? 'lvl-yellow' : 'lvl-red';
@@ -4710,7 +4887,7 @@ function saveRoutineTemplate() {
                 <div class="unit-item unit-lvl-${lvl}">
                   <div class="unit-top-row">
                     <span style="font-weight:800; font-size:12px; flex:1; padding-right:6px;">${escHtml(u.title)}</span>
-                    <button type="button" class="unit-level-btn ${lvlCls}" onclick="cycleSyllabusLevel('${sKey}',${u.id})" title="මෙය Progress Bar එකට බලපාන්නේ නැත">
+                    <button type="button" class="unit-level-btn ${lvlCls}" onclick="cycleSyllabusLevel('${sKey}',${u.id})">
                       ${lvlText}
                     </button>
                   </div>
@@ -4727,7 +4904,7 @@ function saveRoutineTemplate() {
                   </div>
                   <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:2px;">
                     <button type="button" class="mini-btn btn-primary" onclick="sendSyllabusUnitToTodayTasks('${sKey}',${u.id})">+අද වැඩ</button>
-                    <button class="mini-btn btn-danger-soft" onclick="deleteSyllabusUnit('${sKey}',${u.id})">✕</button>
+                    <button type="button" class="mini-btn btn-danger-soft" onclick="deleteSyllabusUnit('${sKey}',${u.id})">✕</button>
                   </div>
                 </div>
               `;
@@ -4755,11 +4932,13 @@ function saveRoutineTemplate() {
     if (overallBadge) overallBadge.textContent = `${overallPct}% Completed (${grandDoneTicks}/${grandTotalTicks})`;
   }
 
-  /* ================= 50-MCQ OMR SIMULATOR ================= */
+  /* ================= 50-MCQ OMR SIMULATOR (FIXED FOR TELEGRAM) ================= */
   function saveOmrState() {
+    const subjEl = document.getElementById('omrSubjectSelect');
+    const titleEl = document.getElementById('omrPaperTitle');
     localStorage.setItem('al_pro_omr_state', JSON.stringify({
-      subj: (document.getElementById('omrSubjectSelect') || {}).value || 's1',
-      title: (document.getElementById('omrPaperTitle') || {}).value || '',
+      subj: (subjEl && subjEl.value) ? subjEl.value : 's1',
+      title: (titleEl && titleEl.value) ? titleEl.value : '',
       answers: omrAnswers,
       flags: omrCorrectFlags,
       guesses: omrGuessedFlags
@@ -4768,18 +4947,18 @@ function saveRoutineTemplate() {
   }
 
   function loadOmrState() {
-    const raw = localStorage.getItem('al_pro_omr_state');
-    if (!raw) return;
-    try {
-      const state = JSON.parse(raw);
-      omrAnswers = state.answers || {};
-      omrCorrectFlags = state.flags || {};
-      omrGuessedFlags = state.guesses || {};
-      if (state.subj && ['s1', 's2', 's3'].includes(state.subj) && document.getElementById('omrSubjectSelect')) {
-        document.getElementById('omrSubjectSelect').value = state.subj;
-      }
-      if (state.title && document.getElementById('omrPaperTitle')) document.getElementById('omrPaperTitle').value = state.title;
-    } catch (e) {}
+    const state = safeJsonParse(localStorage.getItem('al_pro_omr_state'), null);
+    if (!state) return;
+    omrAnswers = (state.answers && typeof state.answers === 'object') ? state.answers : {};
+    omrCorrectFlags = (state.flags && typeof state.flags === 'object') ? state.flags : {};
+    omrGuessedFlags = (state.guesses && typeof state.guesses === 'object') ? state.guesses : {};
+    const subjEl = document.getElementById('omrSubjectSelect');
+    if (subjEl) {
+      updateSubjectDropdownLabels();
+      subjEl.value = ['s1', 's2', 's3'].includes(state.subj) ? state.subj : 's1';
+    }
+    const titleEl = document.getElementById('omrPaperTitle');
+    if (titleEl && state.title !== undefined) titleEl.value = state.title;
   }
 
   function initOmrSheet() {
@@ -4789,18 +4968,20 @@ function saveRoutineTemplate() {
     for (let col = 0; col < 5; col++) {
       html += `<div>`;
       for (let q = col * 10 + 1; q <= (col + 1) * 10; q++) {
-        const sel = omrAnswers[q] || 0;
+        const sel = Number(omrAnswers[q] || 0);
         const st = omrCorrectFlags[q];
         const isGuessed = !!omrGuessedFlags[q];
         const rowCls = st === true ? 'correct' : st === false ? 'wrong' : '';
         html += `
           <div class="omr-row ${rowCls}" onclick="handleOmrRowClick(${q})">
-            <span style="font-weight:800; width:26px; font-size:11.5px;">${String(q).padStart(2, '0')}.</span>
+            <span style="font-weight:900; width:24px; font-size:11.5px;">${String(q).padStart(2, '0')}.</span>
             <div class="omr-bubbles">
               ${[1, 2, 3, 4, 5].map(opt => `
                 <button type="button" class="omr-bubble ${sel === opt ? 'selected' : ''}" onclick="selectOmrBubble(event, ${q}, ${opt})">${opt}</button>
               `).join('')}
               <button type="button" class="omr-guess-btn ${isGuessed ? 'guessed' : ''}" onclick="toggleOmrGuess(event, ${q})" title="Guess">?</button>
+              <button type="button" class="omr-mark-btn ${st === true ? 'mark-ok' : ''}" onclick="markOmrQuestionDirect(event, ${q}, true)" title="හරි">✓</button>
+              <button type="button" class="omr-mark-btn ${st === false ? 'mark-no' : ''}" onclick="markOmrQuestionDirect(event, ${q}, false)" title="වැරදි">✗</button>
             </div>
           </div>
         `;
@@ -4812,46 +4993,66 @@ function saveRoutineTemplate() {
   }
 
   function selectOmrBubble(e, q, opt) {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     triggerHaptic('light');
-    if (omrGradingMode) return handleOmrRowClick(q);
-    omrAnswers[q] = (omrAnswers[q] === opt) ? 0 : opt;
+    if (omrGradingMode) {
+      handleOmrRowClick(q);
+      return;
+    }
+    omrAnswers[q] = (Number(omrAnswers[q]) === opt) ? 0 : opt;
     saveOmrState();
     initOmrSheet();
   }
 
   function toggleOmrGuess(e, q) {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     triggerHaptic('light');
     omrGuessedFlags[q] = !omrGuessedFlags[q];
     saveOmrState();
     initOmrSheet();
   }
 
+  function markOmrQuestionDirect(e, q, isCorrect) {
+    if (e) e.stopPropagation();
+    triggerHaptic('light');
+    if (omrCorrectFlags[q] === isCorrect) {
+      delete omrCorrectFlags[q];
+    } else {
+      omrCorrectFlags[q] = isCorrect;
+    }
+    saveOmrState();
+    initOmrSheet();
+  }
+
   function toggleOmrGradingMode() {
+    triggerHaptic('light');
     omrGradingMode = !omrGradingMode;
-    document.getElementById('omrGradeModeBtn').textContent = omrGradingMode ? '✏️ පිළිතුරු Mode' : '✔️ හරි/වැරදි';
-    if (omrGradingMode) showToast('✔️ ප්‍රශ්න පේළිය මත ඔබා හරි හෝ වැරදි ලකුණු කරන්න.');
+    const btn = document.getElementById('omrGradeModeBtn');
+    if (btn) {
+      btn.textContent = omrGradingMode ? '✏️ පිළිතුරු Mode' : '✔️ හරි/වැරදි Mode';
+      btn.className = omrGradingMode ? 'mini-btn btn-warning' : 'mini-btn btn-purple';
+    }
+    if (omrGradingMode) showToast('✔️ දැන් ඕනෑම ප්‍රශ්න පේළියක් මත ඔබා හරි (🟢) හෝ වැරදි (🔴) ලකුණු කරන්න.');
   }
 
   function toggleAnswerKeyBox() {
     const box = document.getElementById('omrAnswerKeyDrawer');
-    box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    if (box) box.style.display = box.style.display === 'none' ? 'block' : 'none';
   }
 
   function gradeWithAnswerKey() {
     const input = (document.getElementById('omrAnswerKeyInput').value || '').trim();
     if (!input) return showToast('⚠️ පිළිතුරු අංක (1-5) ඇතුළත් කරන්න!');
 
-    const pairMatches = [...input.matchAll(/(\d{1,2})\s*[\)\.\-\:]\s*([1-5])/g)];
+    const pairMatches = [...input.matchAll(/(\d{1,2})\s*[\)\.\-\:\s]\s*([1-5])/g)];
     let gradedCount = 0;
 
-    if (pairMatches.length >= 3) {
+    if (pairMatches.length >= 5) {
       pairMatches.forEach(m => {
         const qNum = parseInt(m[1], 10);
         const correctAns = parseInt(m[2], 10);
         if (qNum >= 1 && qNum <= 50) {
-          omrCorrectFlags[qNum] = ((omrAnswers[qNum] || 0) === correctAns);
+          omrCorrectFlags[qNum] = (Number(omrAnswers[qNum] || 0) === correctAns);
           gradedCount++;
         }
       });
@@ -4861,7 +5062,7 @@ function saveRoutineTemplate() {
       digits.forEach((correctAns, idx) => {
         const qNum = idx + 1;
         if (qNum <= 50) {
-          omrCorrectFlags[qNum] = ((omrAnswers[qNum] || 0) === correctAns);
+          omrCorrectFlags[qNum] = (Number(omrAnswers[qNum] || 0) === correctAns);
           gradedCount++;
         }
       });
@@ -4870,7 +5071,7 @@ function saveRoutineTemplate() {
     saveOmrState();
     initOmrSheet();
     document.getElementById('omrAnswerKeyDrawer').style.display = 'none';
-    showToast(`🔑 ප්‍රශ්න ${gradedCount}ක් පරීක්ෂා කරන ලදී!`);
+    showToast(`🔑 ප්‍රශ්න ${gradedCount}ක් ස්වයංක්‍රීයව පරීක්ෂා කරන ලදී!`);
   }
 
   function handleOmrRowClick(q) {
@@ -4884,30 +5085,45 @@ function saveRoutineTemplate() {
   }
 
   function updateOmrScoreDisplay() {
+    const answeredCount = Object.values(omrAnswers).filter(v => Number(v) >= 1 && Number(v) <= 5).length;
     const correctCount = Object.values(omrCorrectFlags).filter(v => v === true).length;
     const wrongQs = Object.keys(omrCorrectFlags).filter(k => omrCorrectFlags[k] === false).map(k => `#${k}`);
     const guessedCount = Object.values(omrGuessedFlags).filter(v => v === true).length;
     const pct = Math.round((correctCount / 50) * 100);
 
-    document.getElementById('omrScoreBadge').textContent = `${correctCount}/50 (${pct}% - ${getAlGradeLetter(pct)})`;
+    const badge = document.getElementById('omrScoreBadge');
+    if (badge) {
+      badge.textContent = `ලකුණු: ${correctCount}/50 (${pct}% - ${getAlGradeLetter(pct)}) | ලකුණු කළ: ${answeredCount}/50`;
+    }
     document.getElementById('omrWrongListText').textContent = wrongQs.length > 0 ? `❌ වැරදුණු (${wrongQs.length}): ${wrongQs.join(', ')}` : '';
     document.getElementById('omrGuessedListText').textContent = guessedCount > 0 ? `❓ Guess කළ ප්‍රශ්න: ${guessedCount}` : '';
   }
 
   function saveOmrToScores() {
-    const subj = document.getElementById('omrSubjectSelect').value;
-    const name = document.getElementById('omrPaperTitle').value.trim() || `MCQ Paper (${currentDate})`;
+    triggerHaptic('medium');
+    updateSubjectDropdownLabels();
+    const subjEl = document.getElementById('omrSubjectSelect');
+    const subj = (subjEl && ['s1', 's2', 's3'].includes(subjEl.value)) ? subjEl.value : 's1';
+    const name = (document.getElementById('omrPaperTitle').value || '').trim() || `MCQ Paper (${currentDate})`;
+
+    const gradedTotal = Object.keys(omrCorrectFlags).length;
+    const answeredTotal = Object.values(omrAnswers).filter(v => Number(v) >= 1 && Number(v) <= 5).length;
+
+    if (gradedTotal === 0 && answeredTotal === 0) {
+      return showToast('⚠️ පළමුව OMR පත්‍රිකාවේ පිළිතුරු හෝ හරි/වැරදි (✓/✗) ලකුණු කරන්න!');
+    }
+
     const correctCount = Object.values(omrCorrectFlags).filter(v => v === true).length;
     const wrongQs = Object.keys(omrCorrectFlags).filter(k => omrCorrectFlags[k] === false).map(k => `#${k}`);
     const guessedQs = Object.keys(omrGuessedFlags).filter(k => omrGuessedFlags[k] === true).map(k => `#${k}`);
     const pct = Math.round((correctCount / 50) * 100);
 
-    const list = JSON.parse(localStorage.getItem('al_pro_papers') || '[]');
+    const list = safeJsonParse(localStorage.getItem('al_pro_papers'), []);
     list.unshift({ id: Date.now(), date: currentDate, subj, name: `${name} [${correctCount}/50]`, marks: pct });
     localStorage.setItem('al_pro_papers', JSON.stringify(list));
 
     if (wrongQs.length > 0 || guessedQs.length > 0) {
-      const vaultList = JSON.parse(localStorage.getItem('al_pro_vault') || '[]');
+      const vaultList = safeJsonParse(localStorage.getItem('al_pro_vault'), []);
       if (wrongQs.length > 0) {
         vaultList.unshift({ id: Date.now() + 1, date: currentDate, subj, q: `${name} - වැරදුණු MCQ`, a: `ප්‍රශ්න: ${wrongQs.join(', ')} (${correctCount}/50)`, diff: 'hard' });
       }
@@ -4917,25 +5133,42 @@ function saveRoutineTemplate() {
       localStorage.setItem('al_pro_vault', JSON.stringify(vaultList));
     }
 
-    document.getElementById('mcqCount').value = parseInt(document.getElementById('mcqCount').value || '0', 10) + 50;
+    const mcqInput = document.getElementById('mcqCount');
+    if (mcqInput) {
+      mcqInput.value = parseInt(mcqInput.value || '0', 10) + Math.max(answeredTotal, gradedTotal, 50);
+    }
     saveData();
     renderAnalytics();
     renderVaultCards();
-    showToast(`✅ ලකුණු (${correctCount}/50) සුරකින ලදී!`);
+    showToast(`✅ OMR ලකුණු (${correctCount}/50 - ${pct}%) සාර්ථකව සුරකින ලදී!`);
   }
 
   function clearOmrSheet() {
-    if (!confirm('OMR පත්‍රිකාව මකා දමන්නද?')) return;
-    omrAnswers = {}; omrCorrectFlags = {}; omrGuessedFlags = {}; omrGradingMode = false;
-    saveOmrState(); initOmrSheet();
+    askCustomConfirm('OMR පත්‍රිකාවේ සියලුම සලකුණු මකා දමන්නද?', () => {
+      omrAnswers = {};
+      omrCorrectFlags = {};
+      omrGuessedFlags = {};
+      omrGradingMode = false;
+      const btn = document.getElementById('omrGradeModeBtn');
+      if (btn) {
+        btn.textContent = '✔️ හරි/වැරදි Mode';
+        btn.className = 'mini-btn btn-purple';
+      }
+      saveOmrState();
+      initOmrSheet();
+      showToast('🗑️ OMR පත්‍රිකාව මකා දමන ලදී.');
+    });
   }
 
   function startPauseOmrTimer() {
+    triggerHaptic('medium');
     const btn = document.getElementById('omrTimerBtn');
     if (omrTimerInterval) {
-      clearInterval(omrTimerInterval); omrTimerInterval = null;
+      clearInterval(omrTimerInterval);
+      omrTimerInterval = null;
       omrRemainingSec = Math.max(0, Math.round((omrEndTime - Date.now()) / 1000));
-      btn.textContent = '▶ Resume'; return;
+      btn.textContent = '▶ Resume';
+      return;
     }
     omrEndTime = Date.now() + omrRemainingSec * 1000;
     btn.textContent = '⏸ Pause';
@@ -4946,24 +5179,31 @@ function saveRoutineTemplate() {
       const m = String(Math.floor((left % 3600) / 60)).padStart(2, '0');
       const s = String(left % 60).padStart(2, '0');
       document.getElementById('omrTimerDisplay').textContent = `${h}:${m}:${s}`;
-      if (left <= 0) { clearInterval(omrTimerInterval); omrTimerInterval = null; playBellSound(); showToast('⏰ MCQ විභාග කාලය අවසන්!'); }
+      if (left <= 0) {
+        clearInterval(omrTimerInterval);
+        omrTimerInterval = null;
+        btn.textContent = '▶ Start 2h';
+        playBellSound();
+        showToast('⏰ MCQ පැය 2ක විභාග කාලය අවසන්!');
+      }
     }, 500);
   }
 
   function resetOmrTimer() {
     if (omrTimerInterval) clearInterval(omrTimerInterval);
-    omrTimerInterval = null; omrRemainingSec = 2 * 60 * 60;
+    omrTimerInterval = null;
+    omrRemainingSec = 2 * 60 * 60;
     document.getElementById('omrTimerDisplay').textContent = '02:00:00';
     document.getElementById('omrTimerBtn').textContent = '▶ Start 2h';
   }
 
   /* ================= FLASHCARDS & VAULT ================= */
   function addVaultCard() {
-    const subj = document.getElementById('vaultSubjSelect').value;
+    const subj = document.getElementById('vaultSubjSelect').value || 's1';
     const q = document.getElementById('vaultQuestionInput').value.trim();
     const a = document.getElementById('vaultAnswerInput').value.trim();
     if (!q || !a) return showToast('⚠️ ප්‍රශ්නය සහ පිළිතුර ඇතුළත් කරන්න!');
-    const list = JSON.parse(localStorage.getItem('al_pro_vault') || '[]');
+    const list = safeJsonParse(localStorage.getItem('al_pro_vault'), []);
     list.unshift({ id: Date.now(), date: currentDate, subj, q, a, diff: 'medium' });
     localStorage.setItem('al_pro_vault', JSON.stringify(list));
     queueAutoCloudSync();
@@ -4974,9 +5214,9 @@ function saveRoutineTemplate() {
   }
 
   function rateVaultCard(e, id, diffLevel) {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     triggerHaptic('light');
-    const list = JSON.parse(localStorage.getItem('al_pro_vault') || '[]');
+    const list = safeJsonParse(localStorage.getItem('al_pro_vault'), []);
     const item = list.find(c => c.id === id);
     if (item) {
       item.diff = diffLevel;
@@ -4987,7 +5227,7 @@ function saveRoutineTemplate() {
   }
 
   function shuffleVaultCards() {
-    let list = JSON.parse(localStorage.getItem('al_pro_vault') || '[]');
+    let list = safeJsonParse(localStorage.getItem('al_pro_vault'), []);
     for (let i = list.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [list[i], list[j]] = [list[j], list[i]];
@@ -4997,8 +5237,8 @@ function saveRoutineTemplate() {
   }
 
   function deleteVaultCard(e, id) {
-    e.stopPropagation();
-    let list = JSON.parse(localStorage.getItem('al_pro_vault') || '[]');
+    if (e) e.stopPropagation();
+    let list = safeJsonParse(localStorage.getItem('al_pro_vault'), []);
     localStorage.setItem('al_pro_vault', JSON.stringify(list.filter(c => c.id !== id)));
     queueAutoCloudSync();
     renderVaultCards();
@@ -5007,7 +5247,7 @@ function saveRoutineTemplate() {
   function renderVaultCards() {
     const container = document.getElementById('vaultCardsContainer');
     if (!container) return;
-    const allList = JSON.parse(localStorage.getItem('al_pro_vault') || '[]').filter(c => ['s1', 's2', 's3'].includes(c.subj));
+    const allList = safeJsonParse(localStorage.getItem('al_pro_vault'), []).filter(c => c && ['s1', 's2', 's3'].includes(c.subj));
     const searchQ = ((document.getElementById('vaultSearchInput') || {}).value || '').trim().toLowerCase();
     const filterSubj = ((document.getElementById('vaultFilterSubj') || {}).value || 'all');
     const filterDiff = ((document.getElementById('vaultFilterDiff') || {}).value || 'all');
@@ -5031,7 +5271,7 @@ function saveRoutineTemplate() {
         <div class="flashcard ${diffCls}" onclick="this.classList.toggle('revealed')">
           <div style="display:flex; justify-content:space-between; margin-bottom:6px; align-items:center;">
             <span class="stat-badge stat-warn">${escHtml(names[card.subj] || card.subj)}</span>
-            <button class="mini-btn btn-danger-soft" onclick="deleteVaultCard(event, ${card.id})">✕</button>
+            <button type="button" class="mini-btn btn-danger-soft" onclick="deleteVaultCard(event, ${card.id})">✕</button>
           </div>
           <div style="font-weight:700;">❓ ${escHtml(card.q)}</div>
           <div class="flashcard-ans">
@@ -5048,6 +5288,31 @@ function saveRoutineTemplate() {
   }
 
   /* ================= SHARE REPORT CARD & DATA PERSISTENCE ================= */
+  function copyTextSafe(text, successMsg) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => showToast(successMsg)).catch(() => fallbackCopyText(text, successMsg));
+    } else {
+      fallbackCopyText(text, successMsg);
+    }
+  }
+
+  function fallbackCopyText(text, successMsg) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast(successMsg);
+    } catch (e) {
+      showToast('⚠️ Copy කිරීමට නොහැකි විය.');
+    }
+  }
+
   function openShareCard() {
     document.getElementById('shareModal').classList.add('open');
     const canvas = document.getElementById('shareCanvas');
@@ -5119,7 +5384,7 @@ function saveRoutineTemplate() {
       `📙 ${names.s3}: ${document.getElementById('subj3Hours').textContent}`,
       `📊 *සතියේ එකතුව:* ${document.getElementById('weekTotalDisplay').textContent}`
     ].join('\n');
-    navigator.clipboard.writeText(report).then(() => showToast('📋 වාර්තාව Copy කරන ලදී!'));
+    copyTextSafe(report, '📋 වාර්තාව Copy කරන ලදී!');
   }
 
   function updateExamCountdown() {
@@ -5152,38 +5417,37 @@ function saveRoutineTemplate() {
   }
 
   function loadGlobalSettings() {
-    const raw = localStorage.getItem('al_pro_settings');
-    if (raw) {
-      try {
-        const s = JSON.parse(raw);
-        if (s.stream) document.getElementById('streamSelect').value = s.stream;
-        if (s.ambition) document.getElementById('studentAmbition').value = s.ambition;
-        if (s.parentPromise && document.getElementById('parentPromiseInput')) {
-          document.getElementById('parentPromiseInput').value = s.parentPromise;
-        }
-        if (s.examDate) document.getElementById('examDate').value = s.examDate;
-        if (s.dailyGoalHours) document.getElementById('dailyGoalHours').value = s.dailyGoalHours;
-        if (s.s1) document.getElementById('subj1Name').value = s.s1;
-        if (s.s2) document.getElementById('subj2Name').value = s.s2;
-        if (s.s3) document.getElementById('subj3Name').value = s.s3;
-        if (s.botNotifyEnabled && document.getElementById('botNotifyEnabled')) {
-          document.getElementById('botNotifyEnabled').value = s.botNotifyEnabled;
-        }
-        if (s.tgBotToken && document.getElementById('tgBotTokenInput')) {
-          document.getElementById('tgBotTokenInput').value = s.tgBotToken;
-        }
-        if (s.tgChatId && document.getElementById('tgChatIdInput')) {
-          document.getElementById('tgChatIdInput').value = s.tgChatId;
-        }
-        if (s.sleepStart !== undefined && document.getElementById('sleepStartHour')) {
-          document.getElementById('sleepStartHour').value = String(s.sleepStart);
-        }
-        if (s.sleepEnd !== undefined && document.getElementById('sleepEndHour')) {
-          document.getElementById('sleepEndHour').value = String(s.sleepEnd);
-        }
-        if (s.sleepCustomText) updateSleepTextInputs(s.sleepCustomText);
-      } catch (e) {}
-    } else loadDefaultSyllabusForCurrentSubjects(false);
+    const s = safeJsonParse(localStorage.getItem('al_pro_settings'), null);
+    if (s) {
+      if (s.stream) document.getElementById('streamSelect').value = s.stream;
+      if (s.ambition) document.getElementById('studentAmbition').value = s.ambition;
+      if (s.parentPromise && document.getElementById('parentPromiseInput')) {
+        document.getElementById('parentPromiseInput').value = s.parentPromise;
+      }
+      if (s.examDate) document.getElementById('examDate').value = s.examDate;
+      if (s.dailyGoalHours) document.getElementById('dailyGoalHours').value = s.dailyGoalHours;
+      if (s.s1) document.getElementById('subj1Name').value = s.s1;
+      if (s.s2) document.getElementById('subj2Name').value = s.s2;
+      if (s.s3) document.getElementById('subj3Name').value = s.s3;
+      if (s.botNotifyEnabled && document.getElementById('botNotifyEnabled')) {
+        document.getElementById('botNotifyEnabled').value = s.botNotifyEnabled;
+      }
+      if (s.tgBotToken && document.getElementById('tgBotTokenInput')) {
+        document.getElementById('tgBotTokenInput').value = s.tgBotToken;
+      }
+      if (s.tgChatId && document.getElementById('tgChatIdInput')) {
+        document.getElementById('tgChatIdInput').value = s.tgChatId;
+      }
+      if (s.sleepStart !== undefined && document.getElementById('sleepStartHour')) {
+        document.getElementById('sleepStartHour').value = String(s.sleepStart);
+      }
+      if (s.sleepEnd !== undefined && document.getElementById('sleepEndHour')) {
+        document.getElementById('sleepEndHour').value = String(s.sleepEnd);
+      }
+      if (s.sleepCustomText) updateSleepTextInputs(s.sleepCustomText);
+    }
+
+    ensureSyllabusHasDefaultUnits();
 
     if (localStorage.getItem('al_planner_theme') === 'dark') {
       document.body.classList.add('dark');
@@ -5217,40 +5481,38 @@ function saveRoutineTemplate() {
 
   function loadData(dateStr) {
     updateExamCountdown();
-    const raw = localStorage.getItem(`al_plan_${dateStr}`);
-    if (!raw) { clearFormFields(); renderTotals(); return; }
-
-    try {
-      const data = JSON.parse(raw);
-      document.getElementById('mcqCount').value = data.mcqCount || '';
-      document.getElementById('essayCount').value = data.essayCount || '';
-      document.getElementById('mainDistraction').value = data.mainDistraction || '';
-      document.getElementById('tomorrowFix').value = data.tomorrowFix || '';
-      waterGlasses = parseInt(data.water || '0', 10);
-      renderWaterBadge();
-
-      currentPriorities = sanitizeSavedPriorities(data.priorities);
-      renderPriorityList();
-
-      timeSlots.forEach(slot => {
-        if (slot.group) return;
-        const r = (data.rows && data.rows[slot.id]) || {};
-        const validSubj = ['s1', 's2', 's3'].includes(r.subj) ? r.subj : 'none';
-        document.getElementById(`subj_${slot.id}`).value = validSubj;
-        document.getElementById(`task_${slot.id}`).value = r.task || '';
-        [0, 1, 2, 3].forEach(q => {
-          const rawSt = r.slots ? r.slots[q] : 0;
-          const stVal = (rawSt === true || rawSt === 1) ? 1 : (rawSt === 2 ? 2 : 0);
-          setSlotState(slot.id, q, stVal);
-        });
-        setSleepButtonState(document.getElementById(`sleep_${slot.id}`), parseInt(r.sleep || 0, 10));
-      });
-      applySubjectColorClasses();
-      renderTotals();
-    } catch (e) {
+    const data = safeJsonParse(localStorage.getItem(`al_plan_${dateStr}`), null);
+    if (!data) {
       clearFormFields();
       renderTotals();
+      return;
     }
+
+    document.getElementById('mcqCount').value = data.mcqCount || '';
+    document.getElementById('essayCount').value = data.essayCount || '';
+    document.getElementById('mainDistraction').value = data.mainDistraction || '';
+    document.getElementById('tomorrowFix').value = data.tomorrowFix || '';
+    waterGlasses = parseInt(data.water || '0', 10);
+    renderWaterBadge();
+
+    currentPriorities = sanitizeSavedPriorities(data.priorities);
+    renderPriorityList();
+
+    timeSlots.forEach(slot => {
+      if (slot.group) return;
+      const r = (data.rows && data.rows[slot.id]) || {};
+      const validSubj = ['s1', 's2', 's3'].includes(r.subj) ? r.subj : 'none';
+      document.getElementById(`subj_${slot.id}`).value = validSubj;
+      document.getElementById(`task_${slot.id}`).value = r.task || '';
+      [0, 1, 2, 3].forEach(q => {
+        const rawSt = r.slots ? r.slots[q] : 0;
+        const stVal = (rawSt === true || rawSt === 1) ? 1 : (rawSt === 2 ? 2 : 0);
+        setSlotState(slot.id, q, stVal);
+      });
+      setSleepButtonState(document.getElementById(`sleep_${slot.id}`), parseInt(r.sleep || 0, 10));
+    });
+    applySubjectColorClasses();
+    renderTotals();
   }
 
   function clearFormFields() {
@@ -5281,12 +5543,15 @@ function saveRoutineTemplate() {
   }
 
   function resetCurrentDay() {
-    if (confirm('අද දවසේ දත්ත සියල්ල මකා දමන්නද?')) {
+    askCustomConfirm('අද දවසේ දත්ත සියල්ල මකා දමන්නද?', () => {
       localStorage.removeItem(`al_plan_${currentDate}`);
-      clearFormFields(); renderTotals(); renderAnalytics(); renderSyllabus();
+      clearFormFields();
+      renderTotals();
+      renderAnalytics();
+      renderSyllabus();
       queueAutoCloudSync();
       showToast('🗑️ අද දත්ත මකා දමන ලදී.');
-    }
+    });
   }
 
   function toggleTheme() {
@@ -5309,23 +5574,41 @@ function saveRoutineTemplate() {
   }
 
   function applyBackupObject(data) {
-    Object.keys(data).forEach(k => { if (k.startsWith('al_')) localStorage.setItem(k, data[k]); });
-    loadGlobalSettings(); loadData(currentDate); renderLongTermPlan(); loadOmrState(); loadEssayLapsState(); initOmrSheet(); renderSyllabus(); renderAnalytics(); renderVaultCards();
+    if (!data || typeof data !== 'object') return;
+    Object.keys(data).forEach(k => {
+      if (k.startsWith('al_') && typeof data[k] === 'string') {
+        localStorage.setItem(k, data[k]);
+      }
+    });
+    loadGlobalSettings();
+    ensureSyllabusHasDefaultUnits();
+    loadData(currentDate);
+    renderLongTermPlan();
+    loadOmrState();
+    loadEssayLapsState();
+    initOmrSheet();
+    renderSyllabus();
+    renderAnalytics();
+    renderVaultCards();
     queueAutoCloudSync();
   }
 
   function generateTextBackupCode() {
     const jsonStr = JSON.stringify(getAllBackupObject());
     const area = document.getElementById('backupTextArea');
-    area.value = jsonStr; area.select();
-    navigator.clipboard.writeText(jsonStr).then(() => showToast('📋 Backup කේතය Copy කරන ලදී!'));
+    area.value = jsonStr;
+    area.select();
+    copyTextSafe(jsonStr, '📋 Backup කේතය Copy කරන ලදී!');
   }
 
   function restoreFromTextBackupCode() {
     const raw = (document.getElementById('backupTextArea').value || '').trim();
     if (!raw) return showToast('⚠️ කේතය Paste කරන්න!');
-    try { applyBackupObject(JSON.parse(raw)); closeBackupModal(); showToast('✅ දත්ත Restore කරන ලදී!'); }
-    catch (e) { showToast('⚠️ කේතය නිවැරදි නොවේ!'); }
+    const parsed = safeJsonParse(raw, null);
+    if (!parsed) return showToast('⚠️ කේතය නිවැරදි නොවේ!');
+    applyBackupObject(parsed);
+    closeBackupModal();
+    showToast('✅ දත්ත Restore කරන ලදී!');
   }
 
   function exportBackup() {
@@ -5341,8 +5624,11 @@ function saveRoutineTemplate() {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = e => {
-      try { applyBackupObject(JSON.parse(e.target.result)); closeBackupModal(); showToast('✅ Restore සාර්ථකයි!'); }
-      catch (err) { showToast('⚠️ දෝෂයක්!'); }
+      const parsed = safeJsonParse(e.target.result, null);
+      if (!parsed) return showToast('⚠️ ගොනුවේ දෝෂයක්!');
+      applyBackupObject(parsed);
+      closeBackupModal();
+      showToast('✅ Restore සාර්ථකයි!');
     };
     reader.readAsText(file);
   }
